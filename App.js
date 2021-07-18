@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import {SwipeListView} from 'react-native-swipe-list-view';
 
 import AddTodo from './components/addTodo';
 import color from './app/config/colors';
@@ -25,11 +26,11 @@ function App(props) {
     {text: 'play on the switch', key: '3'},
   ]);
 
-  const pressHandler = key => {
-    setTodos(prevTodos => {
-      return prevTodos.filter(todo => todo.key != key);
-    });
-  };
+  // const pressHandler = key => {
+  //   setTodos(prevTodos => {
+  //     return prevTodos.filter(todo => todo.key != key);
+  //   });
+  // };
 
   const submitHandler = text => {
     if (text.length > 3) {
@@ -41,6 +42,56 @@ function App(props) {
         {text: 'Understood', onPress: () => console.log('alert closed')},
       ]);
     }
+  };
+
+  const renderHiddenItem = (data, rowMap) => (
+    <View style={styles.rowBack}>
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.closeTaskbtn]}
+        onPress={() => closeRow(rowMap, data.item.key)}>
+        <Text style={styles.backTextWhite}>Close</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.addSubTaskbtn]}
+        onPress={() => console.log('Ready to add new task')}>
+        <Text style={styles.backTextWhite}>Add</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.backRightBtnLeft]}
+        onPress={() => console.log('Ready to edit task')}>
+        <Text style={styles.backTextWhite}>Edit</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.backRightBtnRight]}
+        onPress={() => deleteRow(rowMap, data.item.key)}>
+        <Text style={styles.backTextWhite}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  //close function
+  const closeRow = (rowMap, rowKey) => {
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow();
+      console.log('This row closed', rowKey);
+    }
+  };
+
+  //delete function
+  const deleteRow = (rowMap, rowKey) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...todos];
+    const prevIndex = todos.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setTodos(newData);
+  };
+
+  //detection for row slide action
+  const onRowDidOpen = rowKey => {
+    console.log('This row opened', rowKey);
   };
 
   return (
@@ -55,11 +106,16 @@ function App(props) {
         <View style={styles.content}>
           <AddTodo submitHandler={submitHandler} />
           <View style={styles.list}>
-            <FlatList
+            <SwipeListView
               data={todos}
-              renderItem={({item}) => (
-                <TodoItem item={item} pressHandler={pressHandler} />
-              )}
+              renderItem={({item}) => <TodoItem item={item} />}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={75}
+              rightOpenValue={-200}
+              previewRowKey={'0'}
+              previewOpenValue={-40}
+              previewOpenDelay={3000}
+              onRowDidOpen={onRowDidOpen}
             />
           </View>
         </View>
@@ -72,6 +128,23 @@ function App(props) {
 export default App;
 
 const styles = StyleSheet.create({
+  addSubTaskbtn: {
+    backgroundColor: 'coral',
+    right: 140,
+    padding: 16,
+    marginTop: 16,
+  },
+  backTextWhite: {
+    color: '#FFF',
+  },
+
+  closeTaskbtn: {
+    backgroundColor: 'blue',
+    left: 0,
+    padding: 16,
+    marginTop: 16,
+  },
+
   container: {
     flex: 1,
     backgroundColor: color.primary,
@@ -79,7 +152,45 @@ const styles = StyleSheet.create({
   content: {
     padding: 40,
   },
+
   list: {
     marginTop: 20,
+    // backgroundColor: 'green',
+  },
+  rowFront: {
+    alignItems: 'center',
+    // backgroundColor: 'green',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    height: 50,
+  },
+  rowBack: {
+    alignItems: 'center',
+    // backgroundColor: 'coral',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+  },
+  backRightBtn: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: 75,
+  },
+  backRightBtnLeft: {
+    backgroundColor: 'green',
+    right: 75,
+    padding: 16,
+    marginTop: 16,
+  },
+  backRightBtnRight: {
+    backgroundColor: 'red',
+    right: 10,
+    padding: 16,
+    marginTop: 16,
   },
 });
