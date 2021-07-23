@@ -1,22 +1,17 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
-import type { Node } from 'react';
+import React, {useState} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
+  Text,
+  StyleSheet,
+  Button,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
+import {SwipeListView} from 'react-native-swipe-list-view';
 
 import {SwipeListView} from 'react-native-swipe-list-view';
 
@@ -102,65 +97,133 @@ const Section = ({ children, title }): Node => {
         ]}>
         {children}
       </Text>
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.backRightBtnRight]}
+        onPress={() => deleteRow(rowMap, data.item.key)}>
+        <Text style={styles.backTextWhite}>Delete</Text>
+      </TouchableOpacity>
     </View>
   );
-};
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  //close function
+  const closeRow = (rowMap, rowKey) => {
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow();
+      console.log('This row closed', rowKey);
+    }
+  };
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  //delete function
+  const deleteRow = (rowMap, rowKey) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...todos];
+    const prevIndex = todos.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setTodos(newData);
+  };
+
+  //detection for row slide action
+  const onRowDidOpen = rowKey => {
+    console.log('This row opened', rowKey);
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        console.log('Dismissed keyboard');
+      }}>
+      <View style={styles.container}>
         <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.php</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+        <View style={styles.content}>
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <SwipeListView
+              data={todos}
+              renderItem={({item}) => <TodoItem item={item} />}
+              renderHiddenItem={renderHiddenItem}
+              leftOpenValue={75}
+              rightOpenValue={-200}
+              previewRowKey={'0'}
+              previewOpenValue={-40}
+              previewOpenDelay={3000}
+              onRowDidOpen={onRowDidOpen}
+            />
+          </View>
+        </View>
+        <Footer />
+      </View>
+    </TouchableWithoutFeedback>
+  );
+}
 
 export default App;
+
+const styles = StyleSheet.create({
+  addSubTaskbtn: {
+    backgroundColor: 'coral',
+    right: 140,
+    padding: 16,
+    marginTop: 16,
+  },
+  backTextWhite: {
+    color: '#FFF',
+  },
+
+  closeTaskbtn: {
+    backgroundColor: 'blue',
+    left: 0,
+    padding: 16,
+    marginTop: 16,
+  },
+
+  container: {
+    flex: 1,
+    backgroundColor: color.primary,
+  },
+  content: {
+    padding: 40,
+  },
+
+  list: {
+    marginTop: 20,
+    // backgroundColor: 'green',
+  },
+  rowFront: {
+    alignItems: 'center',
+    // backgroundColor: 'green',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    height: 50,
+  },
+  rowBack: {
+    alignItems: 'center',
+    // backgroundColor: 'coral',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+  },
+  backRightBtn: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: 75,
+  },
+  backRightBtnLeft: {
+    backgroundColor: 'green',
+    right: 75,
+    padding: 16,
+    marginTop: 16,
+  },
+  backRightBtnRight: {
+    backgroundColor: 'red',
+    right: 10,
+    padding: 16,
+    marginTop: 16,
+  },
+});
