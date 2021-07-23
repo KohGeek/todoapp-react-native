@@ -18,11 +18,9 @@ export default function TodoItem({ item }) {
   //     : console.log('text is slashed');
   // };
 
-  const slashing = () => {
-    toggleCheckBox != false
-      ? console.log('text is normal')
-      : console.log('text is slashed');
-  };
+  // const slashing = () => {
+  //   toggleCheckBox != false ? false : true;
+  // };
 
   return (
     <TouchableHighlight onPress={() => console.log('You touched me')}>
@@ -33,10 +31,15 @@ export default function TodoItem({ item }) {
           value={toggleCheckBox}
           onValueChange={newValue => {
             setToggleCheckBox(newValue);
-            slashing();
           }}
         />
-        <Text style={stlyes.item}>{item.text}</Text>
+        <Text
+          style={
+            (stlyes.item,
+            toggleCheckBox ? { textDecorationLine: 'line-through' } : {})
+          }>
+          {item.text}
+        </Text>
       </View>
     </TouchableHighlight>
   );
@@ -44,17 +47,16 @@ export default function TodoItem({ item }) {
 
 const stlyes = StyleSheet.create({
   item: {
-    // padding: 16,
-    // marginTop: 16,
-    // borderColor: 'blue',
-    // borderWidth: 1,
-    // borderRadius: 10,
-    // backgroundColor: 'white',
-    // textDecorationLine: 'line-through',
-    // textDecorationStyle: 'solid',
+    position: 'relative',
+    top: 5,
   },
+
+  slash: {
+    textDecorationLine: 'line-through',
+  },
+
   checkboxes: {
-    backgroundColor: 'gold',
+    // backgroundColor: 'gold',
   },
   wrapper: {
     padding: 16,

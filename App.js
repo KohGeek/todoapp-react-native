@@ -55,11 +55,11 @@ function App(props) {
   //hidden function
   const renderHiddenItem = (data, rowMap) => (
     <View style={styles.rowBack}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[styles.backRightBtn, styles.closeTaskbtn]}
         onPress={() => closeRow(rowMap, data.item.key)}>
         <Text style={styles.backTextWhite}>Close</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         style={[styles.backRightBtn, styles.addSubTaskbtn]}
         onPress={() => console.log('Ready to add new task')}>
@@ -146,7 +146,7 @@ function App(props) {
               data={todos}
               renderItem={({ item }) => <TodoItem item={item} />}
               renderHiddenItem={renderHiddenItem}
-              leftOpenValue={75}
+              leftOpenValue={300}
               rightOpenValue={-200}
               previewRowKey={'0'}
               previewOpenValue={-40}
@@ -174,12 +174,12 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 
-  closeTaskbtn: {
-    backgroundColor: 'blue',
-    left: 0,
-    padding: 16,
-    marginTop: 16,
-  },
+  // closeTaskbtn: {
+  //   backgroundColor: 'blue',
+  //   left: 0,
+  //   padding: 16,
+  //   marginTop: 16,
+  // },
 
   container: {
     flex: 1,
