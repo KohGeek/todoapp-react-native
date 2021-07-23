@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {Text, StyleSheet, TouchableHighlight, View} from 'react-native';
+import React, { useState } from 'react';
+import { Text, StyleSheet, TouchableHighlight, View } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
-export default function TodoItem({item}) {
+export default function TodoItem({ item }) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [slashedText, setSlashedText] = useState(false);
 
@@ -36,13 +36,6 @@ export default function TodoItem({item}) {
             slashing();
           }}
         />
-import React from 'react';
-import {Text, StyleSheet, TouchableHighlight, View} from 'react-native';
-
-export default function TodoItem({item}) {
-  return (
-    <TouchableHighlight onPress={() => console.log('You touched me')}>
-      <View>
         <Text style={stlyes.item}>{item.text}</Text>
       </View>
     </TouchableHighlight>
