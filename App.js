@@ -18,6 +18,60 @@ import {
   View,
 } from 'react-native';
 
+import {SwipeListView} from 'react-native-swipe-list-view';
+
+import AddTodo from './components/addTodo';
+import color from './app/config/colors';
+import Header from './components/header';
+import Footer from './components/footer';
+import TodoItem from './components/todoItem';
+
+function App(props) {
+  const [todos, setTodos] = useState([
+    {text: 'buy coffee', key: '1'},
+    {text: 'create an app', key: '2'},
+    {text: 'play on the switch', key: '3'},
+  ]);
+
+  // const pressHandler = key => {
+  //   setTodos(prevTodos => {
+  //     return prevTodos.filter(todo => todo.key != key);
+  //   });
+  // };
+
+  const submitHandler = text => {
+    if (text.length > 3) {
+      setTodos(prevTodos => {
+        return [{text: text, key: Math.random().toString()}, ...prevTodos];
+      });
+    } else {
+      Alert.alert('OOPS!', 'Todos myst be over 3 chars long!', [
+        {text: 'Understood', onPress: () => console.log('alert closed')},
+      ]);
+    }
+  };
+
+  //hidden function
+  const renderHiddenItem = (data, rowMap) => (
+    <View style={styles.rowBack}>
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.closeTaskbtn]}
+        onPress={() => closeRow(rowMap, data.item.key)}>
+        <Text style={styles.backTextWhite}>Close</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.addSubTaskbtn]}
+        onPress={() => console.log('Ready to add new task')}>
+        <Text style={styles.backTextWhite}>Add</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.backRightBtn, styles.backRightBtnLeft]}
+        onPress={() => console.log('Ready to edit task')}>
+        <Text style={styles.backTextWhite}>Edit</Text>
+      </TouchableOpacity>
+
 import {
   Colors,
   DebugInstructions,
