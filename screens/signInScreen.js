@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Alert, Image } from 'react-native';
-import { InputWithLabel, AppButton } from './15. Sign In/UI';
+import { InputWithLabel, AppButton } from '../src/UI';
 
 export default class signInScreen extends Component {
   constructor(props) {
