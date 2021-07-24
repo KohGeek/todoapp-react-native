@@ -40,12 +40,23 @@ export default function TodoItem({ item }) {
           }>
           {item.text}
         </Text>
+
+        <Text
+          style={
+            (stlyes.subitem,
+            toggleCheckBox ? { textDecorationLine: 'line-through' } : {})
+          }>
+          {'\n' + item.subtext}
+        </Text>
       </View>
     </TouchableHighlight>
   );
 }
 
 const stlyes = StyleSheet.create({
+  checkboxes: {
+    // backgroundColor: 'gold',
+  },
   item: {
     position: 'relative',
     top: 5,
@@ -54,10 +65,8 @@ const stlyes = StyleSheet.create({
   slash: {
     textDecorationLine: 'line-through',
   },
+  subitem: {},
 
-  checkboxes: {
-    // backgroundColor: 'gold',
-  },
   wrapper: {
     padding: 16,
     marginTop: 16,

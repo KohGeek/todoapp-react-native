@@ -29,9 +29,19 @@ import TodoItem from './components/todoItem';
 
 function App(props) {
   const [todos, setTodos] = useState([
-    { text: 'buy coffee', key: '1' },
-    { text: 'create an app', key: '2' },
-    { text: 'play on the switch', key: '3' },
+    {
+      text: 'buy coffee',
+      subtext: 'i am subtask1',
+      subsubtext: 'i am subtask1',
+      key: '1',
+    },
+    {
+      text: 'create an app',
+      subtext: 'i am subtask2',
+      subsubtext: 'i am subtask1',
+      key: '2',
+    },
+    { text: 'play on the switch', subtext: 'i am subtask3', key: '3' },
   ]);
 
   // const pressHandler = key => {
@@ -187,10 +197,14 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 40,
+    // backgroundColor: 'blue',
+    flex: 1,
   },
 
   list: {
     marginTop: 20,
+    // backgroundColor: 'gold',
+    flex: 1,
     // backgroundColor: 'green',
   },
   rowFront: {
