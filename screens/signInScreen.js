@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Alert, Image } from 'react-native';
+import {
+  AsyncStorage,
+  StyleSheet,
+  ScrollView,
+  View,
+  Switch,
+  Picker,
+  Text,
+  Button,
+  Alert,
+  Image,
+} from 'react-native';
 import { InputWithLabel, AppButton } from '../src/UI';
 
 export default class signInScreen extends Component {
@@ -7,9 +18,82 @@ export default class signInScreen extends Component {
     super(props);
 
     this.state = {
-      name: '',
+      username: '',
       password: '',
     };
+  }
+
+  componentDidMount() {
+    this._readSettings();
+  }
+
+  async _saveSetting(key, value) {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (error) {
+      console.log('## ERROR SAVING ITEM ##: ', error);
+    }
+  }
+
+  async _saveSetting() {
+    try {
+      let var1 = [
+        'username',
+        this.state.username ? this.state.username.toString() : '',
+      ];
+      console.log(var1);
+      let var2 = [
+        'password',
+        this.state.password ? this.state.password.toString() : '',
+      ];
+      console.log(var2);
+
+      await AsyncStorage.multiSet([var1, var2]);
+    } catch (error) {
+      console.log('## ERROR SAVING ITEM ##: ', error);
+    }
+  }
+
+  async _readSettings() {
+    newStates = {};
+
+    try {
+      let keys = await AsyncStorage.multiGet(
+        //['name', 'email', 'gender', 'educationLevel', 'ReceiveP'],
+        ['username', 'password'],
+        (err, stores) => {
+          stores.map((result, i, store) => {
+            // get at each store's key/value so you can work with it
+            let key = store[i][0]; // the key
+            let value = store[i][1]; // the value
+            {
+              newStates[key] = value;
+            }
+
+            console.log(key);
+            console.log(value);
+            console.log(
+              //['name', 'email', 'gender', 'educationLevel'].indexOf(key),
+              ['username', 'password'].indexOf(key),
+            );
+          });
+          this.setState(newStates);
+          console.log(newStates);
+        },
+      );
+    } catch (error) {
+      console.log('## ERROR READING ITEMS ##: ', error);
+    }
+  }
+
+  async _removeAllSettings() {
+    //let keys = ['name', 'email', 'gender', 'educationLevel', 'ReceiveP'];
+    let keys = ['username', 'password'];
+    AsyncStorage.multiRemove(keys, err => {
+      // keys k1 & k2 removed, if they existed
+      // callback to do some action after removal of item
+      console.log('Delete', keys);
+    });
   }
 
   render() {
@@ -27,7 +111,7 @@ export default class signInScreen extends Component {
               margin: 20,
               borderRadius: 100,
             }}
-            source={require('./img/Login_Avatar.png')}
+            source={require('../Image/Login_Avatar.png')}
           />
         </View>
         <Text style={styles.content}>{'TODORO'}</Text>
@@ -42,9 +126,11 @@ export default class signInScreen extends Component {
             label="Username"
             style={styles.input}
             placeholder={'Username / Email'}
-            value={this.state.name}
-            onChangeText={name => {
-              this.setState({ name: name });
+            value={this.state.username}
+            onChangeText={username => {
+              //this.setState({ name: name });
+              this.setState({ username });
+              this._saveSetting('username', username);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -65,7 +151,9 @@ export default class signInScreen extends Component {
             value={this.state.password}
             secureTextEntry={true}
             onChangeText={password => {
-              this.setState({ password: password });
+              //this.setState({ password: password });
+              this.setState({ password });
+              this._saveSetting('password', password);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -76,7 +164,7 @@ export default class signInScreen extends Component {
           <AppButton
             title="log in"
             theme="success"
-            onPress={() => alert('Welcome back, ' + this.state.name + '!')}
+            onPress={() => alert('Welcome back, ' + this.state.username + '!')}
             onLongPress={() => {
               Alert.alert('Password: ' + this.state.password);
             }}></AppButton>
