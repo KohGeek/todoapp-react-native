@@ -27,7 +27,7 @@ import Header from './header';
 import Footer from './footer';
 import TodoItem from './todoItem';
 
-function App(props) {
+export default function App({ navigation }) {
   const [todos, setTodos] = useState([
     {
       text: 'buy coffee',
@@ -147,7 +147,7 @@ function App(props) {
         console.log('Dismissed keyboard');
       }}>
       <View style={styles.container}>
-        <Header />
+        <Header navigation={navigation} />
 
         <View style={styles.content}>
           <AddTodo submitHandler={submitHandler} />
@@ -170,8 +170,6 @@ function App(props) {
     </TouchableWithoutFeedback>
   );
 }
-
-export default App;
 
 const styles = StyleSheet.create({
   addSubTaskbtn: {

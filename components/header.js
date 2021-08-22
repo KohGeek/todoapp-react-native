@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import color from '../app/config/colors';
 
-export default function Header() {
+export default function Header({ navigation }) {
+  const pressHandler = () => {
+    navigation.navigate('Profile');
+  };
   return (
     <View style={styles.header}>
       <View style={styles.time_info}>
@@ -26,13 +29,15 @@ export default function Header() {
           color="white"
           borderColor="blue"
         />
-        <Icon
-          style={styles.userIcon}
-          name="user-circle"
-          size={30}
-          color="white"
-          borderColor="blue"
-        />
+        <TouchableOpacity onPress={pressHandler}>
+          <Icon
+            style={styles.userIcon}
+            name="user-circle"
+            size={30}
+            color="white"
+            borderColor="blue"
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
