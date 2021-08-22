@@ -36,18 +36,24 @@ export default function TodoItem({ item }) {
         <Text
           style={
             (stlyes.item,
-            toggleCheckBox ? { textDecorationLine: 'line-through' } : {})
+            toggleCheckBox
+              ? {
+                  textDecorationLine: 'line-through',
+                  position: 'relative',
+                  top: 5,
+                }
+              : { position: 'relative', top: 5 })
           }>
           {item.text}
         </Text>
 
-        <Text
+        {/* <Text
           style={
             (stlyes.subitem,
             toggleCheckBox ? { textDecorationLine: 'line-through' } : {})
           }>
-          {'\n' + item.subtext}
-        </Text>
+          {'\n' + item.subtext[0]}
+        </Text> */}
       </View>
     </TouchableHighlight>
   );

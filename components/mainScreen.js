@@ -31,17 +31,14 @@ export default function App({ navigation }) {
   const [todos, setTodos] = useState([
     {
       text: 'buy coffee',
-      subtext: 'i am subtask1',
-      subsubtext: 'i am subtask1',
+      // subtext: [['hi'], ['no']],
       key: '1',
     },
     {
       text: 'create an app',
-      subtext: 'i am subtask2',
-      subsubtext: 'i am subtask1',
       key: '2',
     },
-    { text: 'play on the switch', subtext: 'i am subtask3', key: '3' },
+    { text: 'play on the switch', key: '3' },
   ]);
 
   // const pressHandler = key => {
@@ -87,36 +84,6 @@ export default function App({ navigation }) {
       </TouchableOpacity>
     </View>
   );
-
-  // const Section = ({ children, title }): Node => {
-  //   const isDarkMode = useColorScheme() === 'dark';
-  //   return (
-  //     <View style={styles.sectionContainer}>
-  //       <Text
-  //         style={[
-  //           styles.sectionTitle,
-  //           {
-  //             color: isDarkMode ? Colors.white : Colors.black,
-  //           },
-  //         ]}>
-  //         {title}
-  //       </Text>
-  //       <Text
-  //         style={[
-  //           styles.sectionDescription,
-  //           {
-  //             color: isDarkMode ? Colors.light : Colors.dark,
-  //           },
-  //         ]}>
-  //         {children}
-  //       </Text>
-  //       <TouchableOpacity
-  //         style={[styles.backRightBtn, styles.backRightBtnRight]}
-  //         onPress={() => deleteRow(rowMap, data.item.key)}>
-  //         <Text style={styles.backTextWhite}>Delete</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   );
 
   //close function
   const closeRow = (rowMap, rowKey) => {
