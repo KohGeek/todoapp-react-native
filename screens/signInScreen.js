@@ -14,6 +14,10 @@ import {
 import { InputWithLabel, AppButton } from '../src/UI';
 
 export default class signInScreen extends Component {
+  static navigationOptions = {
+    title: 'Login Screen',
+  };
+
   constructor(props) {
     super(props);
 
@@ -97,6 +101,11 @@ export default class signInScreen extends Component {
   }
 
   render() {
+    const pressHandler = () => {
+      alert('Welcome back, ' + this.state.username + '!');
+      this.props.navigation.navigate('Index');
+    };
+
     return (
       <View
         style={{
@@ -164,7 +173,7 @@ export default class signInScreen extends Component {
           <AppButton
             title="log in"
             theme="success"
-            onPress={() => alert('Welcome back, ' + this.state.username + '!')}
+            onPress={pressHandler}
             onLongPress={() => {
               Alert.alert('Password: ' + this.state.password);
             }}></AppButton>
