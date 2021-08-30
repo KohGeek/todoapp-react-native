@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 import { InputWithLabel, AppButton } from '../src/UI';
 
-export default class signInScreen extends Component {
+export default class registerScreen extends Component {
   static navigationOptions = {
-    title: 'Login Screen',
+    title: 'Register Screen',
   };
 
   constructor(props) {
@@ -24,6 +24,7 @@ export default class signInScreen extends Component {
     this.state = {
       username: '',
       password: '',
+      retype_password: '',
     };
   }
 
@@ -123,7 +124,7 @@ export default class signInScreen extends Component {
             source={require('../Image/Login_Avatar.png')}
           />
         </View>
-        <Text style={styles.content}>{'TODORO'}</Text>
+        <Text style={styles.content}>{'JOIN TODORO'}</Text>
 
         <View
           style={{
@@ -169,9 +170,33 @@ export default class signInScreen extends Component {
             orientation={'horizontal'}
           />
         </View>
+
+        <View
+          style={{
+            //backgroundColor: 'lightslategrey',
+            flexwrap: 'wrap',
+            flexDirection: 'row',
+          }}>
+          <InputWithLabel
+            style={styles.input}
+            label={'Retype Password'}
+            placeholder={'Type here'}
+            value={this.state.retype_password}
+            secureTextEntry={true}
+            onChangeText={retype_password => {
+              //this.setState({ password: password });
+              this.setState({ retype_password });
+              this._saveSetting('retype_password', retype_password);
+            }}
+            keyboardType={'default'}
+            selectTextOnFocus={true}
+            orientation={'horizontal'}
+          />
+        </View>
+
         <View style={{ alignItems: 'center', marginTop: 10, flex: 0 }}>
           <AppButton
-            title="log in"
+            title="register"
             theme="success"
             onPress={pressHandler}
             onLongPress={() => {
@@ -179,8 +204,8 @@ export default class signInScreen extends Component {
             }}></AppButton>
           <Text
             style={styles.text}
-            onPress={() => this.props.navigation.navigate('Register')}>
-            Register
+            onPress={() => this.props.navigation.navigate('Profile')}>
+            Sign In
           </Text>
         </View>
       </View>
@@ -218,7 +243,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#6360F3',
     // textStyle: {
     //   textDecorationLine: 'underline',
