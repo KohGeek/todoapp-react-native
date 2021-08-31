@@ -1,6 +1,6 @@
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { createStackNavigator } from '@react-navigation/native-stack';
 
 import MainScreen from './mainScreen';
 import ProfileScreen from '../screens/signInScreen';
