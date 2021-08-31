@@ -1,30 +1,29 @@
 import React from 'react';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import MainScreen from './mainScreen';
 import ProfileScreen from '../screens/signInScreen';
 import RegisterScreen from '../screens/registerScreen';
+import AddTaskScreen from './addTask';
 
-const stackContainer = createStackNavigator(
-  {
-    Index: {
-      screen: MainScreen,
-    },
-    Profile: {
-      screen: ProfileScreen,
-    },
-    Register: {
-      screen: RegisterScreen,
-    },
-  },
-  {
-    initialRouteName: 'Index',
-    headerMode: 'none',
-    navigationOptions: {
-      headerVisible: false,
-    },
-  },
-);
+const Stack = createNativeStackNavigator();
 
-export default createAppContainer(stackContainer);
+function AppNavigation() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Index"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="Index" component={MainScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="AddTask" component={AddTaskScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default AppNavigation;
