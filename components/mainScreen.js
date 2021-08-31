@@ -132,7 +132,7 @@ export default function App({ navigation }) {
             />
           </View>
         </View>
-        <Footer />
+        <Footer navigation={navigation} />
       </View>
     </TouchableWithoutFeedback>
   );

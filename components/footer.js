@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import color from '../app/config/colors';
 
-export default function Footer() {
+export default function Footer({ navigation }) {
   const buttonClickHandler = () => {
-    console.log('You click the add button!');
+    navigation.navigate('AddTask');
   };
 
   return (
