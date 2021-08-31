@@ -6,11 +6,11 @@ A todo app powered by react-native. The project is not tested on iOS. The iOS bu
 
 Use the following to launch the project.
 
-```bash
-npm install | npm run android
-```
+Delete any preexisting `node_modules` folder, then run the code below:
 
-If this fails, delete the `node_modules` folder and run it again.
+```bash
+npm ci | npm run android
+```
 
 ### _Developers_
 
