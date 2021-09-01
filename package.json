@@ -26,7 +26,7 @@
     "react-native-reanimated": "^2.3.0-alpha.2",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.6.0",
-    "react-native-sensitive-info": "^5.5.8",
+    "react-native-sensitive-info": "^6.0.0-alpha.9",
     "react-native-sqlite-storage": "^5.0.0",
     "react-native-super-timepicker": "^1.1.6",
     "react-native-swipe-list-view": "^3.2.9",
