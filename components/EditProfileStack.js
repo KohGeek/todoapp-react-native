@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   AsyncStorage,
   StyleSheet,
@@ -8,15 +8,14 @@ import {
   Button,
   Image,
 } from 'react-native';
-import {NavigationContainer, StackRouter} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
+import { NavigationContainer, StackRouter } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import EditProfileMain from './_JD/EditProfileMain.js';
 import EditUsernameScreen from './_JD/EditUsernameScreen.js';
 import EditPasswordScreen from './_JD/EditPasswordScreen.js';
 
-import {defineAnimation} from 'react-native-reanimated';
+import { defineAnimation } from 'react-native-reanimated';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -27,21 +26,20 @@ function ScreenStack() {
       screenOptions={{
         headerMode: 'screen',
         headerTintColor: 'white',
-        headerStyle: {backgroundColor: '#2c2f33'}, //ori grey 
+        headerStyle: { backgroundColor: '#2c2f33' }, //ori grey
       }}>
       <Stack1.Screen name="Edit Profile" component={EditProfileMain} />
-      <Stack1.Screen name="Edit Username/Email" component={EditUsernameScreen} />
+      <Stack1.Screen
+        name="Edit Username/Email"
+        component={EditUsernameScreen}
+      />
       <Stack1.Screen name="Edit Password" component={EditPasswordScreen} />
     </Stack1.Navigator>
   );
 }
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <ScreenStack />
-    </NavigationContainer>
-  );
+  return <ScreenStack />;
 }
 
 const styles = StyleSheet.create({
