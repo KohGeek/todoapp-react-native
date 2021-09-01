@@ -45,15 +45,14 @@ export default class signInScreen extends Component {
         'username',
         this.state.username ? this.state.username.toString() : '',
       ];
-      // console.log(var1);
-      // let var2 = [
-      //   'password',
-      //   this.state.password ? this.state.password.toString() : '',
-      // ];
-      // console.log(var2);
+      console.log(var1);
+      let var2 = [
+        'password',
+        this.state.password ? this.state.password.toString() : '',
+      ];
+      console.log(var2);
 
-      //await AsyncStorage.multiSet([var1, var2]);
-      await AsyncStorage.multiSet([var1]);
+      await AsyncStorage.multiSet([var1, var2]);
     } catch (error) {
       console.log('## ERROR SAVING ITEM ##: ', error);
     }
@@ -65,7 +64,7 @@ export default class signInScreen extends Component {
     try {
       let keys = await AsyncStorage.multiGet(
         //['name', 'email', 'gender', 'educationLevel', 'ReceiveP'],
-        ['username'],
+        ['username', 'password'],
         (err, stores) => {
           stores.map((result, i, store) => {
             // get at each store's key/value so you can work with it
@@ -77,7 +76,10 @@ export default class signInScreen extends Component {
 
             console.log(key);
             console.log(value);
-            console.log(['username'].indexOf(key));
+            console.log(
+              //['name', 'email', 'gender', 'educationLevel'].indexOf(key),
+              ['username', 'password'].indexOf(key),
+            );
           });
           this.setState(newStates);
           console.log(newStates);
@@ -100,14 +102,8 @@ export default class signInScreen extends Component {
 
   render() {
     const pressHandler = () => {
-      if (this.state.username == '') {
-        Alert.alert('Please enter your username.');
-      } else if (this.state.password == '') {
-        Alert.alert('Please enter your password.');
-      } else {
-        alert('Welcome back, ' + this.state.username + '!');
-        this.props.navigation.navigate('Index');
-      }
+      alert('Welcome back, ' + this.state.username + '!');
+      this.props.navigation.navigate('Index');
     };
 
     return (
@@ -161,7 +157,7 @@ export default class signInScreen extends Component {
             style={styles.input}
             label={'Password'}
             placeholder={'Type here'}
-            // value={this.state.password}
+            value={this.state.password}
             secureTextEntry={true}
             onChangeText={password => {
               //this.setState({ password: password });
@@ -180,8 +176,7 @@ export default class signInScreen extends Component {
             onPress={pressHandler}
             onLongPress={() => {
               Alert.alert('Password: ' + this.state.password);
-            }} // TODO: for reference only
-          ></AppButton>
+            }}></AppButton>
           <Text
             style={styles.text}
             onPress={() => this.props.navigation.navigate('Register')}>

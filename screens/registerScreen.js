@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { InputWithLabel, AppButton } from '../src/UI';
 
-let config = require('./Config');
 export default class registerScreen extends Component {
   static navigationOptions = {
     title: 'Register Screen',
@@ -24,12 +23,9 @@ export default class registerScreen extends Component {
 
     this.state = {
       username: '',
-      email: '',
       password: '',
       retype_password: '',
     };
-
-    this._store = this._store.bind(this);
   }
 
   componentDidMount() {
@@ -51,14 +47,13 @@ export default class registerScreen extends Component {
         this.state.username ? this.state.username.toString() : '',
       ];
       console.log(var1);
-      // let var2 = [
-      //   'password',
-      //   this.state.password ? this.state.password.toString() : '',
-      // ];
-      // console.log(var2);
+      let var2 = [
+        'password',
+        this.state.password ? this.state.password.toString() : '',
+      ];
+      console.log(var2);
 
-      // await AsyncStorage.multiSet([var1, var2]);
-      await AsyncStorage.multiSet([var1]);
+      await AsyncStorage.multiSet([var1, var2]);
     } catch (error) {
       console.log('## ERROR SAVING ITEM ##: ', error);
     }
@@ -68,25 +63,29 @@ export default class registerScreen extends Component {
     newStates = {};
 
     try {
-      let keys = await AsyncStorage.multiGet(['username'], (err, stores) => {
-        stores.map((result, i, store) => {
-          // get at each store's key/value so you can work with it
-          let key = store[i][0]; // the key
-          let value = store[i][1]; // the value
-          {
-            newStates[key] = value;
-          }
+      let keys = await AsyncStorage.multiGet(
+        //['name', 'email', 'gender', 'educationLevel', 'ReceiveP'],
+        ['username', 'password'],
+        (err, stores) => {
+          stores.map((result, i, store) => {
+            // get at each store's key/value so you can work with it
+            let key = store[i][0]; // the key
+            let value = store[i][1]; // the value
+            {
+              newStates[key] = value;
+            }
 
-          console.log(key);
-          console.log(value);
-          console.log(
-            //['name', 'email', 'gender', 'educationLevel'].indexOf(key),
-            ['username'].indexOf(key),
-          );
-        });
-        this.setState(newStates);
-        console.log(newStates);
-      });
+            console.log(key);
+            console.log(value);
+            console.log(
+              //['name', 'email', 'gender', 'educationLevel'].indexOf(key),
+              ['username', 'password'].indexOf(key),
+            );
+          });
+          this.setState(newStates);
+          console.log(newStates);
+        },
+      );
     } catch (error) {
       console.log('## ERROR READING ITEMS ##: ', error);
     }
@@ -102,67 +101,10 @@ export default class registerScreen extends Component {
     });
   }
 
-  // Database connectivity
-  _store() {
-    let url = config.settings.serverPath + '/api/accounts';
-
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: this.state.name,
-        email: this.state.email,
-        password: this.state.password,
-      }),
-    })
-      .then(response => {
-        if (!response.ok) {
-          Alert.alert('Error', response.status.toString());
-          throw Error('Error ' + response.status);
-        }
-
-        return response.json();
-      })
-      .then(responseJson => {
-        if (responseJson.affected > 0) {
-          Alert.alert(
-            'Record Saved',
-            'Record for `' + this.state.name + '` has been saved',
-          );
-        } else {
-          Alert.alert('Error saving record');
-        }
-
-        this.props.navigation.getParam('refresh')();
-        this.props.navigation.goBack();
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
   render() {
     const pressHandler = () => {
-      if (this.state.username == '') {
-        Alert.alert('Please enter your username.');
-      } else if (this.state.email == '') {
-        Alert.alert('Please enter your email.');
-      } else if (this.state.password == '') {
-        Alert.alert('Please enter your password.');
-      } else if (this.state.retype_password == '') {
-        Alert.alert('Please retype password.');
-      } else if (this.state.password != this.state.retype_password) {
-        Alert.alert('Retype password mismatch.');
-      } else {
-        // this._saveSettings();
-        this._store;
-        Alert.alert('Welcome, ' + this.state.username + '!');
-        // this.props.navigation.navigate('Show');
-        this.props.navigation.navigate('Index');
-      }
+      alert('Welcome back, ' + this.state.username + '!');
+      this.props.navigation.navigate('Index');
     };
 
     return (
@@ -193,34 +135,12 @@ export default class registerScreen extends Component {
           <InputWithLabel
             label="Username"
             style={styles.input}
-            placeholder={'Your name'}
+            placeholder={'Username / Email'}
             value={this.state.username}
             onChangeText={username => {
               //this.setState({ name: name });
               this.setState({ username });
               this._saveSetting('username', username);
-            }}
-            keyboardType={'default'}
-            selectTextOnFocus={true}
-            orientation={'horizontal'}
-          />
-        </View>
-
-        <View
-          style={{
-            //backgroundColor: '#23272a',
-            flexwrap: 'wrap',
-            flexDirection: 'row',
-          }}>
-          <InputWithLabel
-            label="Email"
-            style={styles.input}
-            placeholder={'e.g., abc@mail.com'}
-            value={this.state.email}
-            onChangeText={email => {
-              //this.setState({ name: name });
-              this.setState({ email });
-              this._saveSetting('email', email);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -279,10 +199,9 @@ export default class registerScreen extends Component {
             title="register"
             theme="success"
             onPress={pressHandler}
-            // onLongPress={() => {
-            //   Alert.alert('Password: ' + this.state.password);
-            // }}
-          ></AppButton>
+            onLongPress={() => {
+              Alert.alert('Password: ' + this.state.password);
+            }}></AppButton>
           <Text
             style={styles.text}
             onPress={() => this.props.navigation.navigate('Profile')}>
