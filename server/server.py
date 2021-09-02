@@ -5,7 +5,8 @@ import sqlite3
 from os import path
 from flask import Flask, jsonify, request, session
 from flask.helpers import make_response
-from flask.ext.session import Session
+from flask_socketio import SocketIO, emit
+from flask_session import Session
 from argon2 import PasswordHasher
 
 # Change DB Name here
@@ -14,8 +15,8 @@ autologin_on_register = True
 
 # Setting up various imports
 basedir = path.abspath(path.dirname(__file__))
-db = sqlite3.connect(path.join(basedir, DB))
 sess = Session()
+socketio = SocketIO()
 
 # Setting up the flask server
 server = Flask(__name__)
@@ -25,11 +26,14 @@ server.config.update(
     SESSION_TYPE='filesystem',
 )
 sess.init_app(server)
+socketio.init_app(server)
 
 # Real flask application starts here
 # The following three method are user management
 @server.route('/api/login', methods=['POST'])
 def login():
+
+    db = sqlite3.connect(path.join(basedir, DB))
 
     response_json = None
     response_code = 400
@@ -43,13 +47,14 @@ def login():
         username = request.json['username']
         password = request.json['password']
 
-        db.execute("SELECT password, email FROM users WHERE username=?", username)
-        data = db.fetchone()
+        cursor = db.cursor()
+        cursor.execute("SELECT hashedpassword, email FROM users WHERE username=?", (username,))
+        data = cursor.fetchone()
 
         if data is None:
             response_json = {'message': 'Username not found'}
         else:
-            match = PasswordHasher().verify(password, data[0])
+            match = PasswordHasher().verify(data[0], password)
             if match:
                 session['username'] = username
                 response_json = {
@@ -67,6 +72,8 @@ def login():
 @server.route('/api/register', methods=['POST'])
 def register():
     
+    db = sqlite3.connect(path.join(basedir, DB))
+
     response_json = None
     response_code = 400
 
@@ -81,7 +88,7 @@ def register():
         email = request.json['email']
 
         hashed_password = PasswordHasher().hash(password)
-        db.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (username, hashed_password, email))
+        db.execute("INSERT INTO users (username, hashedpassword, email) VALUES (?, ?, ?)", (username, hashed_password, email))
         db.commit()
         response_json = {
             'message': 'Registration successful',
@@ -101,13 +108,13 @@ def logout():
 
 
 # The following method are for syncing the database
-@server.route('/api/push', methods=['POST'])
-def push():
+@socketio.on('push')
+def push(json):
     pass
 
-@server.route('/api/pull', methods=['POST'])
+@socketio.on('pull')
 def pull():
     pass
 
 if __name__ == '__main__':
-    server.run(host='0.0.0.0', port=5000)
+    socketio.run(server, host='0.0.0.0', port=5000)
