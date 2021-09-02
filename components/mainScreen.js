@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import {
   Keyboard,
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
+
+import { openDatabase } from 'react-native-sqlite-storage';
 
 // import {
 //   Colors,
@@ -28,18 +30,7 @@ import Footer from './footer';
 import TodoItem from './todoItem';
 
 export default function App({ navigation }) {
-  const [todos, setTodos] = useState([
-    {
-      text: 'buy coffee',
-      // subtext: [['hi'], ['no']],
-      key: '1',
-    },
-    {
-      text: 'create an app',
-      key: '2',
-    },
-    { text: 'play on the switch', key: '3' },
-  ]);
+  const [todos, setTodos] = useState([]);
 
   // const pressHandler = key => {
   //   setTodos(prevTodos => {
@@ -62,22 +53,15 @@ export default function App({ navigation }) {
   //hidden function
   const renderHiddenItem = (data, rowMap) => (
     <View style={styles.rowBack}>
-      {/* <TouchableOpacity
-        style={[styles.backRightBtn, styles.closeTaskbtn]}
-        onPress={() => closeRow(rowMap, data.item.key)}>
-        <Text style={styles.backTextWhite}>Close</Text>
-      </TouchableOpacity> */}
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
         onPress={() => {
+          console.log('Ready to edit task');
 
-                    console.log('Ready to edit task');
-                    
-                    navigation.navigate('AddTask',{                      
-                      taskId: '455' ,
-                    });
-
-                    }}>
+          navigation.navigate('AddTask', {
+            taskId: '455',
+          });
+        }}>
         <Text style={styles.backTextWhite}>Edit</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -109,6 +93,21 @@ export default function App({ navigation }) {
   const onRowDidOpen = rowKey => {
     console.log('This row opened', rowKey);
   };
+
+  var db = openDatabase({
+    name: 'tododb',
+    createFromLocation: '~todo.sqlite',
+  });
+
+  useEffect(() => {
+    console.log('Database opened');
+    db.transaction(function (tx) {
+      tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
+        setTodos(results.rows.raw());
+        console.log(results.rows.raw());
+      });
+    });
+  }, []);
 
   return (
     <TouchableWithoutFeedback

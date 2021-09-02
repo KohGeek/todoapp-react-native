@@ -44,16 +44,8 @@ export default function TodoItem({ item }) {
                 }
               : { position: 'relative', top: 5 })
           }>
-          {item.text}
+          {item.name}
         </Text>
-
-        {/* <Text
-          style={
-            (stlyes.subitem,
-            toggleCheckBox ? { textDecorationLine: 'line-through' } : {})
-          }>
-          {'\n' + item.subtext[0]}
-        </Text> */}
       </View>
     </TouchableHighlight>
   );
