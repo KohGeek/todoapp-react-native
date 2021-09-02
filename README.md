@@ -12,6 +12,21 @@ Delete any preexisting `node_modules` folder, then run the code below:
 npm ci | npm run android
 ```
 
+Additionally, to run the python server, install the following packages:
+
+- pyjwt
+- flask
+- flask-socketio
+- eventlet
+- flask-cors
+- argon2-cffi
+
+If you use pip, use this:
+
+```bash
+pip install pyjwt flask flask-socketio eventlet flask-cors argon2-cffi
+```
+
 ### _Developers_
 
 Icons can be set using the following commands, courtesy of [react-native-make](https://github.com/bamlab/react-native-make):
