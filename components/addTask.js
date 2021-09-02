@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 import {
   StyleSheet,
   Image,
@@ -10,7 +10,7 @@ import {
   DatePickerAndroid,
 } from 'react-native';
 
-import {Input}  from '../src/UI.js';
+import { Input } from '../src/UI.js';
 import { ColorPicker } from 'react-native-btr';
 import TimePicker from 'react-native-super-timepicker';
 
@@ -109,32 +109,14 @@ export default class addTask extends Component<Props> {
           ]}>
           {/* Not yet implement onPress */}
           <TouchableOpacity
-            style={{ left: -100 }}
-            onPress={() => {
-              this.setState({
-                selectedColor: '#161718',
-                priority: '',
-                repeat: '',
-                title: '',
-
-                //Reminder
-                dateText: '',
-                time: '',
-
-                prioBtn1Color: '#313437',
-                prioBtn2Color: '#313437',
-                prioBtn3Color: '#313437',
-
-                rptBtn1Color: '#313437',
-                rptBtn2Color: '#313437',
-                rptBtn3Color: '#313437',
-              });
-
-              alert('Add task cancelled !');
-            }}>
-            <Image
-              style={styles.icon}
-              source={require('../Image/cancel-xxl.png')}
+            onPress={() => this.props.navigation.goBack()}
+            style={{ left: -100 }}>
+            <Icon
+              style={styles.userIcon}
+              name="arrow-back"
+              size={30}
+              color="white"
+              borderColor="blue"
             />
           </TouchableOpacity>
 
@@ -158,8 +140,7 @@ export default class addTask extends Component<Props> {
                   this.state.dateText +
                   '\n' +
                   'Time: ' +
-                  this.state.time 
-                  
+                  this.state.time,
               );
             }}>
             <Image style={styles.icon} source={require('../Image/tick2.png')} />
@@ -221,24 +202,19 @@ export default class addTask extends Component<Props> {
                   },
                 ]}
                 onPress={() => {
-
-                  if(this.state.prioBtn1Color === 'red'){
+                  if (this.state.prioBtn1Color === 'red') {
                     this.setState({
-                      priority:'',
+                      priority: '',
                       prioBtn1Color: '#313437',
-                    })
-                  }else{
-                    
+                    });
+                  } else {
                     this.setState({
-                    priority: 'Low',
-                    prioBtn1Color: 'red',
-                    prioBtn2Color: '#313437',
-                    prioBtn3Color: '#313437',
-                  });
-                  
+                      priority: 'Low',
+                      prioBtn1Color: 'red',
+                      prioBtn2Color: '#313437',
+                      prioBtn3Color: '#313437',
+                    });
                   }
-
-                 
                 }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>Low</Text>
               </TouchableOpacity>
@@ -252,24 +228,19 @@ export default class addTask extends Component<Props> {
                   },
                 ]}
                 onPress={() => {
-
-                  if(this.state.prioBtn2Color === 'red'){
+                  if (this.state.prioBtn2Color === 'red') {
                     this.setState({
-                      priority:'',
+                      priority: '',
                       prioBtn2Color: '#313437',
-                    })
-                  }else{
-                    
+                    });
+                  } else {
                     this.setState({
-                    priority: 'Medium',
-                    prioBtn1Color: '#313437',
-                    prioBtn2Color: 'red',
-                    prioBtn3Color: '#313437',
-                  });
-                  
+                      priority: 'Medium',
+                      prioBtn1Color: '#313437',
+                      prioBtn2Color: 'red',
+                      prioBtn3Color: '#313437',
+                    });
                   }
-
-                  
                 }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>Medium</Text>
               </TouchableOpacity>
@@ -284,24 +255,19 @@ export default class addTask extends Component<Props> {
                   },
                 ]}
                 onPress={() => {
-
-                  if(this.state.prioBtn3Color === 'red'){
+                  if (this.state.prioBtn3Color === 'red') {
                     this.setState({
-                      priority:'',
+                      priority: '',
                       prioBtn3Color: '#313437',
-                    })
-                  }else{
-                    
+                    });
+                  } else {
                     this.setState({
-                    priority: 'High',
-                    prioBtn1Color: '#313437',
-                    prioBtn2Color: '#313437',
-                    prioBtn3Color: 'red',
-                  });
-                  
+                      priority: 'High',
+                      prioBtn1Color: '#313437',
+                      prioBtn2Color: '#313437',
+                      prioBtn3Color: 'red',
+                    });
                   }
-
-                  
                 }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>High</Text>
               </TouchableOpacity>
@@ -335,7 +301,6 @@ export default class addTask extends Component<Props> {
               <TouchableOpacity onPress={() => this.TimePicker.open()}>
                 <View>
                   <Input
-                    
                     style={styles.inputStyle}
                     value={this.state.time}
                     placeholder="Event Time"
@@ -418,7 +383,6 @@ export default class addTask extends Component<Props> {
             </View>
           
           </View> */}
-          
         </ScrollView>
       </View>
     );
