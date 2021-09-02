@@ -174,12 +174,12 @@ export default class registerScreen extends Component {
         <View style={{ alignItems: 'center' }}>
           <Image
             style={{
-              width: 200,
-              height: 200,
+              width: 100,
+              height: 100,
               margin: 20,
               borderRadius: 100,
             }}
-            source={require('../Image/Login_Avatar.png')}
+            source={require('../resources/AppLogo.png')}
           />
         </View>
         <Text style={styles.content}>{'JOIN TODORO'}</Text>
