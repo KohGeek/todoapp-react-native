@@ -1,7 +1,10 @@
 # File sqlite-server.py
+
+import base64
 import sqlite3
 from os import path
 from flask import Flask, jsonify, request, session
+from flask.helpers import make_response
 from flask.ext.session import Session
 from argon2 import PasswordHasher
 
@@ -17,28 +20,43 @@ sess = Session()
 server = Flask(__name__)
 server.config.update(
     DEBUG=True,
+    SECRET_KEY='bcpicsdFEKsuxhqZp2QY@JXtR*98#eZgoEbd#4QxS&ePt$M8k7',
     SESSION_TYPE='filesystem',
 )
 sess.init_app(server)
 
-# Used for returning 400 response
-def bad_request(message):
-    response = jsonify({'message': message})
-    response.status_code = 400
-    return response
-
 # Real flask application starts here
-# Handles login
+# The following three method are user management
 @server.route('/api/login', methods=['POST'])
 def login():
-    if not request.json:
-        return bad_request("Malformed request!")
-    
-    if 'username' not in request.json or 'password' not in request.json:
-        return bad_request("Request json incomplete!")
 
-    username = request.json['username']
-    password = request.json['password']
+    response_json = None
+    response_code = 400
+
+    if not request.json:
+        response_json = {'message': 'No JSON data found'}
+    elif 'username' not in request.json or 'password' not in request.json:
+        response_json = {'message': 'Missing username or password'}
+    else:
+
+        username = request.json['username']
+        password = request.json['password']
+
+        db.execute("SELECT password FROM users WHERE username=?", username)
+        data = db.fetchone()
+
+        if data is None:
+            response_json = {'message': 'Username not found'}
+        else:
+            match = PasswordHasher().verify(password, data[0])
+            if match:
+                session['username'] = username
+                response_json = {'message': 'Login successful'}
+                response_code = 200
+            else:
+                response_json = {'message': 'Invalid password'}
+
+    return make_response(jsonify(response_json), response_code)
 
 @server.route('/api/register', methods=['POST'])
 def register():
@@ -46,6 +64,15 @@ def register():
 
 @server.route('/api/logout', methods=['POST'])
 def logout():
+    session.pop('username', None)
+
+# The following method are for syncing the database
+@server.route('/api/push', methods=['POST'])
+def push():
+    pass
+
+@server.route('/api/pull', methods=['POST'])
+def pull():
     pass
 
 if __name__ == '__main__':
