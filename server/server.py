@@ -11,7 +11,7 @@ import datetime
 import sqlite3
 import json
 import jwt
-from os import path
+from os import mkdir, path
 from flask import Flask, jsonify, request
 from flask.helpers import make_response
 from flask_socketio import SocketIO, emit
@@ -24,6 +24,7 @@ autologin_on_register = True
 
 # Setting up various imports
 basedir = path.abspath(path.dirname(__file__))
+userdir = path.join(basedir, "userdata/")
 socketio = SocketIO(logger=True, engineio_logger=True, cors_allowed_origins='*')
 cors = CORS()
 
@@ -54,13 +55,15 @@ def encode_auth_token(user_id):
         return e
 
 def decode_auth_token(auth_token):
-    try:
-        payload = jwt.decode(auth_token, server.config.get('SECRET_KEY'))
-        return payload['sub']
-    except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
-    except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
+
+    db = sqlite3.connect(path.join(basedir, DB))
+    c = db.cursor()
+    c.execute("SELECT * FROM tokens WHERE token = ?", (auth_token,))
+    data = c.fetchone()
+
+    data = jwt.decode(data[0], server.config.get('SECRET_KEY'), algorithms="HS256")
+    print(data)
+    return data
 
 def token_query(token, type):
 
@@ -75,9 +78,6 @@ def token_query(token, type):
     elif type == "delete":
         c.execute("DELETE FROM tokens WHERE token = ?", (token,))
         return_data = True
-    elif type == "get":
-        c.execute("SELECT * FROM tokens WHERE token = ?", (token,))
-        return_data = c.fetchone()
     db.commit()
     db.close()
 
@@ -103,7 +103,7 @@ def login():
         password = request.json['password']
 
         cursor = db.cursor()
-        cursor.execute("SELECT hashedpassword, email, username FROM users WHERE username=?", (username,))
+        cursor.execute("SELECT hashedpassword, email, uuid FROM users WHERE username=?", (username,))
         data = cursor.fetchone()
 
         if data is None:
@@ -117,7 +117,7 @@ def login():
                     'message': 'Login successful',
                     'username': username,
                     'email': data[1],
-                    'token': token.decode('UTF-8')
+                    'token': token
                 }
                 response_code = 200
             else:
@@ -163,11 +163,74 @@ def register():
         response_code = 200
 
         if autologin_on_register:
-            token = encode_auth_token(username)
+            c = db.cursor()
+            # select uuid
+            c.execute("SELECT uuid FROM users WHERE username=?", (username,))
+            data = c.fetchone()
+
+            token = encode_auth_token(data[0])
             token_query(token, "add")
-            response_json['token'] = token.decode('UTF-8')
+            response_json['token'] = token
     
     return make_response(jsonify(response_json), response_code)
+
+# Special route for updating info
+# json request must contain current_username
+@server.route('/api/update', methods=['POST'])
+def update():
+
+    db = sqlite3.connect(path.join(basedir, DB))
+    c = db.cursor()
+
+    response_json = None
+    response_code = 400
+
+    # will fail 
+    if 'current_username' not in request.json:
+        response_json = {'message': 'Missing current username'}
+
+    else:
+        current_username = request.json['current_username']
+
+        # if json contains username, update username if not already in database
+        if 'username' in request.json:
+            username = request.json['username']
+            c.execute("SELECT * FROM users WHERE username=?", (username,))
+            data = c.fetchone()
+
+            if data is None:
+                c.execute("UPDATE users SET username=? WHERE current_username=?", (username, current_username))
+                response_json = {'message': 'Username updated'}
+                response_code = 200
+            else: 
+                response_json = {'message': 'Username already exists'}
+        
+        # if json contains email, update email if not already in database
+        if 'email' in request.json:
+            email = request.json['email']
+            c.execute("SELECT * FROM users WHERE email=?", (email,))
+            data = c.fetchone()
+
+            if data is None:
+                c.execute("UPDATE users SET email=? WHERE current_username=?", (email, current_username))
+                response_json = {'message': 'Email updated'}
+                response_code = 200
+            else:
+                response_json = {'message': 'Email already exists'}
+
+        # if json contains password, update password if not already in database
+        if 'password' in request.json:
+            password = request.json['password']
+            hashed_password = PasswordHasher().hash(password)
+            c.execute("UPDATE users SET hashedpassword=? WHERE current_username=?", (hashed_password, current_username))
+
+            response_json = {'message': 'Password updated'}
+            response_code = 200
+
+    db.commit()
+    db.close()
+    return make_response(jsonify(response_json), response_code)
+        
 
 @server.route('/api/logout', methods=['POST'])
 def logout():
@@ -182,17 +245,37 @@ def logout():
 # The following method are for syncing the database
 @socketio.on('push', namespace='/api')
 def push(json_data):
-    # token check here
-    if username is None:
-        emit('relogin', 'User not logged in or session has expired. Please log in again.')
-    else: 
-        with open(username + '.json', 'w', encoding='utf-8') as f:
+    try:
+        uuid = decode_auth_token(json_data['token'])
+        json_data.pop('token')
+        filename = str(uuid['sub']) + '.json'
+        filepath = path.join(userdir, filename)
+        with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(json_data, f, ensure_ascii=False, indent=4)
-        emit('status', 'Sync successful')
+        emit('status', 'Server update successful')
+    except jwt.ExpiredSignatureError:
+        emit('error', {'message': 'Token expired'})
+    except jwt.InvalidTokenError:
+        emit('error', {'message': 'Invalid token/Logged out'})
 
 @socketio.on('pull', namespace='/api')
-def pull():
-    pass
+def pull(json_data):
+    try:
+        uuid = decode_auth_token(json_data['token'])
+        json_data.pop('token')
+        filename = str(uuid['sub']) + '.json'
+        filepath = path.join(userdir, filename)
+        # read uuid + .json file and send it as json data
+        with open(filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        emit('pull', data)
+    except jwt.ExpiredSignatureError:
+        emit('error', {'message': 'Token expired'})
+    except jwt.InvalidTokenError:
+        emit('error', {'message': 'Invalid token/Logged out'})
 
 if __name__ == '__main__':
+    if not path.exists(userdir):
+        mkdir(userdir)
+
     socketio.run(server, host='0.0.0.0', port=5000)
