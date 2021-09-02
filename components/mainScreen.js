@@ -74,7 +74,15 @@ export default function App({ navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
-        onPress={() => console.log('Ready to edit task')}>
+        onPress={() => {
+
+                    console.log('Ready to edit task');
+                    
+                    navigation.navigate('AddTask',{                      
+                      taskId: '455' ,
+                    });
+
+                    }}>
         <Text style={styles.backTextWhite}>Edit</Text>
       </TouchableOpacity>
       <TouchableOpacity

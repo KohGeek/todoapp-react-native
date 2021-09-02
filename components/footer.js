@@ -6,7 +6,9 @@ import color from '../app/config/colors';
 
 export default function Footer({ navigation }) {
   const buttonClickHandler = () => {
-    navigation.navigate('AddTask');
+    navigation.navigate('AddTask',{
+      taskId:null,
+    });
   };
 
   return (
