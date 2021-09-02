@@ -14,6 +14,8 @@ import { Input } from '../src/UI.js';
 import { ColorPicker } from 'react-native-btr';
 import TimePicker from 'react-native-super-timepicker';
 
+let SQLite = require('react-native-sqlite-storage');
+
 Date.prototype.formatted = function () {
   let day = this.getDay();
   let date = this.getDate();
@@ -39,77 +41,147 @@ Date.prototype.formatted = function () {
 };
 
 export default class addTask extends Component {
-   
-  static navigationOptions = ({navigation}) => {
-    return{
-      title:'Add Task',
-      
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Add Task',
     };
-    
   };
 
   constructor(props) {
     super(props);
-      
-      var taskId = this.props.route.params.taskId;
-      console.log("Task ID: " + taskId);
+    this._queryTask = this._queryTask.bind(this);
+    this.object = null;
+    this.db = SQLite.openDatabase(
+      { name: 'tododb', createFromLocation: '~todo.sqlite' },
+      this.openDb,
+      this.errorDb,
+    );
+    var taskId = this.props.route.params.taskId;
+    console.log('Task ID: ' + taskId);
 
-      if(taskId != null){
-        //Edit Task
-        //Need to apply server side data reading
-        this.state = {
-          selectedColor: '#161718',
-          priority: '',
-          repeat: '',
-          title: '',
-          labelColor: 'white',
+    if (taskId != null) {
+      //Edit Task
+      //Need to apply server side data reading
+      this.state = {
+        selectedColor: '#161718',
+        priority: '',
+        title: '',
+        labelColor: 'white',
 
-          taskId:taskId,
-       
-          //Reminder
-          dateText: '',
-          time: '',
+        taskId: taskId,
 
-          //For button styling usage
-          prioBtn1Color: '#313437',
-          prioBtn2Color: '#313437',
-          prioBtn3Color: '#313437',
+        //Reminder
+        dateText: '',
+        time: '',
 
-          rptBtn1Color: '#313437',
-          rptBtn2Color: '#313437',
-          rptBtn3Color: '#313437',
-        };
+        //For button styling usage
+        prioBtn1Color: '#313437',
+        prioBtn2Color: '#313437',
+        prioBtn3Color: '#313437',
+      };
 
-      }else{
-        //Add Task
-        this.state = {
-          selectedColor: '#161718',
-          priority: '',
-          repeat: '',
-          title: '',
-          labelColor: 'white',
-  
-          taskId:taskId,
-         
-          //Reminder
-          dateText: '',
-          time: '',
-  
-          //For button styling usage
-          prioBtn1Color: '#313437',
-          prioBtn2Color: '#313437',
-          prioBtn3Color: '#313437',
-  
-          rptBtn1Color: '#313437',
-          rptBtn2Color: '#313437',
-          rptBtn3Color: '#313437',
-        };
-      }
+      this._queryTask(taskId);
+    } else {
+      //Add Task
+      this.state = {
+        selectedColor: '#161718',
+        priority: '',
+        title: '',
+        labelColor: 'white',
 
-     
+        taskId: taskId,
+
+        //Reminder
+        dateText: '',
+        time: '',
+
+        //For button styling usage
+        prioBtn1Color: '#313437',
+        prioBtn2Color: '#313437',
+        prioBtn3Color: '#313437',
+      };
+    }
+
+    console.log(this.state);
   }
 
-  
+  _queryTask(taskId) {
+    console.log('Line 1');
+    this.db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM todo WHERE id =?',
+        [taskId],
+        (tx, results) => {
+          console.log('Line 2');
+
+          if (results.rows.length) {
+            var obj = JSON.parse(results.rows.item(0).reminder);
+
+            this.setState(
+              {
+                selectedColor: results.rows.item(0).colour || '#161718',
+                priority: results.rows.item(0).priority || '',
+                title: results.rows.item(0).title || '',
+                labelColor: 'white',
+
+                //Reminder
+                dateText: obj.dateText || '',
+                time: obj.time || '2400',
+
+                taskId: taskId,
+                //For button styling usage
+              },
+              function () {
+                console.log(this.state);
+              },
+            );
+
+            if (this.state.priority === 'Low') {
+              this.setState({ prioBtn1Color: 'red' });
+            } else if (this.state.priority === 'Medium') {
+              this.setState({ prioBtn2Color: 'red' });
+            } else {
+              this.setState({ prioBtn3Color: 'red' });
+            }
+          }
+        },
+      );
+    });
+  }
+
+  //REMEMBER TO CREATE REFRESH ON MAIN SCREEN AFTER INSERT DATA
+  _insertTask(taskId) {
+    var obj = { dateText: this.state.dateText, time: this.state.time };
+    var reminder = JSON.stringify(obj);
+    this.db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO todo(name,colour,priority,reminder) VALUES(?,?,?,?) WHERE id=?',
+        [
+          this.state.title,
+          this.state.selectedColor,
+          this.state.priority,
+          reminder,
+          taskId,
+        ],
+      );
+    });
+  }
+
+  _insertNewTask() {
+    var obj = { dateText: this.state.dateText, time: this.state.time };
+    var reminder = JSON.stringify(obj);
+    this.db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO todo(name,colour,priority,reminder) VALUES(?,?,?,?)',
+        [
+          this.state.title,
+          this.state.selectedColor,
+          this.state.priority,
+          reminder,
+        ],
+      );
+    });
+  }
 
   openDatePicker = async () => {
     try {
@@ -143,10 +215,8 @@ export default class addTask extends Component {
   }
 
   render() {
-    
     return (
       <View style={{ flex: 1 }}>
-      
         {/* Header */}
         <View
           style={[
@@ -188,6 +258,11 @@ export default class addTask extends Component {
                   'Time: ' +
                   this.state.time,
               );
+              if (this.state.taskId != null) {
+                this._insertTask(taskId);
+              } else {
+                this._insertNewTask;
+              }
             }}>
             <Image style={styles.icon} source={require('../Image/tick2.png')} />
           </TouchableOpacity>
@@ -365,70 +440,6 @@ export default class addTask extends Component {
               />
             </View>
           </View>
-
-          {/* Repeat */}
-          {/* <View style={[styles.view, { paddingBottom: 30 }]}>
-            <Text style={[styles.label]}>Repeat</Text>
-
-            <View style={[styles.priority]}>
-              
-              <TouchableOpacity
-                style={[
-                  styles.touchableBtn,
-                  {
-                    left: -40,
-                    paddingHorizontal: 30,
-                    backgroundColor: this.state.rptBtn1Color,
-                  },
-                ]}
-                onPress={() => {
-                  this.setState({
-                    repeat: 'Daily',
-                    rptBtn1Color: 'red',
-                    rptBtn2Color: '#313437',
-                    rptBtn3Color: '#313437',
-                  });
-                }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Daily</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.touchableBtn,
-                  {
-                    paddingHorizontal: 25,
-                    backgroundColor: this.state.rptBtn2Color,
-                  },
-                ]}
-                onPress={() => {
-                  this.setState({
-                    repeat: 'Weekly',
-                    rptBtn1Color: '#313437',
-                    rptBtn2Color: 'red',
-                    rptBtn3Color: '#313437',
-                  });
-                }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Weekly</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.touchableBtn,
-                  { right: -40, backgroundColor: this.state.rptBtn3Color },
-                ]}
-                onPress={() => {
-                  this.setState({
-                    repeat: 'Monthly',
-                    rptBtn1Color: '#313437',
-                    rptBtn2Color: '#313437',
-                    rptBtn3Color: 'red',
-                  });
-                }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Monthly</Text>
-              </TouchableOpacity>
-            </View>
-          
-          </View> */}
         </ScrollView>
       </View>
     );

@@ -59,7 +59,7 @@ export default function App({ navigation }) {
           console.log('Ready to edit task');
 
           navigation.navigate('AddTask', {
-            taskId: '455',
+            taskId: '1',
           });
         }}>
         <Text style={styles.backTextWhite}>Edit</Text>
