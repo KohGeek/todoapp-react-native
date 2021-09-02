@@ -182,7 +182,7 @@ export default class registerScreen extends Component {
             source={require('../resources/AppLogo.png')}
           />
         </View>
-        <Text style={styles.content}>{'JOIN TODORO'}</Text>
+        <Text style={styles.content}>{'JOIN TODOLO!'}</Text>
 
         <View
           style={{

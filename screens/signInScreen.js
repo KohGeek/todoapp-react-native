@@ -127,7 +127,7 @@ export default class signInScreen extends Component {
             source={require('../Image/Login_Avatar.png')}
           />
         </View>
-        <Text style={styles.content}>{'TODORO'}</Text>
+        <Text style={styles.content}>{'TODOLO!'}</Text>
 
         <View
           style={{
