@@ -1,8 +1,8 @@
 # File sqlite-server.py
 import sqlite3
 from os import path
-from flask import Flask, jsonify, request
-from argparse import ArgumentParser
+from flask import Flask, jsonify, request, session
+from flask.ext.session import Session
 from argon2 import PasswordHasher
 
 # Change DB Name here
@@ -10,15 +10,16 @@ DB = 'account.sqlite'
 
 # Setting up various imports
 basedir = path.abspath(path.dirname(__file__))
+db = sqlite3.connect(path.join(basedir, DB))
+sess = Session()
 
 # Setting up the flask server
 server = Flask(__name__)
 server.config.update(
     DEBUG=True,
-    SECRET_KEY="Z7q2uPTP^m4L@bF%PbuZ3azg^NkMfwarzgzYmeHAX#!*A4a&4V",
-    JWT_ACCESS_LIFESPAN={"days": 30},
-    JWT_REFRESH_LIFESPAN={"days": 120},
+    SESSION_TYPE='filesystem',
 )
+sess.init_app(server)
 
 # Used for returning 400 response
 def bad_request(message):
@@ -39,6 +40,13 @@ def login():
     username = request.json['username']
     password = request.json['password']
 
+@server.route('/api/register', methods=['POST'])
+def register():
+    pass
+
+@server.route('/api/logout', methods=['POST'])
+def logout():
+    pass
 
 if __name__ == '__main__':
     server.run(host='0.0.0.0', port=5000)

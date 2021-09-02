@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "server": "python ./server/server.py",
+    "server": "cd server && python ./server.py",
     "android": "react-native run-android",
     "start": "react-native start",
     "test": "jest",
