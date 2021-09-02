@@ -105,7 +105,7 @@ export default class signInScreen extends Component {
       } else if (this.state.password == '') {
         Alert.alert('Please enter your password.');
       } else {
-        alert('Welcome back, ' + this.state.username + '!');
+        Alert.alert('Welcome back, ' + this.state.username + '!');
         this.props.navigation.navigate('Index');
       }
     };
