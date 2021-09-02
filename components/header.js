@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import moment from 'moment';
 
 import color from '../app/config/colors';
 
@@ -8,16 +9,23 @@ export default function Header({ navigation }) {
   const pressHandler = () => {
     navigation.navigate('Profile');
   };
+
+  const [currentDate, setCurrentDate] = useState('');
+  useEffect(() => {
+    var date = moment().utcOffset('+05:30').format('DD MMM YYYY');
+    setCurrentDate(date);
+  }, []);
+
   return (
     <View style={styles.header}>
       <View style={styles.time_info}>
         <Text style={styles.days}>Today</Text>
-        <Text style={styles.date}>03 July 2021</Text>
+        <Text style={styles.date}>{currentDate}</Text>
       </View>
       <View style={styles.userContainer}>
         <Icon
           style={styles.userIcon}
-          name="calendar"
+          name="refresh"
           size={30}
           color="white"
           borderColor="blue"
@@ -47,11 +55,13 @@ const styles = StyleSheet.create({
   date: {
     color: color.white,
     fontSize: 20,
+    paddingLeft: 10,
   },
 
   days: {
     fontSize: 50,
     color: color.white,
+    paddingLeft: 10,
   },
 
   header: {
