@@ -105,7 +105,7 @@ export default class signInScreen extends Component {
       } else if (this.state.password == '') {
         Alert.alert('Please enter your password.');
       } else {
-        alert('Welcome back, ' + this.state.username + '!');
+        Alert.alert('Welcome back, ' + this.state.username + '!');
         this.props.navigation.navigate('Index');
       }
     };
@@ -127,7 +127,7 @@ export default class signInScreen extends Component {
             source={require('../Image/Login_Avatar.png')}
           />
         </View>
-        <Text style={styles.content}>{'TODORO'}</Text>
+        <Text style={styles.content}>{'TODOLO!'}</Text>
 
         <View
           style={{

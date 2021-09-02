@@ -182,7 +182,7 @@ def update():
     db = sqlite3.connect(path.join(basedir, DB))
     c = db.cursor()
 
-    response_json = None
+    response_json = {}
     response_code = 400
 
     if 'current_username' not in request.json:
@@ -207,10 +207,10 @@ def update():
 
                 if data is None:
                     c.execute("UPDATE users SET username=? WHERE current_username=?", (username, current_username))
-                    response_json = {'message': 'Username updated'}
+                    response_json['username_status'] = 'Username updated'
                     response_code = 200
                 else: 
-                    response_json = {'message': 'Username already exists'}
+                    response_json['username_status'] = 'Username already exists'
             
             # if json contains email, update email if not already in database
             if 'email' in request.json:
@@ -220,10 +220,10 @@ def update():
 
                 if data is None:
                     c.execute("UPDATE users SET email=? WHERE current_username=?", (email, current_username))
-                    response_json = {'message': 'Email updated'}
+                    response_json['email_status'] = 'Email updated'
                     response_code = 200
                 else:
-                    response_json = {'message': 'Email already exists'}
+                    response_json['email_status'] = 'Email already exists'
 
             # if json contains password, update password if not already in database
             if 'password' in request.json:
@@ -231,7 +231,7 @@ def update():
                 hashed_password = PasswordHasher().hash(password)
                 c.execute("UPDATE users SET hashedpassword=? WHERE current_username=?", (hashed_password, current_username))
 
-                response_json = {'message': 'Password updated'}
+                response_json['password_message'] = 'Password updated'
                 response_code = 200
 
     db.commit()

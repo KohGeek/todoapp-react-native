@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 import {
   StyleSheet,
   Image,
@@ -155,32 +155,14 @@ export default class addTask extends Component {
           ]}>
           {/* Not yet implement onPress */}
           <TouchableOpacity
-            style={{ left: -100 }}
-            onPress={() => {
-              this.setState({
-                selectedColor: '#161718',
-                priority: '',
-                repeat: '',
-                title: '',
-
-                //Reminder
-                dateText: '',
-                time: '',
-
-                prioBtn1Color: '#313437',
-                prioBtn2Color: '#313437',
-                prioBtn3Color: '#313437',
-
-                rptBtn1Color: '#313437',
-                rptBtn2Color: '#313437',
-                rptBtn3Color: '#313437',
-              });
-
-              alert('Add task cancelled !' )
-            }}>
-            <Image
-              style={styles.icon}
-              source={require('../Image/cancel-xxl.png')}
+            onPress={() => this.props.navigation.goBack()}
+            style={{ left: -100 }}>
+            <Icon
+              style={styles.userIcon}
+              name="arrow-back"
+              size={30}
+              color="white"
+              borderColor="blue"
             />
           </TouchableOpacity>
 
