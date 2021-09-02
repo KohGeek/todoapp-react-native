@@ -10,6 +10,7 @@ from argon2 import PasswordHasher
 
 # Change DB Name here
 DB = 'account.sqlite'
+autologin_on_register = True
 
 # Setting up various imports
 basedir = path.abspath(path.dirname(__file__))
@@ -42,7 +43,7 @@ def login():
         username = request.json['username']
         password = request.json['password']
 
-        db.execute("SELECT password FROM users WHERE username=?", username)
+        db.execute("SELECT password, email FROM users WHERE username=?", username)
         data = db.fetchone()
 
         if data is None:
@@ -51,20 +52,53 @@ def login():
             match = PasswordHasher().verify(password, data[0])
             if match:
                 session['username'] = username
-                response_json = {'message': 'Login successful'}
+                response_json = {
+                    'message': 'Login successful',
+                    'username': username,
+                    'email': data[1],
+                }
                 response_code = 200
             else:
                 response_json = {'message': 'Invalid password'}
 
     return make_response(jsonify(response_json), response_code)
 
+
 @server.route('/api/register', methods=['POST'])
 def register():
-    pass
+    
+    response_json = None
+    response_code = 400
+
+    if not request.json:
+        response_json = {'message': 'No JSON data found'}
+    elif 'username' not in request.json or 'password' not in request.json or 'email' not in request.json:
+        response_json = {'message': 'Missing username or password or email'}
+    else:
+
+        username = request.json['username']
+        password = request.json['password']
+        email = request.json['email']
+
+        hashed_password = PasswordHasher().hash(password)
+        db.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (username, hashed_password, email))
+        db.commit()
+        response_json = {
+            'message': 'Registration successful',
+            'username': username,
+            'email': email,
+        }
+        response_code = 200
+
+        if autologin_on_register:
+            session['username'] = username
+    
+    return make_response(jsonify(response_json), response_code)
 
 @server.route('/api/logout', methods=['POST'])
 def logout():
     session.pop('username', None)
+
 
 # The following method are for syncing the database
 @server.route('/api/push', methods=['POST'])
