@@ -12,7 +12,7 @@ import {
 /**
  * InputWithLabel
  */
-class InputWithLabel extends Component {
+class Input extends Component {
   constructor(props) {
     super(props);
 
@@ -181,7 +181,7 @@ const buttonStyles = StyleSheet.create({
  * Export modules
  */
 module.exports = {
-  InputWithLabel: InputWithLabel,
+  Input: Input,
   PickerWithLabel: PickerWithLabel,
   AppButton: AppButton,
 };

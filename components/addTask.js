@@ -10,7 +10,7 @@ import {
   DatePickerAndroid,
 } from 'react-native';
 
-import { InputWithLabel } from './UI';
+import {Input}  from './UI_NoLabel';
 import { ColorPicker } from 'react-native-btr';
 import TimePicker from 'react-native-super-timepicker';
 
@@ -158,10 +158,8 @@ export default class addTask extends Component<Props> {
                   this.state.dateText +
                   '\n' +
                   'Time: ' +
-                  this.state.time +
-                  '\n' +
-                  'Repeat: ' +
-                  this.state.repeat,
+                  this.state.time 
+                  
               );
             }}>
             <Image style={styles.icon} source={require('../Image/tick2.png')} />
@@ -175,7 +173,7 @@ export default class addTask extends Component<Props> {
             <Text style={[styles.label, { color: this.state.labelColor }]}>
               Title
             </Text>
-            <InputWithLabel
+            <Input
               style={styles.inputStyle}
               value={this.state.title}
               placeholder=" Enter Title"
@@ -185,7 +183,7 @@ export default class addTask extends Component<Props> {
                 });
               }}
               keyboardType={'default'}
-              selectTextOnFocus={true}></InputWithLabel>
+              selectTextOnFocus={true}></Input>
           </View>
 
           {/* Color Picker */}
@@ -223,12 +221,24 @@ export default class addTask extends Component<Props> {
                   },
                 ]}
                 onPress={() => {
-                  this.setState({
+
+                  if(this.state.prioBtn1Color === 'red'){
+                    this.setState({
+                      priority:'',
+                      prioBtn1Color: '#313437',
+                    })
+                  }else{
+                    
+                    this.setState({
                     priority: 'Low',
                     prioBtn1Color: 'red',
                     prioBtn2Color: '#313437',
                     prioBtn3Color: '#313437',
                   });
+                  
+                  }
+
+                 
                 }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>Low</Text>
               </TouchableOpacity>
@@ -242,12 +252,24 @@ export default class addTask extends Component<Props> {
                   },
                 ]}
                 onPress={() => {
-                  this.setState({
+
+                  if(this.state.prioBtn2Color === 'red'){
+                    this.setState({
+                      priority:'',
+                      prioBtn2Color: '#313437',
+                    })
+                  }else{
+                    
+                    this.setState({
                     priority: 'Medium',
                     prioBtn1Color: '#313437',
                     prioBtn2Color: 'red',
                     prioBtn3Color: '#313437',
                   });
+                  
+                  }
+
+                  
                 }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>Medium</Text>
               </TouchableOpacity>
@@ -262,12 +284,24 @@ export default class addTask extends Component<Props> {
                   },
                 ]}
                 onPress={() => {
-                  this.setState({
+
+                  if(this.state.prioBtn3Color === 'red'){
+                    this.setState({
+                      priority:'',
+                      prioBtn3Color: '#313437',
+                    })
+                  }else{
+                    
+                    this.setState({
                     priority: 'High',
                     prioBtn1Color: '#313437',
                     prioBtn2Color: '#313437',
                     prioBtn3Color: 'red',
                   });
+                  
+                  }
+
+                  
                 }}>
                 <Text style={{ color: 'white', fontSize: 20 }}>High</Text>
               </TouchableOpacity>
@@ -285,7 +319,7 @@ export default class addTask extends Component<Props> {
                 style={{ backgroundColor: 'white', borderRadius: 50 }}
                 onPress={this.openDatePicker}>
                 <View>
-                  <InputWithLabel
+                  <Input
                     //label="Date"
                     style={styles.inputStyle}
                     value={this.state.dateText}
@@ -300,8 +334,8 @@ export default class addTask extends Component<Props> {
 
               <TouchableOpacity onPress={() => this.TimePicker.open()}>
                 <View>
-                  <InputWithLabel
-                    label="Time"
+                  <Input
+                    
                     style={styles.inputStyle}
                     value={this.state.time}
                     placeholder="Event Time"
@@ -322,11 +356,11 @@ export default class addTask extends Component<Props> {
           </View>
 
           {/* Repeat */}
-          <View style={[styles.view, { paddingBottom: 30 }]}>
+          {/* <View style={[styles.view, { paddingBottom: 30 }]}>
             <Text style={[styles.label]}>Repeat</Text>
 
             <View style={[styles.priority]}>
-              {/* Issue 1: When first click the value is not stored(OnPress issue) */}
+              
               <TouchableOpacity
                 style={[
                   styles.touchableBtn,
@@ -382,7 +416,9 @@ export default class addTask extends Component<Props> {
                 <Text style={{ color: 'white', fontSize: 20 }}>Monthly</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          
+          </View> */}
+          
         </ScrollView>
       </View>
     );
