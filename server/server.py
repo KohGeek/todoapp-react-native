@@ -106,6 +106,10 @@ def register():
 def logout():
     session.pop('username', None)
 
+    response_json = {'message': 'Logout successful'}
+
+    return make_response(jsonify(response_json), 200)
+
 
 # The following method are for syncing the database
 @socketio.on('push')
