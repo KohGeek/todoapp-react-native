@@ -68,11 +68,6 @@ export default function App({ navigation }) {
         <Text style={styles.backTextWhite}>Close</Text>
       </TouchableOpacity> */}
       <TouchableOpacity
-        style={[styles.backRightBtn, styles.addSubTaskbtn]}
-        onPress={() => console.log('Ready to add new task')}>
-        <Text style={styles.backTextWhite}>Add</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
         onPress={() => console.log('Ready to edit task')}>
         <Text style={styles.backTextWhite}>Edit</Text>
@@ -124,7 +119,7 @@ export default function App({ navigation }) {
               renderItem={({ item }) => <TodoItem item={item} />}
               renderHiddenItem={renderHiddenItem}
               leftOpenValue={300}
-              rightOpenValue={-200}
+              rightOpenValue={-150}
               previewRowKey={'0'}
               previewOpenValue={-40}
               previewOpenDelay={3000}

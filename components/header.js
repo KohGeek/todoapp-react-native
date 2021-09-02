@@ -23,20 +23,26 @@ export default function Header({ navigation }) {
         <Text style={styles.date}>{currentDate}</Text>
       </View>
       <View style={styles.userContainer}>
-        <Icon
-          style={styles.userIcon}
-          name="refresh"
-          size={30}
-          color="white"
-          borderColor="blue"
-        />
-        <Icon
-          style={styles.userIcon}
-          name="sort-amount-desc"
-          size={30}
-          color="white"
-          borderColor="blue"
-        />
+        <TouchableOpacity>
+          <Icon
+            style={styles.userIcon}
+            name="refresh"
+            size={30}
+            color="white"
+            borderColor="blue"
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Icon
+            style={styles.userIcon}
+            name="sort-amount-desc"
+            size={30}
+            color="white"
+            borderColor="blue"
+          />
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={pressHandler}>
           <Icon
             style={styles.userIcon}
