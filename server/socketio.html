@@ -14,12 +14,23 @@
     ></script>
     <script>
       let data = {
-        username: 'admin',
+        username: 'user',
         password: 'admin',
-        email: 'admin@admin.com',
+        email: 'admin@google.com',
       };
       let token =
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzMyNjA4NjAsImlhdCI6MTYzMDU4MjQ2MCwic3ViIjoxfQ.SranRMGAEaMl4zcCCErGm2wFU5IVNvm3-myh957M3qE';
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzMyNzQ2MjcsImlhdCI6MTYzMDU5NjIyNywic3ViIjoyfQ.-KQosRZ7K97KeRN3tr7c00XI3oef029bkE2WO5YqkwY';
+
+      // fetch('http://localhost:5000/api/logout', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Accept: 'application/json',
+      //   },
+      //   body: JSON.stringify(token),
+      // }).then(res => {
+      //   console.log('Request complete! response:', res);
+      // });
 
       const sio = io('http://127.0.0.1:5000/api', {
         transports: ['websocket', 'polling'],
@@ -29,6 +40,7 @@
       sio.on('connect', () => {
         console.log('connected');
         sio.emit('push', { token: token, test: 'test' });
+        sio.emit('pull', { token: token });
       });
 
       sio.on('error', data => {
