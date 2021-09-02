@@ -10,7 +10,7 @@ import {
   DatePickerAndroid,
 } from 'react-native';
 
-import {Input}  from './UI_NoLabel';
+import {Input}  from '../src/UI.js';
 import { ColorPicker } from 'react-native-btr';
 import TimePicker from 'react-native-super-timepicker';
 

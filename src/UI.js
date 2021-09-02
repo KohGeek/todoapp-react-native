@@ -79,6 +79,68 @@ const inputStyles = StyleSheet.create({
   },
 });
 
+class Input extends Component {
+  constructor(props) {
+    super(props);
+
+    this.orientation = this.props.orientation
+      ? this.props.orientation == 'horizontal'
+        ? 'row'
+        : 'column'
+      : 'column';
+  }
+
+  render() {
+    return (
+      <View
+        style={[inputStyles2.container, { flexDirection: this.orientation }]}>
+        {/* <Text style={inputStyles.label}>
+                    {this.props.label ? this.props.label : ''}
+                </Text> */}
+        <TextInput
+          style={[inputStyles2.input, this.props.style]}
+          placeholderTextColor="white"
+          placeholder={this.props.placeholder ? this.props.placeholder : ''}
+          value={this.props.value}
+          onChangeText={this.props.onChangeText}
+          multiline={this.props.multiline ? this.props.multiline : false}
+          keyboardType={
+            this.props.keyboardType ? this.props.keyboardType : 'default'
+          }
+          secureTextEntry={
+            this.props.secureTextEntry ? this.props.secureTextEntry : false
+          }
+          selectTextOnFocus={
+            this.props.selectTextOnFocus ? this.props.selectTextOnFocus : false
+          }
+          editable={this.props.editable !== null ? this.props.editable : true}
+        />
+      </View>
+    );
+  }
+}
+
+
+
+
+const inputStyles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  label: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 3,
+    textAlignVertical: 'center',
+    color: 'white',
+  },
+  input: {
+    flex: 3,
+    fontSize: 20,
+  },
+});
+
 /* App Button */
 class AppButton extends Component {
   constructor(props) {
@@ -147,6 +209,7 @@ const buttonStyles = StyleSheet.create({
 
 /* Export Modules */
 module.exports = {
+  Input:Input,
   InputWithLabel: InputWithLabel,
   AppButton: AppButton,
 };
