@@ -175,7 +175,7 @@ def register():
     return make_response(jsonify(response_json), response_code)
 
 # Special route for updating info
-# json request must contain current_username
+# json request must contain current_username and current_password
 @server.route('/api/update', methods=['POST'])
 def update():
 
@@ -185,47 +185,54 @@ def update():
     response_json = None
     response_code = 400
 
-    # will fail 
     if 'current_username' not in request.json:
         response_json = {'message': 'Missing current username'}
-
+    elif 'current_password' not in request.json:
+        response_json = {'message': 'Missing current password'}
     else:
         current_username = request.json['current_username']
+        current_password = request.json['current_password']
 
-        # if json contains username, update username if not already in database
-        if 'username' in request.json:
-            username = request.json['username']
-            c.execute("SELECT * FROM users WHERE username=?", (username,))
-            data = c.fetchone()
+        c.execute("SELECT hashedpassword, uuid FROM users WHERE username=?", (current_username,))
+        data = c.fetchone()
 
-            if data is None:
-                c.execute("UPDATE users SET username=? WHERE current_username=?", (username, current_username))
-                response_json = {'message': 'Username updated'}
+        if not PasswordHasher().verify(data[0], current_password):
+            response_json = {'message': 'Invalid current password'}
+        else:
+            # if json contains username, update username if not already in database
+            if 'username' in request.json:
+                username = request.json['username']
+                c.execute("SELECT * FROM users WHERE username=?", (username,))
+                data = c.fetchone()
+
+                if data is None:
+                    c.execute("UPDATE users SET username=? WHERE current_username=?", (username, current_username))
+                    response_json = {'message': 'Username updated'}
+                    response_code = 200
+                else: 
+                    response_json = {'message': 'Username already exists'}
+            
+            # if json contains email, update email if not already in database
+            if 'email' in request.json:
+                email = request.json['email']
+                c.execute("SELECT * FROM users WHERE email=?", (email,))
+                data = c.fetchone()
+
+                if data is None:
+                    c.execute("UPDATE users SET email=? WHERE current_username=?", (email, current_username))
+                    response_json = {'message': 'Email updated'}
+                    response_code = 200
+                else:
+                    response_json = {'message': 'Email already exists'}
+
+            # if json contains password, update password if not already in database
+            if 'password' in request.json:
+                password = request.json['password']
+                hashed_password = PasswordHasher().hash(password)
+                c.execute("UPDATE users SET hashedpassword=? WHERE current_username=?", (hashed_password, current_username))
+
+                response_json = {'message': 'Password updated'}
                 response_code = 200
-            else: 
-                response_json = {'message': 'Username already exists'}
-        
-        # if json contains email, update email if not already in database
-        if 'email' in request.json:
-            email = request.json['email']
-            c.execute("SELECT * FROM users WHERE email=?", (email,))
-            data = c.fetchone()
-
-            if data is None:
-                c.execute("UPDATE users SET email=? WHERE current_username=?", (email, current_username))
-                response_json = {'message': 'Email updated'}
-                response_code = 200
-            else:
-                response_json = {'message': 'Email already exists'}
-
-        # if json contains password, update password if not already in database
-        if 'password' in request.json:
-            password = request.json['password']
-            hashed_password = PasswordHasher().hash(password)
-            c.execute("UPDATE users SET hashedpassword=? WHERE current_username=?", (hashed_password, current_username))
-
-            response_json = {'message': 'Password updated'}
-            response_code = 200
 
     db.commit()
     db.close()
