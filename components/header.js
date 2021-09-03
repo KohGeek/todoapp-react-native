@@ -3,13 +3,18 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import { styles } from '../style';
-import { syncToServer } from './functions';
+import { getEmail, getUsername, syncToServer } from './functions';
 
-export default function Header({ navigation, _update }) {
-  const pressHandler = () => {
-    navigation.navigate('EditProfileScreen');
-  };
+const pressHandler = async () => {
+  const username = await getUsername();
+  const email = await getEmail();
+  navigation.navigate('EditProfileScreen', {
+    username: username,
+    email: email,
+  });
+};
 
+export default function Header({ navigation }) {
   const [currentDate, setCurrentDate] = useState('');
   useEffect(() => {
     var date = moment().utcOffset('+05:30').format('DD MMM YYYY');
@@ -41,7 +46,10 @@ export default function Header({ navigation, _update }) {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={pressHandler}>
+        <TouchableOpacity
+          onPress={async () => {
+            await pressHandler();
+          }}>
           <Icon name="user-circle" size={30} color="white" borderColor="blue" />
         </TouchableOpacity>
       </View>
