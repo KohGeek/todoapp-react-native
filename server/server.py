@@ -20,7 +20,7 @@ from argon2 import PasswordHasher
 
 # Change DB Name here
 DB = 'account.sqlite'
-autologin_on_register = True
+autologin_on_register = False
 
 # Setting up various imports
 basedir = path.abspath(path.dirname(__file__))
@@ -196,6 +196,9 @@ def update():
         c.execute("SELECT hashedpassword, uuid FROM users WHERE username=?", (current_username,))
         data = c.fetchone()
 
+        response_json['username'] = current_username
+        response_json['email'] = ''
+
         if not PasswordHasher().verify(data[0], current_password):
             response_json = {'message': 'Invalid current password'}
         else:
@@ -208,6 +211,7 @@ def update():
                 if data is None:
                     c.execute("UPDATE users SET username=? WHERE username=?", (username, current_username))
                     response_json['username_status'] = 'Username updated'
+                    response_json['username'] = username
                     response_code = 200
                 else: 
                     response_json['username_status'] = 'Username already exists'
@@ -221,6 +225,7 @@ def update():
                 if data is None:
                     c.execute("UPDATE users SET email=? WHERE username=?", (email, current_username))
                     response_json['email_status'] = 'Email updated'
+                    response_json['email'] = email
                     response_code = 200
                 else:
                     response_json['email_status'] = 'Email already exists'
