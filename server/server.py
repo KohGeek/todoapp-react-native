@@ -303,6 +303,7 @@ def push(json_data):
 
 @socketio.on('pull', namespace='/api')
 def pull(json_data):
+    filepath = None
     try:
         uuid = decode_auth_token(json_data['token'])
         filename = str(uuid['sub']) + '.json'
@@ -315,6 +316,12 @@ def pull(json_data):
         emit('error', {'message': 'Token expired'})
     except jwt.InvalidTokenError:
         emit('error', {'message': 'Invalid token/Logged out'})
+    except FileNotFoundError:
+        f = open(filepath, 'x')
+        obj = {'database': []}
+        f.write(json.dumps(obj, ensure_ascii=False, indent=4))
+        f.close()
+        emit('pull', obj)
 
 if __name__ == '__main__':
     if not path.exists(userdir):
