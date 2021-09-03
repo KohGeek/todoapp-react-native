@@ -41,7 +41,7 @@ export default function App({ navigation, route }) {
   // };
 
   const submitHandler = text => {
-    if (text.length > 3) {
+    if (text.length >= 1) {
       // console.log('Ready to add ' + text);
       db.transaction(function (tx) {
         tx.executeSql(
@@ -54,7 +54,7 @@ export default function App({ navigation, route }) {
       });
       _update();
     } else {
-      Alert.alert('OOPS!', 'Todos myst be over 3 chars long!', [
+      Alert.alert('OOPS!', 'Task added cannot be empty!!', [
         { text: 'Understood', onPress: () => console.log('alert closed') },
       ]);
     }
