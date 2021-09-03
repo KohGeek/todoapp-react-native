@@ -56,11 +56,9 @@ export default class addTask extends Component {
       this.errorDb,
     );
 
-    console.log(this.props.route.params.data);
     let data = JSON.parse(this.props.route.params.data);
     let reminder = JSON.parse(data.reminder);
 
-    console.log('Task ID: ' + data.id);
     this.state = {
       selectedColor: data.colour || 'white',
       priority: data.priority || '',
@@ -78,52 +76,6 @@ export default class addTask extends Component {
       prioBtn2Color: '#313437',
       prioBtn3Color: '#313437',
     };
-
-    console.log(this.state);
-  }
-
-  _queryTask(data) {
-    console.log('Line 1');
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM todo WHERE id =?',
-        [data.id],
-        (tx, results) => {
-          console.log('Line 2');
-
-          if (results.rows.length) {
-            var obj = JSON.parse(results.rows.item(0).reminder);
-
-            this.setState(
-              {
-                selectedColor: results.rows.item(0).colour || '#161718',
-                priority: results.rows.item(0).priority || '',
-                title: results.rows.item(0).title || '',
-                labelColor: 'white',
-
-                //Reminder
-                dateText: obj.dateText || '',
-                time: obj.time || '2400',
-
-                taskId: taskId,
-                //For button styling usage
-              },
-              function () {
-                console.log(this.state);
-              },
-            );
-
-            if (this.state.priority === 'Low') {
-              this.setState({ prioBtn1Color: 'red' });
-            } else if (this.state.priority === 'Medium') {
-              this.setState({ prioBtn2Color: 'red' });
-            } else {
-              this.setState({ prioBtn3Color: 'red' });
-            }
-          }
-        },
-      );
-    });
   }
 
   //REMEMBER TO CREATE REFRESH ON MAIN SCREEN AFTER INSERT DATA
@@ -184,7 +136,7 @@ export default class addTask extends Component {
         console.log('sql error' + error.message);
       },
       () => {
-        console.log('transa ok!');
+        console.log('transaction ok!');
       },
     );
   }
@@ -237,14 +189,18 @@ export default class addTask extends Component {
         <View
           style={[
             styles.header,
-            { backgroundColor: this.state.selectedColor, flex: 0.1125 },
+            {
+              backgroundColor: this.state.selectedColor,
+              flex: 0.1125,
+              flexDirection: 'row',
+            },
           ]}>
           {/* Not yet implement onPress */}
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
-            style={{ left: -80 }}>
+            style={{ flex: 1, marginLeft: 20 }}>
             <Icon
-              style={styles.userIcon}
+              // style={styles.userIcon}
               name="arrow-back"
               size={30}
               color="black"
@@ -252,44 +208,31 @@ export default class addTask extends Component {
             />
           </TouchableOpacity>
 
-          <Text style={styles.title}>{this.props.route.params.action}</Text>
+          <Text style={[styles.title, { flex: 9 }]}>
+            {this.props.route.params.action}
+          </Text>
 
           <TouchableOpacity
-            style={{ right: -80 }}
+            style={{ flex: 2 }}
             onPress={() => {
-              alert(
-                'Task added !\n\n' +
-                  'Title: ' +
-                  this.state.title +
-                  '\n' +
-                  'Selected Color: ' +
-                  this.state.selectedColor +
-                  '\n' +
-                  'Priority: ' +
-                  this.state.priority +
-                  '\n' +
-                  'Reminder Date: ' +
-                  this.state.dateText +
-                  '\n' +
-                  'Time: ' +
-                  this.state.time,
-              );
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
                 console.log('Ready to update task!!');
+                alert('Task edited successfully !');
                 this.props.navigation.navigate('Index', {
                   AddTask: true,
                 });
               } else {
                 this._insertNewTask();
                 console.log('Ready to add task!!');
+                alert('Task added successfully !');
                 this.props.navigation.navigate('Index', {
                   AddTask: true,
                 });
               }
             }}>
             <Icon
-              style={styles.userIcon}
+              // style={styles.userIcon}
               name="checkmark-sharp"
               size={30}
               color="black"

@@ -63,7 +63,6 @@ def decode_auth_token(auth_token):
     print(data)
 
     data = jwt.decode(data[0], server.config.get('SECRET_KEY'), algorithms="HS256")
-    print(data)
     return data
 
 def token_query(token, type):
@@ -281,9 +280,7 @@ def logout():
 @socketio.on('push', namespace='/api')
 def push(json_data):
     try:
-        print("got data" + json_data['token'])
         uuid = decode_auth_token(json_data['token'])
-        print("decoded data")
         json_data.pop('token')
         filename = str(uuid['sub']) + '.json'
         filepath = path.join(userdir, filename)
@@ -301,7 +298,6 @@ def push(json_data):
 def pull(json_data):
     try:
         uuid = decode_auth_token(json_data['token'])
-        json_data.pop('token')
         filename = str(uuid['sub']) + '.json'
         filepath = path.join(userdir, filename)
         # read uuid + .json file and send it as json data
