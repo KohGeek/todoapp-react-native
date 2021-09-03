@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, ScrollView, View, Text, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
-import { useFocusEffect } from '@react-navigation/native';
 import { validatePassword } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
 
@@ -14,13 +13,22 @@ export default class EditAccountDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.object = {
       new_username: '',
-      username: '', //current username
       new_email: '',
       current_password: '',
       new_password1: '',
       new_password2: '',
+      email_change: false,
+      username_change: false,
+      password_change: false,
+    };
+
+    var data = this.props.route.params;
+
+    this.state = {
+      username: data.username, //current username
+      email: data.email, //current email
     };
   }
 
@@ -33,6 +41,8 @@ export default class EditAccountDetails extends Component {
   }
 
   async _saveSettings(new_username, new_email) {
+    console.log(new_username);
+    console.log(new_email);
     try {
       let var1 = ['username', new_username];
       console.log('var1: ' + var1);
@@ -49,35 +59,8 @@ export default class EditAccountDetails extends Component {
     }
   }
 
-  async _readSettings() {
-    newStates = {};
-
-    try {
-      let keys = await AsyncStorage.multiGet(
-        ['new_username', 'new_email', 'username'],
-        (err, stores) => {
-          stores.map((result, i, store) => {
-            // get at each store's key/value so you can work with it
-            let key = store[i][0]; // the key
-            let value = store[i][1]; // the value
-            {
-              newStates[key] = value;
-            }
-          });
-          this.setState(newStates);
-          console.log(newStates);
-        },
-      );
-    } catch (error) {
-      console.log('## ERROR READING ITEMS ##: ', error);
-    }
-  }
-
   _update() {
-    var success = false;
-
     var url = `${Config.API_URL}:${Config.API_PORT}/api/update`;
-    console.log(url);
 
     fetch(url, {
       method: 'POST',
@@ -87,30 +70,27 @@ export default class EditAccountDetails extends Component {
       },
       body: JSON.stringify({
         current_username: this.state.username,
-        current_password: this.state.current_password,
-        username: this.state.new_username,
-        email: this.state.new_email,
-        password: this.state.new_password1,
+        current_password: this.object.current_password,
+        username: this.object.new_username,
+        email: this.object.new_email,
+        password: this.object.new_password1,
+        email_change: this.object.email_change,
+        username_change: this.object.username_change,
+        password_change: this.object.password_change,
       }),
     })
       .then(response => {
         if (!response.ok) {
-          success = false;
-          throw Error('Error ' + response.status);
+          throw Error(response.status + ' : ' + response.json().message);
         } else {
-          success = true;
           this.props.navigation.navigate('EditProfileScreen');
         }
         return response.json();
       })
-
       .then(data => {
-        if (success) {
-          this._saveSettings(data.new_username, data.new_email);
-          Alert.alert('Details Successfully saved!');
-        } else {
-          Alert.alert('Details Failed to save! Please input again.');
-        }
+        var message = data.message;
+        console.log(message);
+        this._saveSettings(data.username, data.email);
       })
       .catch(error => {
         console.error(error);
@@ -118,14 +98,25 @@ export default class EditAccountDetails extends Component {
   }
 
   pressHandler = () => {
-    if (this.state.current_password == '') {
+    if (this.object.current_password == '') {
       Alert.alert('Please enter your Current Password!');
     } else {
       if (
-        validatePassword(this.state.new_password1, this.state.new_password2) !=
-        0
+        validatePassword(
+          this.object.new_password1,
+          this.object.new_password2,
+        ) == 0
       ) {
-        this.state.new_password1 = '';
+        console.log('password match');
+        this.object.password_change = true;
+      }
+      if (this.object.new_email != '') {
+        console.log('email change');
+        this.object.email_change = true;
+      }
+      if (this.object.new_username != '') {
+        console.log('username change');
+        this.object.username_change = true;
       }
       this._update();
     }
@@ -161,7 +152,7 @@ export default class EditAccountDetails extends Component {
             style={styles.passinput}
             placeholder={'Please fill this first'}
             onChangeText={current_password => {
-              this.setState({ current_password });
+              this.object.current_password = current_password;
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -191,7 +182,7 @@ export default class EditAccountDetails extends Component {
             label={'New Username'}
             placeholder={'Type here (Optional)'}
             onChangeText={new_username => {
-              this.setState({ new_username });
+              this.object.new_username = new_username;
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -221,7 +212,7 @@ export default class EditAccountDetails extends Component {
             label={'New Email'}
             placeholder={'Type here (Optional)'}
             onChangeText={new_email => {
-              this.setState({ new_email });
+              this.object.new_email = new_email;
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -251,7 +242,7 @@ export default class EditAccountDetails extends Component {
             label={'New Password'}
             placeholder={'Type here (Optional)'}
             onChangeText={new_password1 => {
-              this.setState({ new_password1 });
+              this.object.new_password1 = new_password1;
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -269,7 +260,7 @@ export default class EditAccountDetails extends Component {
             label={'Re-Type Password'}
             placeholder={'Re-Type new password'}
             onChangeText={new_password2 => {
-              this.setState({ new_password2 });
+              this.object.new_password2 = new_password2;
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
