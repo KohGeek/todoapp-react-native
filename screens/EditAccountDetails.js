@@ -227,7 +227,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Username'}
             placeholder={'Type here (Optional)'}
-            secureTextEntry={true}
             onChangeText={new_username => {
               this.setState({ new_username });
             }}
@@ -259,8 +258,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Email'}
             placeholder={'Type here (Optional)'}
-        
-            secureTextEntry={true}
             onChangeText={new_email => {
             
               this.setState({ new_email });
@@ -293,8 +290,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Password'}
             placeholder={'Type here (Optional)'}
-           
-            secureTextEntry={true}
             onChangeText={new_password1 => {
               
               this.setState({ new_password1 });
@@ -315,8 +310,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'Re-Type Password'}
             placeholder={'Re-Type new password'}
-           
-            secureTextEntry={true}
             onChangeText={new_password2 => {
               
               this.setState({ new_password2 });
