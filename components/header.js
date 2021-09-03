@@ -8,7 +8,7 @@ import { syncToServer } from './functions';
 
 export default function Header({ navigation, _update }) {
   const pressHandler = () => {
-    navigation.navigate('Profile');
+    navigation.navigate('EditProfileScreen');
   };
 
   const [currentDate, setCurrentDate] = useState('');
