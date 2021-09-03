@@ -237,6 +237,33 @@ def update():
     db.commit()
     db.close()
     return make_response(jsonify(response_json), response_code)
+
+@server.route('/api/fetch', methods=['GET'])
+def fetch():
+    db = sqlite3.connect(path.join(basedir, DB))
+    c = db.cursor()
+    response_json = {}
+    response_code = 400
+
+    if 'token' not in request.json:
+        response_json = {'message': 'Missing token'}
+    else:
+        try:
+            token = decode_auth_token(request.json['token'])
+            c.execute("SELECT username, email FROM users WHERE uuid=?", (token,))
+            data = c.fetchone()
+            response_json = {
+                'username': data[0],
+                'email': data[1],
+            }
+            response_code = 200
+        except jwt.ExpiredSignatureError:
+            response_json = {'message': 'Token expired'}
+        except jwt.InvalidTokenError:
+            response_json = {'message': 'Invalid token/Logged out'}
+
+    db.close()
+    return make_response(jsonify(response_json), response_code)
         
 
 @server.route('/api/logout', methods=['POST'])
