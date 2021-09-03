@@ -25,7 +25,7 @@ export default class EditAccountDetails extends Component {
 
     this.state = {
       new_username: '',
-      username: '',
+      username: '', //current username
       new_email: '',
       current_password: '',
       new_password1: '',
@@ -51,7 +51,7 @@ export default class EditAccountDetails extends Component {
       let var1 = ['username', new_username ? username.toString() : ''];
       console.log('var1: ' + var1);
 
-      let var2 = ['email', new_email ? message.toString() : ''];
+      let var2 = ['new_email', new_email ? message.toString() : ''];
       console.log('var2: ' + var2);
 
       let var3 = ['email', new_password ? message.toString() : ''];
@@ -100,12 +100,11 @@ export default class EditAccountDetails extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: this.state.username,
-        new_username: this.state.new_username,
-        new_email: this.state.new_email,
+        current_username: this.state.username,
+        username: this.state.new_username,
+        email: this.state.new_email,
         current_password: this.state.current_password,
-        new_password1: this.state.new_password1,
-        new_password2: this.state.new_password2,
+        password: this.state.new_password1,
 
       }),
     })
@@ -125,7 +124,8 @@ export default class EditAccountDetails extends Component {
         if (success) {
           this._saveSettings(
             data.new_username,
-            data.current_email,
+            data.new_email,
+            data.new_password1,
             Alert.alert('Details Successfully saved!')
           );
         }else {
@@ -139,6 +139,7 @@ export default class EditAccountDetails extends Component {
 
   render() {
     const pressHandler = () => {
+
       if (this.state.current_password == '') {
         Alert.alert('Please enter your Current Password!');
         } else if (this.state.new_email == '') {
@@ -149,9 +150,10 @@ export default class EditAccountDetails extends Component {
             this.state.new_password1 = null;
         } else if (this.state.new_password2 == '') {
             this.state.new_password2 = null;
-        }else {
+        } else if (this.state.new_password1 == this.state.new_password2) {  
             this._update();
         }
+
     };
 
     return (
@@ -178,8 +180,8 @@ export default class EditAccountDetails extends Component {
           style={{
             flexwrap: 'wrap',
             flexDirection: 'row',
-            marginTop: '3%',
-            marginBottom: '5%',
+           // marginTop: '3%',
+           // marginBottom: '5%',
             backgroundColor: '#1A1B1E',
           }}>
           <InputWithLabel
@@ -200,7 +202,7 @@ export default class EditAccountDetails extends Component {
 
         <View
             style={{
-                marginTop: 10,
+                //marginTop: 10,
                 borderColor: 'white',
                 borderBottomColor: 'black',
                 borderBottomWidth: 1,
@@ -218,7 +220,7 @@ export default class EditAccountDetails extends Component {
           <InputWithLabel
             style={styles.newinput}
             label={'New Username'}
-            placeholder={'Type here'}
+            placeholder={'Type here (Optional)'}
             secureTextEntry={true}
             onChangeText={new_username => {
               this.setState({ new_username });
@@ -250,7 +252,7 @@ export default class EditAccountDetails extends Component {
           <InputWithLabel
             style={styles.newinput}
             label={'New Email'}
-            placeholder={'Type here'}
+            placeholder={'Type here (Optional)'}
         
             secureTextEntry={true}
             onChangeText={new_email => {
@@ -284,7 +286,7 @@ export default class EditAccountDetails extends Component {
           <InputWithLabel
             style={styles.newinput}
             label={'New Password'}
-            placeholder={'Type here'}
+            placeholder={'Type here (Optional)'}
            
             secureTextEntry={true}
             onChangeText={new_password1 => {
@@ -306,7 +308,7 @@ export default class EditAccountDetails extends Component {
           <InputWithLabel
             style={styles.newinput}
             label={'Re-Type Password'}
-            placeholder={'Type here'}
+            placeholder={'Re-Type new password'}
            
             secureTextEntry={true}
             onChangeText={new_password2 => {
@@ -384,8 +386,8 @@ const styles = StyleSheet.create({
   passinput: {
     fontSize: 20,
     color: 'white',
-    marginTop: 10,
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 30,
   },
 
   text: {

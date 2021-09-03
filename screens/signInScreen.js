@@ -138,7 +138,7 @@ export default class signInScreen extends Component {
           console.log(data.message);
 
           Alert.alert(data.message, 'Welcome, ' + data.username + '!');
-          this.props.navigation.navigate('Index');
+          this.props.navigation.navigate('Main');
         } else {
           Alert.alert(data.message);
         }
