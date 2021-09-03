@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, TouchableHighlight, View } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function TodoItem({ item, _complete }) {
+import { styles } from '../style';
+
+export default function TodoItem({ item, _complete, _update }) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [color, setColor] = useState('white');
 
@@ -15,7 +18,11 @@ export default function TodoItem({ item, _complete }) {
     if (item.colour != null) {
       setColor(item.colour);
     }
-  }, []);
+  }, [item]);
+
+  // useFocusEffect(() => {
+  //   _update();
+  // });
 
   var style = StyleSheet.create({
     wrap_box: { backgroundColor: color },
@@ -23,9 +30,9 @@ export default function TodoItem({ item, _complete }) {
 
   return (
     <TouchableHighlight onPress={() => console.log('You touched me')}>
-      <View style={StyleSheet.compose(stlyes.wrapper, style.wrap_box)}>
+      <View style={StyleSheet.compose(styles.wrapper, style.wrap_box)}>
         <CheckBox
-          style={stlyes.checkboxes}
+          style={styles.checkboxes}
           disabled={false}
           value={toggleCheckBox}
           onValueChange={newValue => {
@@ -40,7 +47,7 @@ export default function TodoItem({ item, _complete }) {
         />
         <Text
           style={
-            (stlyes.item,
+            (styles.item,
             toggleCheckBox
               ? {
                   textDecorationLine: 'line-through',
@@ -56,27 +63,27 @@ export default function TodoItem({ item, _complete }) {
   );
 }
 
-const stlyes = StyleSheet.create({
-  checkboxes: {
-    // backgroundColor: 'gold',
-  },
-  item: {
-    position: 'relative',
-    top: 5,
-  },
+// const styles = StyleSheet.create({
+//   checkboxes: {
+//     // backgroundColor: 'gold',
+//   },
+//   item: {
+//     position: 'relative',
+//     top: 5,
+//   },
 
-  slash: {
-    textDecorationLine: 'line-through',
-  },
-  subitem: {},
+//   slash: {
+//     textDecorationLine: 'line-through',
+//   },
+//   subitem: {},
 
-  wrapper: {
-    padding: 16,
-    marginTop: 16,
-    borderColor: 'blue',
-    borderWidth: 1,
-    borderRadius: 10,
-    flex: 1,
-    flexDirection: 'row',
-  },
-});
+//   wrapper: {
+//     padding: 16,
+//     marginTop: 16,
+//     borderColor: 'blue',
+//     borderWidth: 1,
+//     borderRadius: 10,
+//     flex: 1,
+//     flexDirection: 'row',
+//   },
+// });

@@ -56,13 +56,11 @@ export default class addTask extends Component {
       this.errorDb,
     );
 
-    console.log(this.props.route.params.data);
     let data = JSON.parse(this.props.route.params.data);
     let reminder = JSON.parse(data.reminder);
 
-    console.log('Task ID: ' + data.id);
     this.state = {
-      selectedColor: data.colour || '#161718',
+      selectedColor: data.colour || 'white',
       priority: data.priority || '',
       title: data.name || '',
       labelColor: 'white',
@@ -78,70 +76,38 @@ export default class addTask extends Component {
       prioBtn2Color: '#313437',
       prioBtn3Color: '#313437',
     };
-
-    console.log(this.state);
-  }
-
-  _queryTask(data) {
-    console.log('Line 1');
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM todo WHERE id =?',
-        [data.id],
-        (tx, results) => {
-          console.log('Line 2');
-
-          if (results.rows.length) {
-            var obj = JSON.parse(results.rows.item(0).reminder);
-
-            this.setState(
-              {
-                selectedColor: results.rows.item(0).colour || '#161718',
-                priority: results.rows.item(0).priority || '',
-                title: results.rows.item(0).title || '',
-                labelColor: 'white',
-
-                //Reminder
-                dateText: obj.dateText || '',
-                time: obj.time || '2400',
-
-                taskId: taskId,
-                //For button styling usage
-              },
-              function () {
-                console.log(this.state);
-              },
-            );
-
-            if (this.state.priority === 'Low') {
-              this.setState({ prioBtn1Color: 'red' });
-            } else if (this.state.priority === 'Medium') {
-              this.setState({ prioBtn2Color: 'red' });
-            } else {
-              this.setState({ prioBtn3Color: 'red' });
-            }
-          }
-        },
-      );
-    });
   }
 
   //REMEMBER TO CREATE REFRESH ON MAIN SCREEN AFTER INSERT DATA
   _insertTask(taskId) {
     var obj = { dateText: this.state.dateText, time: this.state.time };
     var reminder = JSON.stringify(obj);
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'UPDATE todo SET name=?,colour=?,priority=?,reminder=? WHERE id=?',
-        [
-          this.state.title,
-          this.state.selectedColor,
-          this.state.priority,
-          reminder,
-          taskId,
-        ],
-      );
-    });
+    this.db.transaction(
+      tx => {
+        tx.executeSql(
+          'UPDATE todo SET name=?,colour=?,priority=?,reminder=? WHERE id=?',
+          [
+            this.state.title,
+            this.state.selectedColor,
+            this.state.priority,
+            reminder,
+            taskId,
+          ],
+          (tx, results) => {
+            console.log(this.state.title + ' is updated successful!');
+          },
+          (tx, error) => {
+            console.log('sql error' + error);
+          },
+        );
+      },
+      error => {
+        console.log('sql error' + error.message);
+      },
+      () => {
+        console.log('update ok!');
+      },
+    );
   }
 
   _insertNewTask() {
@@ -170,7 +136,7 @@ export default class addTask extends Component {
         console.log('sql error' + error.message);
       },
       () => {
-        console.log('transa ok!');
+        console.log('transaction ok!');
       },
     );
   }
@@ -223,58 +189,55 @@ export default class addTask extends Component {
         <View
           style={[
             styles.header,
-            { backgroundColor: this.state.selectedColor, flex: 0.1125 },
+            {
+              backgroundColor: this.state.selectedColor,
+              flex: 0.1125,
+              flexDirection: 'row',
+            },
           ]}>
           {/* Not yet implement onPress */}
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
-            style={{ left: -80 }}>
+            style={{ flex: 1, marginLeft: 20 }}>
             <Icon
-              style={styles.userIcon}
+              // style={styles.userIcon}
               name="arrow-back"
               size={30}
-              color="white"
+              color="black"
               borderColor="blue"
             />
           </TouchableOpacity>
 
-          <Text style={styles.title}>Add Task</Text>
+          <Text style={[styles.title, { flex: 9 }]}>
+            {this.props.route.params.action}
+          </Text>
 
           <TouchableOpacity
-            style={{ right: -80 }}
+            style={{ flex: 2 }}
             onPress={() => {
-              alert(
-                'Task added !\n\n' +
-                  'Title: ' +
-                  this.state.title +
-                  '\n' +
-                  'Selected Color: ' +
-                  this.state.selectedColor +
-                  '\n' +
-                  'Priority: ' +
-                  this.state.priority +
-                  '\n' +
-                  'Reminder Date: ' +
-                  this.state.dateText +
-                  '\n' +
-                  'Time: ' +
-                  this.state.time,
-              );
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
-                console.log('Ready to add task!!');
+                console.log('Ready to update task!!');
+                alert('Task edited successfully !');
                 this.props.navigation.navigate('Index', {
                   AddTask: true,
                 });
               } else {
                 this._insertNewTask();
                 console.log('Ready to add task!!');
+                alert('Task added successfully !');
                 this.props.navigation.navigate('Index', {
                   AddTask: true,
                 });
               }
             }}>
-            <Image style={styles.icon} source={require('../Image/tick2.png')} />
+            <Icon
+              // style={styles.userIcon}
+              name="checkmark-sharp"
+              size={30}
+              color="black"
+              borderColor="blue"
+            />
           </TouchableOpacity>
         </View>
 
@@ -311,10 +274,10 @@ export default class addTask extends Component {
                   });
                 }}
               />
-
-              <Text style={{ left: 140, color: 'white' }}>
-                Scroll for more colors.
-              </Text>
+              
+                <Text style={{textAlign:'center', color: 'white' }}>
+                  Scroll for more colors.
+                </Text>
             </View>
           </View>
 
@@ -322,14 +285,16 @@ export default class addTask extends Component {
           <View style={styles.view}>
             <Text style={styles.label}>Priority</Text>
 
-            <View style={[styles.priority]}>
+            <View style={[styles.priority,{flex:1,flexDirection:'row'}]}>
+              
+              <View style={{flex:1, paddingRight:5}}>
               <TouchableOpacity
                 style={[
                   styles.touchableBtn,
                   {
-                    left: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn1Color,
+                    
                   },
                 ]}
                 onPress={() => {
@@ -347,15 +312,18 @@ export default class addTask extends Component {
                     });
                   }
                 }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Low</Text>
+                <Text style={styles.buttonText}>Low</Text>
               </TouchableOpacity>
-
+              </View>
+              
+              <View style = {{flex:1}}>
               <TouchableOpacity
                 style={[
                   styles.touchableBtn,
                   {
                     paddingVertical: 10,
                     backgroundColor: this.state.prioBtn2Color,
+
                   },
                 ]}
                 onPress={() => {
@@ -373,14 +341,15 @@ export default class addTask extends Component {
                     });
                   }
                 }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Medium</Text>
+                <Text style={styles.buttonText}>Medium</Text>
               </TouchableOpacity>
-
+              </View>
+             
+              <View style={{flex:1, paddingLeft:5}}>
               <TouchableOpacity
                 style={[
                   styles.touchableBtn,
                   {
-                    right: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn3Color,
                   },
@@ -400,8 +369,10 @@ export default class addTask extends Component {
                     });
                   }
                 }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>High</Text>
+                <Text style={styles.buttonText}>High</Text>
               </TouchableOpacity>
+              </View>
+            
             </View>
           </View>
 
@@ -460,6 +431,11 @@ const styles = StyleSheet.create({
   view: {
     paddingTop: 20,
   },
+  buttonText:{
+    color: 'white', 
+    fontSize: 20,
+    textAlign:'center',
+  },
   header: {
     flex: 1,
     width: '100%',
@@ -501,7 +477,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 20,
-    color: 'white',
+    color: 'black',
   },
   wrapper: {
     marginVertical: 1,

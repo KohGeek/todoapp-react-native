@@ -18,64 +18,87 @@ export function passwordValidation(password1, password2) {
   return 0;
 }
 
-export function getToken() {
+export const getToken = async () => {
   return SInfo.getItem('token', {});
-}
+};
 
-export function setToken(token) {
+export const setToken = async token => {
   return SInfo.setItem('token', token, {});
-}
+};
 
 // syncs database to server
 // parameter accepts: push, pull
 // push to push data to server
 // pull to pull data from server
-export function syncToServer(operation) {
-  let socket = io.connect(`${Config.API_URL}:${Config.API_PORT}/api/`, {
+export async function syncToServer(operation) {
+  let socket = io.connect(`${Config.API_URL}:${Config.API_PORT}/api`, {
     transports: ['websocket', 'polling'],
   });
 
   let db = SQLite.openDatabase({
-    name: 'tododb',
+    name: 'tododb5',
     createFromLocation: '~todo.sqlite',
   });
 
   let returndata = [];
 
   console.log('syncToServer: ' + operation);
-  console.log(`${Config.API_URL}:${Config.API_PORT}/api/`);
 
   if (operation === 'push') {
-    db.transaction(tx => {
-      tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
-        let data = results.rows.raw;
-        console.log(JSON.stringify(results.rows.raw));
-        data['token'] = getToken();
+    db.transaction(async tx => {
+      tx.executeSql('SELECT * FROM todo', [], async (tx, results) => {
+        // data['token'] = getToken();
+        let token = await getToken();
+        console.log(token);
+        let data = { token: token, database: results.rows.raw() };
         socket.emit('push', data);
         returndata = data;
       });
     });
   } else if (operation === 'pull') {
-    socket.emit('pull', { token: getToken() });
+    socket.emit('pull', { token: await getToken() });
     socket.on('pull', data => {
-      db.transaction(tx => {
-        returndata = data;
-        let parsedData = JSON.parse(data);
-        tx.executeSql('DELETE FROM todo');
-        parsedData.forEach(item => {
+      db.transaction(
+        tx => {
+          let pullData = data.database;
           tx.executeSql(
-            'INSERT INTO todo (id, name, priority, color, reminder, completed) VALUES (?, ?, ?, ?, ?, ?)',
-            [
-              item.id,
-              item.name,
-              item.priority,
-              item.color,
-              item.reminder,
-              item.completed,
-            ],
+            'DELETE FROM todo',
+            [],
+            () => {
+              console.log('deleted');
+            },
+            () => {
+              console.log('error deleting');
+            },
           );
-        });
-      });
+          pullData.forEach(item => {
+            console.log(item);
+            tx.executeSql(
+              'INSERT INTO todo (id, name, priority, colour, reminder, completed) VALUES (?, ?, ?, ?, ?, ?)',
+              [
+                item.id,
+                item.name,
+                item.priority,
+                item.color,
+                item.reminder,
+                item.completed,
+              ],
+              results => {
+                console.log('Results: ' + results);
+              },
+              error => {
+                console.log('Error: ' + error);
+              },
+            );
+          });
+        },
+        (tx, error) => {
+          console.log('DB Error: ' + error);
+        },
+        () => {
+          console.log('DB Success');
+        },
+      );
     });
   }
 

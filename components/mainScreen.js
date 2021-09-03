@@ -12,7 +12,8 @@ import {
   Keyboard,
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-
+import { useFocusEffect } from '@react-navigation/native';
+import { styles } from '../style';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 // import {
@@ -40,12 +41,12 @@ export default function App({ navigation, route }) {
   // };
 
   const submitHandler = text => {
-    if (text.length > 3) {
+    if (text.length >= 1) {
       // console.log('Ready to add ' + text);
       db.transaction(function (tx) {
         tx.executeSql(
-          'INSERT INTO todo(name, completed) VALUES(?,?)',
-          [text, 'false'],
+          'INSERT INTO todo(name,completed, reminder) VALUES(?,?,?)',
+          [text, 'false', '{"dateText": "", "time": ""}'],
           (tx, results) => {
             // console.log(text + ' is added successful!');
           },
@@ -53,7 +54,7 @@ export default function App({ navigation, route }) {
       });
       _update();
     } else {
-      Alert.alert('OOPS!', 'Todos myst be over 3 chars long!', [
+      Alert.alert('OOPS!', 'Task added cannot be empty!!', [
         { text: 'Understood', onPress: () => console.log('alert closed') },
       ]);
     }
@@ -75,9 +76,10 @@ export default function App({ navigation, route }) {
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
         onPress={() => {
           console.log('Ready to edit task');
-          console.log(data);
+          // console.log(data);
           navigation.navigate('AddTask', {
             data: JSON.stringify(data),
+            action: 'Edit Task',
           });
         }}>
         <Text style={styles.backTextWhite}>Edit</Text>
@@ -86,7 +88,7 @@ export default function App({ navigation, route }) {
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
         onPress={() => {
-          console.log(data.id);
+          // console.log(data.id);
           deleteRow(data.id);
         }}>
         <Text style={styles.backTextWhite}>Delete</Text>
@@ -96,7 +98,7 @@ export default function App({ navigation, route }) {
 
   //close function
   const closeRow = id => {
-    console.log('This row closed', id);
+    // console.log('This row closed', id);
   };
 
   //delete function
@@ -131,15 +133,19 @@ export default function App({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    console.log(route);
+    // console.log('Route is ' + route);
     _update();
   }, [addtask]);
+
+  useFocusEffect(() => {
+    _update();
+  });
 
   const _update = () => {
     db.transaction(function (tx) {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         setTodos(results.rows.raw());
-        console.log(results.rows.raw());
+        // console.log(results.rows.raw());
       });
     });
   };
@@ -174,7 +180,7 @@ export default function App({ navigation, route }) {
             <SwipeListView
               data={todos}
               renderItem={({ item }) => (
-                <TodoItem item={item} _complete={_complete} />
+                <TodoItem item={item} _complete={_complete} _update={_update} />
               )}
               renderHiddenItem={({ item }) => renderHiddenItem(item)}
               leftOpenValue={300}
@@ -193,74 +199,62 @@ export default function App({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  addSubTaskbtn: {
-    backgroundColor: 'coral',
-    right: 140,
-    padding: 16,
-    marginTop: 16,
-  },
-  backTextWhite: {
-    color: '#FFF',
-  },
+// const styles = StyleSheet.create({
+//   addSubTaskbtn: {
+//     backgroundColor: 'coral',
+//     right: 140,
+//     padding: 16,
+//     marginTop: 16,
+//   },
+//   backTextWhite: {
+//     color: '#FFF',
+//   },
 
-  // closeTaskbtn: {
-  //   backgroundColor: 'blue',
-  //   left: 0,
-  //   padding: 16,
-  //   marginTop: 16,
-  // },
+//   container: {
+//     flex: 1,
+//     backgroundColor: color.primary,
+//   },
+//   content: {
+//     padding: 40,
+//     flex: 1,
+//   },
 
-  container: {
-    flex: 1,
-    backgroundColor: color.primary,
-  },
-  content: {
-    padding: 40,
-    // backgroundColor: 'blue',
-    flex: 1,
-  },
-
-  list: {
-    marginTop: 20,
-    // backgroundColor: 'gold',
-    flex: 1,
-    // backgroundColor: 'green',
-  },
-  rowFront: {
-    alignItems: 'center',
-    // backgroundColor: 'green',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    height: 50,
-  },
-  rowBack: {
-    alignItems: 'center',
-    // backgroundColor: 'coral',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75,
-  },
-  backRightBtnLeft: {
-    backgroundColor: 'green',
-    right: 75,
-    padding: 16,
-    marginTop: 16,
-  },
-  backRightBtnRight: {
-    backgroundColor: 'red',
-    right: 10,
-    padding: 16,
-    marginTop: 16,
-  },
-});
+//   list: {
+//     marginTop: 20,
+//     flex: 1,
+//   },
+//   rowFront: {
+//     alignItems: 'center',
+//     borderBottomColor: 'black',
+//     borderBottomWidth: 1,
+//     justifyContent: 'center',
+//     height: 50,
+//   },
+//   rowBack: {
+//     alignItems: 'center',
+//     flex: 1,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     paddingLeft: 15,
+//   },
+//   backRightBtn: {
+//     alignItems: 'center',
+//     bottom: 0,
+//     justifyContent: 'center',
+//     position: 'absolute',
+//     top: 0,
+//     width: 75,
+//   },
+//   backRightBtnLeft: {
+//     backgroundColor: 'green',
+//     right: 75,
+//     padding: 16,
+//     marginTop: 16,
+//   },
+//   backRightBtnRight: {
+//     backgroundColor: 'red',
+//     right: 10,
+//     padding: 16,
+//     marginTop: 16,
+//   },
+// });
