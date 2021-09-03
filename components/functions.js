@@ -22,7 +22,13 @@ export const getToken = async () => {
 };
 
 export const setToken = async token => {
-  return SInfo.setItem('token', token, {});
+  var promise = new Promise();
+  if (token != null) {
+    SInfo.setItem('token', token, {});
+  } else {
+    SInfo.deleteItem('token', {});
+  }
+  return promise;
 };
 
 export const isLoggedIn = async () => {
@@ -51,7 +57,6 @@ export async function syncToServer(operation) {
   if (operation === 'push') {
     db.transaction(async tx => {
       tx.executeSql('SELECT * FROM todo', [], async (tx, results) => {
-        // data['token'] = getToken();
         let token = await getToken();
         console.log(token);
         let data = { token: token, database: results.rows.raw() };
