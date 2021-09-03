@@ -4,17 +4,26 @@ import CheckBox from '@react-native-community/checkbox';
 
 export default function TodoItem({ item, _complete }) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [color, setColor] = useState('white');
 
   useEffect(() => {
     // console.log(item.completed);
     if (item.completed == 'true') {
       setToggleCheckBox(true);
     }
+
+    if (item.colour != null) {
+      setColor(item.colour);
+    }
   }, []);
+
+  var style = StyleSheet.create({
+    wrap_box: { backgroundColor: color },
+  });
 
   return (
     <TouchableHighlight onPress={() => console.log('You touched me')}>
-      <View style={stlyes.wrapper}>
+      <View style={StyleSheet.compose(stlyes.wrapper, style.wrap_box)}>
         <CheckBox
           style={stlyes.checkboxes}
           disabled={false}
@@ -41,7 +50,6 @@ export default function TodoItem({ item, _complete }) {
               : { position: 'relative', top: 5 })
           }>
           {item.name}
-          {item.colour}
         </Text>
       </View>
     </TouchableHighlight>
@@ -68,7 +76,6 @@ const stlyes = StyleSheet.create({
     borderColor: 'blue',
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: 'white',
     flex: 1,
     flexDirection: 'row',
   },

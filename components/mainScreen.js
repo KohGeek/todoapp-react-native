@@ -68,7 +68,7 @@ export default function App({ navigation }) {
   // };
 
   //hidden function
-  const renderHiddenItem = (data, rowMap) => (
+  const renderHiddenItem = data => (
     <View style={styles.rowBack}>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
@@ -81,6 +81,7 @@ export default function App({ navigation }) {
         }}>
         <Text style={styles.backTextWhite}>Edit</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
         onPress={() => {
@@ -119,7 +120,7 @@ export default function App({ navigation }) {
   // };
 
   var db = openDatabase({
-    name: 'tododb3',
+    name: 'tododb4',
     createFromLocation: '~todo.sqlite',
   });
 
