@@ -29,8 +29,9 @@ import Header from './header';
 import Footer from './footer';
 import TodoItem from './todoItem';
 
-export default function App({ navigation }) {
+export default function App({ navigation, route }) {
   const [todos, setTodos] = useState([]);
+  const [addtask, setaddTask] = useState(route.AddTask || false);
 
   // const pressHandler = key => {
   //   setTodos(prevTodos => {
@@ -40,9 +41,17 @@ export default function App({ navigation }) {
 
   const submitHandler = text => {
     if (text.length > 3) {
-      setTodos(prevTodos => {
-        return [{ text: text, key: Math.random().toString() }, ...prevTodos];
+      // console.log('Ready to add ' + text);
+      db.transaction(function (tx) {
+        tx.executeSql(
+          'INSERT INTO todo(name, completed) VALUES(?,?)',
+          [text, 'false'],
+          (tx, results) => {
+            // console.log(text + ' is added successful!');
+          },
+        );
       });
+      _update();
     } else {
       Alert.alert('OOPS!', 'Todos myst be over 3 chars long!', [
         { text: 'Understood', onPress: () => console.log('alert closed') },
@@ -50,64 +59,105 @@ export default function App({ navigation }) {
     }
   };
 
+  // const _insert = () => {
+  //   db.transaction(function (tx) {
+  //     tx.executeSql('INSERT INTO todo(name) VALUES(?)', [id], (tx, results) => {
+  //       console.log(id + ' is deleted successful!');
+  //     });
+  //   });
+  //   _update();
+  // };
+
   //hidden function
-  const renderHiddenItem = (data, rowMap) => (
+  const renderHiddenItem = data => (
     <View style={styles.rowBack}>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
         onPress={() => {
           console.log('Ready to edit task');
-
+          console.log(data);
           navigation.navigate('AddTask', {
-            taskId: '1',
+            data: JSON.stringify(data),
           });
         }}>
         <Text style={styles.backTextWhite}>Edit</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
-        onPress={() => deleteRow(rowMap, data.item.key)}>
+        onPress={() => {
+          console.log(data.id);
+          deleteRow(data.id);
+        }}>
         <Text style={styles.backTextWhite}>Delete</Text>
       </TouchableOpacity>
     </View>
   );
 
   //close function
-  const closeRow = (rowMap, rowKey) => {
-    if (rowMap[rowKey]) {
-      rowMap[rowKey].closeRow();
-      console.log('This row closed', rowKey);
-    }
+  const closeRow = id => {
+    console.log('This row closed', id);
   };
 
   //delete function
-  const deleteRow = (rowMap, rowKey) => {
-    closeRow(rowMap, rowKey);
-    const newData = [...todos];
-    const prevIndex = todos.findIndex(item => item.key === rowKey);
-    newData.splice(prevIndex, 1);
-    setTodos(newData);
+  const deleteRow = id => {
+    // closeRow(id);
+    // const newData = [...todos];
+    // const prevIndex = todos.findIndex(item => item.key === rowKey);
+    // newData.splice(prevIndex, 1);
+    // setTodos(newData);
+    // console.log(id + ' is ready to be deleted!');
+    db.transaction(function (tx) {
+      tx.executeSql('DELETE FROM todo WHERE id= ?', [id], (tx, results) => {
+        // console.log(id + ' is deleted successful!');
+      });
+    });
+    _update();
   };
 
   //detection for row slide action
-  const onRowDidOpen = rowKey => {
-    console.log('This row opened', rowKey);
-  };
+  // const onRowDidOpen = rowKey => {
+  //   console.log('This row opened', rowKey);
+  // };
 
   var db = openDatabase({
-    name: 'tododb',
+    name: 'tododb4',
     createFromLocation: '~todo.sqlite',
   });
 
   useEffect(() => {
     console.log('Database opened');
+    _update();
+  }, []);
+
+  useEffect(() => {
+    console.log(route);
+    _update();
+  }, [addtask]);
+
+  const _update = () => {
     db.transaction(function (tx) {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         setTodos(results.rows.raw());
         console.log(results.rows.raw());
       });
     });
-  }, []);
+  };
+
+  const _complete = (id, completed) => {
+    console.log('ready to set complete state');
+    db.transaction(function (tx) {
+      tx.executeSql(
+        'UPDATE todo SET completed=? WHERE id=?',
+        [completed, id],
+        (tx, results) => {
+          console.log('success to set complete state');
+          // console.log(results.rows.raw());
+        },
+      );
+    });
+    _update();
+  };
 
   return (
     <TouchableWithoutFeedback
@@ -116,21 +166,24 @@ export default function App({ navigation }) {
         console.log('Dismissed keyboard');
       }}>
       <View style={styles.container}>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} _update={_update} />
 
         <View style={styles.content}>
           <AddTodo submitHandler={submitHandler} />
           <View style={styles.list}>
             <SwipeListView
               data={todos}
-              renderItem={({ item }) => <TodoItem item={item} />}
-              renderHiddenItem={renderHiddenItem}
+              renderItem={({ item }) => (
+                <TodoItem item={item} _complete={_complete} />
+              )}
+              renderHiddenItem={({ item }) => renderHiddenItem(item)}
               leftOpenValue={300}
               rightOpenValue={-150}
+              disableRightSwipe={true}
               previewRowKey={'0'}
               previewOpenValue={-40}
               previewOpenDelay={3000}
-              onRowDidOpen={onRowDidOpen}
+              // onRowDidOpen={onRowDidOpen}
             />
           </View>
         </View>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   StyleSheet,
@@ -49,68 +49,45 @@ export default class addTask extends Component {
 
   constructor(props) {
     super(props);
-    this._queryTask = this._queryTask.bind(this);
-    this.object = null;
+
     this.db = SQLite.openDatabase(
-      { name: 'tododb', createFromLocation: '~todo.sqlite' },
+      { name: 'tododb4', createFromLocation: '~todo.sqlite' },
       this.openDb,
       this.errorDb,
     );
-    var taskId = this.props.route.params.taskId;
-    console.log('Task ID: ' + taskId);
 
-    if (taskId != null) {
-      //Edit Task
-      //Need to apply server side data reading
-      this.state = {
-        selectedColor: '#161718',
-        priority: '',
-        title: '',
-        labelColor: 'white',
+    console.log(this.props.route.params.data);
+    let data = JSON.parse(this.props.route.params.data);
+    let reminder = JSON.parse(data.reminder);
 
-        taskId: taskId,
+    console.log('Task ID: ' + data.id);
+    this.state = {
+      selectedColor: data.colour || '#161718',
+      priority: data.priority || '',
+      title: data.name || '',
+      labelColor: 'white',
 
-        //Reminder
-        dateText: '',
-        time: '',
+      taskId: data.id,
 
-        //For button styling usage
-        prioBtn1Color: '#313437',
-        prioBtn2Color: '#313437',
-        prioBtn3Color: '#313437',
-      };
+      //Reminder
+      dateText: reminder.dateText || '',
+      time: reminder.time || '0000',
 
-      this._queryTask(taskId);
-    } else {
-      //Add Task
-      this.state = {
-        selectedColor: '#161718',
-        priority: '',
-        title: '',
-        labelColor: 'white',
-
-        taskId: taskId,
-
-        //Reminder
-        dateText: '',
-        time: '',
-
-        //For button styling usage
-        prioBtn1Color: '#313437',
-        prioBtn2Color: '#313437',
-        prioBtn3Color: '#313437',
-      };
-    }
+      //For button styling usage
+      prioBtn1Color: '#313437',
+      prioBtn2Color: '#313437',
+      prioBtn3Color: '#313437',
+    };
 
     console.log(this.state);
   }
 
-  _queryTask(taskId) {
+  _queryTask(data) {
     console.log('Line 1');
-    this.db.transaction((tx) => {
+    this.db.transaction(tx => {
       tx.executeSql(
         'SELECT * FROM todo WHERE id =?',
-        [taskId],
+        [data.id],
         (tx, results) => {
           console.log('Line 2');
 
@@ -155,7 +132,7 @@ export default class addTask extends Component {
     var reminder = JSON.stringify(obj);
     this.db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO todo(name,colour,priority,reminder) VALUES(?,?,?,?) WHERE id=?',
+        'UPDATE todo SET name=?,colour=?,priority=?,reminder=? WHERE id=?',
         [
           this.state.title,
           this.state.selectedColor,
@@ -170,17 +147,32 @@ export default class addTask extends Component {
   _insertNewTask() {
     var obj = { dateText: this.state.dateText, time: this.state.time };
     var reminder = JSON.stringify(obj);
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO todo(name,colour,priority,reminder) VALUES(?,?,?,?)',
-        [
-          this.state.title,
-          this.state.selectedColor,
-          this.state.priority,
-          reminder,
-        ],
-      );
-    });
+    this.db.transaction(
+      tx => {
+        tx.executeSql(
+          'INSERT INTO todo(name,colour,priority,reminder,completed) VALUES(?,?,?,?,?)',
+          [
+            this.state.title,
+            this.state.selectedColor,
+            this.state.priority,
+            reminder,
+            false,
+          ],
+          (tx, results) => {
+            console.log(this.state.title + 'is added successful!');
+          },
+          (tx, error) => {
+            console.log('sql error' + error);
+          },
+        );
+      },
+      error => {
+        console.log('sql error' + error.message);
+      },
+      () => {
+        console.log('transa ok!');
+      },
+    );
   }
 
   openDatePicker = async () => {
@@ -209,6 +201,16 @@ export default class addTask extends Component {
     this.TimePicker.close();
   }
 
+  componentDidMount() {
+    if (this.state.priority === 'L') {
+      this.setState({ prioBtn1Color: 'red' });
+    } else if (this.state.priority === 'M') {
+      this.setState({ prioBtn2Color: 'red' });
+    } else if (this.state.priority === 'H') {
+      this.setState({ prioBtn3Color: 'red' });
+    }
+  }
+
   onConfirm(hour, minute) {
     this.setState({ time: `${hour}:${minute}` });
     this.TimePicker.close();
@@ -226,7 +228,7 @@ export default class addTask extends Component {
           {/* Not yet implement onPress */}
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
-            style={{ left: -100 }}>
+            style={{ left: -80 }}>
             <Icon
               style={styles.userIcon}
               name="arrow-back"
@@ -239,7 +241,7 @@ export default class addTask extends Component {
           <Text style={styles.title}>Add Task</Text>
 
           <TouchableOpacity
-            style={{ right: -100 }}
+            style={{ right: -80 }}
             onPress={() => {
               alert(
                 'Task added !\n\n' +
@@ -259,9 +261,17 @@ export default class addTask extends Component {
                   this.state.time,
               );
               if (this.state.taskId != null) {
-                this._insertTask(taskId);
+                this._insertTask(this.state.taskId);
+                console.log('Ready to add task!!');
+                this.props.navigation.navigate('Index', {
+                  AddTask: true,
+                });
               } else {
-                this._insertNewTask;
+                this._insertNewTask();
+                console.log('Ready to add task!!');
+                this.props.navigation.navigate('Index', {
+                  AddTask: true,
+                });
               }
             }}>
             <Image style={styles.icon} source={require('../Image/tick2.png')} />
@@ -317,7 +327,7 @@ export default class addTask extends Component {
                 style={[
                   styles.touchableBtn,
                   {
-                    left: -50,
+                    left: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn1Color,
                   },
@@ -330,7 +340,7 @@ export default class addTask extends Component {
                     });
                   } else {
                     this.setState({
-                      priority: 'Low',
+                      priority: 'L',
                       prioBtn1Color: 'red',
                       prioBtn2Color: '#313437',
                       prioBtn3Color: '#313437',
@@ -356,7 +366,7 @@ export default class addTask extends Component {
                     });
                   } else {
                     this.setState({
-                      priority: 'Medium',
+                      priority: 'M',
                       prioBtn1Color: '#313437',
                       prioBtn2Color: 'red',
                       prioBtn3Color: '#313437',
@@ -370,7 +380,7 @@ export default class addTask extends Component {
                 style={[
                   styles.touchableBtn,
                   {
-                    right: -50,
+                    right: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn3Color,
                   },
@@ -383,7 +393,7 @@ export default class addTask extends Component {
                     });
                   } else {
                     this.setState({
-                      priority: 'High',
+                      priority: 'H',
                       prioBtn1Color: '#313437',
                       prioBtn2Color: '#313437',
                       prioBtn3Color: 'red',
