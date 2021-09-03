@@ -24,7 +24,7 @@ export default function Header({ navigation, _update }) {
         <Text style={styles.date}>{currentDate}</Text>
       </View>
       <View style={styles.userContainer}>
-        <TouchableOpacity onPress={() => syncToServer('push')}>
+        <TouchableOpacity onPress={() => syncToServer('pull')}>
           <Icon
             style={styles.userIcon}
             name="cloud-upload"

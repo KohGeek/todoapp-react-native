@@ -18,20 +18,20 @@ export function passwordValidation(password1, password2) {
   return 0;
 }
 
-export function getToken() {
+export const getToken = async () => {
   return SInfo.getItem('token', {});
-}
+};
 
-export function setToken(token) {
+export const setToken = async token => {
   return SInfo.setItem('token', token, {});
-}
+};
 
 // syncs database to server
 // parameter accepts: push, pull
 // push to push data to server
 // pull to pull data from server
-export function syncToServer(operation) {
-  let socket = io.connect(`${Config.API_URL}:${Config.API_PORT}/api/`, {
+export async function syncToServer(operation) {
+  let socket = io.connect(`${Config.API_URL}:${Config.API_PORT}/api`, {
     transports: ['websocket', 'polling'],
   });
 
@@ -43,24 +43,27 @@ export function syncToServer(operation) {
   let returndata = [];
 
   console.log('syncToServer: ' + operation);
-  console.log(`${Config.API_URL}:${Config.API_PORT}/api/`);
 
   if (operation === 'push') {
-    db.transaction(tx => {
-      tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
-        let data = results.rows.raw;
-        console.log(JSON.stringify(results.rows.raw));
-        data['token'] = getToken();
-        socket.emit('push', data);
-        returndata = data;
+    db.transaction(async tx => {
+      tx.executeSql('SELECT * FROM todo', [], async (tx, results) => {
+        // data['token'] = getToken();
+        let token = await getToken();
+        let data = { token: token, database: results.rows.raw() };
+        console.log(data.token);
+        let jsondata = JSON.stringify(data);
+        console.log(jsondata);
+        socket.emit('push', jsondata);
+        returndata = jsondata;
       });
     });
   } else if (operation === 'pull') {
-    socket.emit('pull', { token: getToken() });
+    socket.emit('pull', { token: await getToken() });
+    console.log('pull emitted');
     socket.on('pull', data => {
       db.transaction(tx => {
         returndata = data;
-        let parsedData = JSON.parse(data);
+        let parsedData = JSON.parse(data.database);
         tx.executeSql('DELETE FROM todo');
         parsedData.forEach(item => {
           tx.executeSql(
