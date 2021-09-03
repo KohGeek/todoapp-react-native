@@ -31,7 +31,7 @@ export function setToken(token) {
 // push to push data to server
 // pull to pull data from server
 export function syncToServer(operation) {
-  let socket = io.connect(`http://${Config.API_URL}:${Config.API_PORT}/api/`, {
+  let socket = io.connect(`${Config.API_URL}:${Config.API_PORT}/api/`, {
     transports: ['websocket', 'polling'],
   });
 
@@ -43,12 +43,13 @@ export function syncToServer(operation) {
   let returndata = [];
 
   console.log('syncToServer: ' + operation);
-  console.log(`http://${Config.API_URL}:${Config.API_PORT}/api/`);
+  console.log(`${Config.API_URL}:${Config.API_PORT}/api/`);
 
   if (operation === 'push') {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         let data = results.rows.raw;
+        console.log(JSON.stringify(results.rows.raw));
         data['token'] = getToken();
         socket.emit('push', data);
         returndata = data;
@@ -85,7 +86,7 @@ export const emptyTodo = {
   id: null,
   name: '',
   priority: '',
-  color: '',
-  reminder: '',
-  completed: false,
+  color: '#161718',
+  reminder: '{"dateText": "", "time": ""}',
+  completed: 'false',
 };

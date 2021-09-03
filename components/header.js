@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 
 import color from '../app/config/colors';
+import { syncToServer } from './functions';
 
 export default function Header({ navigation, _update }) {
   const pressHandler = () => {
@@ -23,7 +24,7 @@ export default function Header({ navigation, _update }) {
         <Text style={styles.date}>{currentDate}</Text>
       </View>
       <View style={styles.userContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => syncToServer('push')}>
           <Icon
             style={styles.userIcon}
             name="cloud-upload"

@@ -3,11 +3,11 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import color from '../app/config/colors';
-
+import { emptyTodo } from './functions';
 export default function Footer({ navigation }) {
   const buttonClickHandler = () => {
     navigation.navigate('AddTask',{
-      taskId:null,
+      data:JSON.stringify(emptyTodo),
     });
   };
 
