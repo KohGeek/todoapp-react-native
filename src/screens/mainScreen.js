@@ -11,12 +11,11 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { useFocusEffect } from '@react-navigation/native';
 import { styles } from '../style';
 import { openDatabase } from 'react-native-sqlite-storage';
-import { getUsername, getEmail } from './functions';
 
-import AddTodo from './addTodo';
-import Header from './header';
-import Footer from './footer';
-import TodoItem from './todoItem';
+import AddTodo from '../components/addTodo';
+import Header from '../components/header';
+import Footer from '../components/footer';
+import TodoItem from '../components/todoItem';
 
 export default function App({ navigation, route }) {
   const [todos, setTodos] = useState([]);

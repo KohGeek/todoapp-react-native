@@ -160,10 +160,10 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
   },
 
-  buttonText:{
-    color: 'white', 
+  buttonText: {
+    color: 'white',
     fontSize: 20,
-    textAlign:'center',
+    textAlign: 'center',
   },
 
   addTaskHeader: {
@@ -223,5 +223,35 @@ export const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  
+  userinfo: {
+    fontSize: 40,
+    textAlign: 'left',
+    marginTop: 5,
+    color: 'white',
+  },
+  userinforight: {
+    fontSize: 40,
+    textAlign: 'right',
+    marginTop: 5,
+    color: 'white',
+  },
+  newinput: {
+    fontSize: 20,
+    color: 'white',
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  passinput: {
+    fontSize: 20,
+    color: 'white',
+    marginTop: 20,
+    marginBottom: 30,
+  },
+  editlabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    margin: 10,
+    color: 'white',
+  },
 });

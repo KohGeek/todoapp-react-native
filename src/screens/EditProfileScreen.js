@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button, Image } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getToken, setToken } from '../components/functions';
 import { useFocusEffect } from '@react-navigation/native';
-import SQLite from 'react-native-sqlite-storage';
 import Config from 'react-native-config';
+import { styles } from '../style';
 
 function FetchData({ username }) {
   useFocusEffect(() => {});
@@ -76,36 +75,36 @@ export default class EditProfileScreen extends Component {
 
           {/* USERNAME */}
           <View>
-            <Text style={styles.label}>Username: </Text>
+            <Text style={styles.editlabel}>Username: </Text>
             <View
               style={{
                 backgroundColor: '#1A1B1E',
                 flexwrap: 'wrap',
                 borderColor: '#BFBFBF',
               }}>
-              <Text style={styles.name}> {this.state.username} </Text>
+              <Text style={styles.userinforight}> {this.state.username} </Text>
             </View>
           </View>
 
           {/* EMAIL */}
           <View>
-            <Text style={styles.label}>Email:</Text>
+            <Text style={styles.editlabel}>Email:</Text>
             <View
               style={{
                 backgroundColor: '#1A1B1E',
                 flexwrap: 'wrap',
                 borderColor: '#BFBFBF',
               }}>
-              <Text style={styles.name}> {this.state.email} </Text>
+              <Text style={styles.userinforight}> {this.state.email} </Text>
             </View>
           </View>
 
           {/* PASSWORD */}
-          <View style={styles.passwordButton}>
+          <View style={{ marginTop: '10%' }}>
             <Button
               marginTop="15%"
               color="#6360F3"
-              style={styles.button}
+              style={{ marginTop: '5%' }}
               title={'Edit Account Details >'}
               onPress={() => {
                 this.props.navigation.navigate('EditAccountDetails', {
@@ -115,11 +114,11 @@ export default class EditProfileScreen extends Component {
               }}></Button>
           </View>
 
-          <View style={styles.passwordButton}>
+          <View style={{ marginTop: '10%' }}>
             <Button
               marginTop="15%"
               color="#6360F3"
-              style={styles.button}
+              style={{ marginTop: '5%' }}
               title={'Logout'}
               onPress={async () => {
                 await this._logout();
@@ -130,69 +129,3 @@ export default class EditProfileScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  name: {
-    fontSize: 30,
-    marginTop: 5,
-    color: 'white',
-    textAlign: 'right',
-    alignItems: 'center',
-    marginRight: 20,
-  },
-
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  title: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 20,
-  },
-
-  //For label next to button
-  label: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'left',
-    margin: 10,
-    color: 'white',
-  },
-
-  passwordButton: {
-    marginTop: '15%',
-  },
-
-  button: {
-    marginTop: '5%',
-  },
-
-  header: {
-    textAlign: 'left',
-    color: 'white',
-    fontSize: 30,
-    margin: 20,
-    fontWeight: 'bold',
-  },
-
-  content: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 20,
-    margin: 20,
-    fontWeight: 'bold',
-  },
-  input: {
-    fontSize: 20,
-    color: 'white',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  text: {
-    fontSize: 16,
-    color: '#6360F3',
-  },
-});

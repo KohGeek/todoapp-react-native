@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { InputWithLabel, AppButton } from '../src/UI';
-import { setToken } from '../components/functions';
 import Config from 'react-native-config';
 
 export default class registerScreen extends Component {
@@ -20,7 +19,6 @@ export default class registerScreen extends Component {
       retype_password: '',
     };
   }
-
 
   async _saveSetting(key, value) {
     try {

@@ -1,21 +1,11 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  Alert,
-  TouchableNativeFeedbackBase,
-} from 'react-native';
+import { ScrollView, View, Text, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 import { useFocusEffect } from '@react-navigation/native';
-import {
-  validatePassword,
-  getUsername,
-  getEmail,
-} from '../components/functions';
+import { validatePassword } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
+import { styles } from '../style';
 
 function FetchData({ username }) {
   useFocusEffect(() => {});
@@ -158,7 +148,7 @@ export default class EditAccountDetails extends Component {
               //marginTop: '1%',
               //marginBottom: 40,
             }}>
-            <Text style={styles.name}> {this.state.username} </Text>
+            <Text style={styles.userinfo}> {this.state.username} </Text>
           </View>
 
           <View
@@ -309,52 +299,3 @@ export default class EditAccountDetails extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  name: {
-    fontSize: 40,
-    textAlign: 'left',
-    marginTop: 5,
-    color: 'white',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  title: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 20,
-  },
-  button: {
-    backgroundColor: '#6360F3',
-    margin: 10,
-  },
-  content: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 15,
-    margin: 20,
-    fontWeight: 'bold',
-  },
-  newinput: {
-    fontSize: 20,
-    color: 'white',
-    marginTop: 5,
-    marginBottom: 5,
-  },
-
-  passinput: {
-    fontSize: 20,
-    color: 'white',
-    marginTop: 20,
-    marginBottom: 30,
-  },
-
-  text: {
-    fontSize: 14,
-    color: '#6360F3',
-  },
-});

@@ -39,7 +39,7 @@ Date.prototype.formatted = function () {
   return `${daysText[day]}, ${monthsText[month]} ${date}, ${year}`;
 };
 
-export default class addTask extends Component {
+export default class AddTask extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Add Task',

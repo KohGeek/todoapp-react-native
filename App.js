@@ -1,5 +1,5 @@
 import React from 'react';
-import MainScreen from './components/homeStack';
+import MainScreen from './src/homeStack';
 
 function App(props) {
   return <MainScreen />;

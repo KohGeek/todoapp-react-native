@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import MainScreen from './mainScreen';
-import ProfileScreen from '../screens/signInScreen';
-import RegisterScreen from '../screens/registerScreen';
-import AddTaskScreen from './addTask';
-import EditProfileScreen from '../screens/EditProfileScreen';
-import EditAccountDetails from '../screens/EditAccountDetails';
-import { isLoggedIn } from './functions';
+import MainScreen from './screens/mainScreen';
+import ProfileScreen from './screens/signInScreen';
+import RegisterScreen from './screens/registerScreen';
+import AddTaskScreen from './screens/addTaskScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
+import EditAccountDetails from './screens/EditAccountDetailsScreen';
+import { isLoggedIn } from './components/functions';
 
 const Stack = createNativeStackNavigator();
 

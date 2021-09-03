@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setToken, syncToServer } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
 import Config from 'react-native-config';
-import SQLite from 'react-native-sqlite-storage';
 
 export default class signInScreen extends Component {
   static navigationOptions = {
@@ -20,7 +19,6 @@ export default class signInScreen extends Component {
       password: '',
       token: '',
       message: '',
-      // profile: [],
     };
   }
 
