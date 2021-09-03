@@ -60,6 +60,7 @@ def decode_auth_token(auth_token):
     c = db.cursor()
     c.execute("SELECT * FROM tokens WHERE token = ?", (auth_token,))
     data = c.fetchone()
+    print(data)
 
     data = jwt.decode(data[0], server.config.get('SECRET_KEY'), algorithms="HS256")
     print(data)
@@ -280,7 +281,9 @@ def logout():
 @socketio.on('push', namespace='/api')
 def push(json_data):
     try:
+        print("got data" + json_data['token'])
         uuid = decode_auth_token(json_data['token'])
+        print("decoded data")
         json_data.pop('token')
         filename = str(uuid['sub']) + '.json'
         filepath = path.join(userdir, filename)
@@ -291,6 +294,8 @@ def push(json_data):
         emit('error', {'message': 'Token expired'})
     except jwt.InvalidTokenError:
         emit('error', {'message': 'Invalid token/Logged out'})
+    except TypeError:
+        emit('error', {'message': 'Logged out'})
 
 @socketio.on('pull', namespace='/api')
 def pull(json_data):
