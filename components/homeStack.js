@@ -3,11 +3,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, View, Text } from 'react-native';
 
-import {   
+import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItem,
-  DrawerItemList, } from '@react-navigation/drawer';
+  DrawerItemList,
+} from '@react-navigation/drawer';
 
 import MainScreen from './mainScreen';
 import ProfileScreen from '../screens/signInScreen';
@@ -19,7 +20,6 @@ import EditAccountDetails from '../screens/EditAccountDetails';
 
 const Stack = createNativeStackNavigator();
 
-
 function AppNavigation() {
   return (
     <NavigationContainer>
@@ -28,13 +28,16 @@ function AppNavigation() {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="Index" component={MainScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Index" component={ProfileScreen} />
+        <Stack.Screen name="Main" component={MainScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Show" component={ShowScreen} />
         <Stack.Screen name="AddTask" component={AddTaskScreen} />
         <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-        <Stack.Screen name="EditAccountDetails" component={EditAccountDetails} />
+        <Stack.Screen
+          name="EditAccountDetails"
+          component={EditAccountDetails}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
