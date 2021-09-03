@@ -46,7 +46,7 @@ export async function syncToServer(operation) {
   });
 
   let db = SQLite.openDatabase({
-    name: 'tododb5',
+    name: 'todo.sqlite',
     createFromLocation: '~todo.sqlite',
   });
 
