@@ -65,9 +65,10 @@ export async function syncToServer(operation) {
 
   if (operation === 'push') {
     db.transaction(async tx => {
-      tx.executeSql('SELECT * FROM todo', [], async results => {
+      tx.executeSql('SELECT * FROM todo', [], async (tx, results) => {
         let token = await getToken();
         console.log(token);
+        console.log(results);
         let data = { token: token, database: results.rows.raw() };
         socket.emit('push', data);
         returndata = data;

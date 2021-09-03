@@ -92,10 +92,10 @@ export default class addTask extends Component {
             reminder,
             taskId,
           ],
-          results => {
+          (tx, results) => {
             console.log(this.state.title + ' is updated successful!');
           },
-          error => {
+          (tx, error) => {
             console.log('sql error' + error);
           },
         );
@@ -123,10 +123,10 @@ export default class addTask extends Component {
             reminder,
             false,
           ],
-          results => {
+          (tx, results) => {
             console.log(this.state.title + 'is added successful!');
           },
-          error => {
+          (tx, error) => {
             console.log('sql error' + error);
           },
         );
