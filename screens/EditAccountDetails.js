@@ -34,7 +34,6 @@ export default class EditAccountDetails extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.setItem('username', 'Sam');
     this._readSettings();
   }
 
@@ -153,6 +152,13 @@ export default class EditAccountDetails extends Component {
         } else if (this.state.new_password1 == this.state.new_password2) {  
             this._update();
         }
+
+        
+    console.log(this.state.new_email);
+    console.log(this.state.new_password1);
+    console.log(this.state.current_password);
+    console.log(this.state.new_password2);
+    console.log(this.state.new_email);
 
     };
 
