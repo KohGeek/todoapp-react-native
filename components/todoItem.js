@@ -16,7 +16,7 @@ export default function TodoItem({ item, _complete, _update }) {
     if (item.colour != null) {
       setColor(item.colour);
     }
-  }, [color, toggleCheckBox]);
+  }, [item]);
 
   // useFocusEffect(() => {
   //   _update();

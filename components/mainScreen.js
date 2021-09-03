@@ -45,8 +45,8 @@ export default function App({ navigation, route }) {
       // console.log('Ready to add ' + text);
       db.transaction(function (tx) {
         tx.executeSql(
-          'INSERT INTO todo(name, completed) VALUES(?,?)',
-          [text, 'false'],
+          'INSERT INTO todo(name,completed, reminder) VALUES(?,?,?)',
+          [text, 'false', '{"dateText": "", "time": ""}'],
           (tx, results) => {
             // console.log(text + ' is added successful!');
           },

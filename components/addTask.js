@@ -60,10 +60,9 @@ export default class addTask extends Component {
     let data = JSON.parse(this.props.route.params.data);
     let reminder = JSON.parse(data.reminder);
 
-
     console.log('Task ID: ' + data.id);
     this.state = {
-      selectedColor: data.colour || '#161718',
+      selectedColor: data.colour || 'white',
       priority: data.priority || '',
       title: data.name || '',
       labelColor: 'white',
@@ -248,7 +247,7 @@ export default class addTask extends Component {
               style={styles.userIcon}
               name="arrow-back"
               size={30}
-              color="white"
+              color="black"
               borderColor="blue"
             />
           </TouchableOpacity>
@@ -289,7 +288,13 @@ export default class addTask extends Component {
                 });
               }
             }}>
-            <Image style={styles.icon} source={require('../Image/tick2.png')} />
+            <Icon
+              style={styles.userIcon}
+              name="checkmark-sharp"
+              size={30}
+              color="black"
+              borderColor="blue"
+            />
           </TouchableOpacity>
         </View>
 
@@ -516,7 +521,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 20,
-    color: 'white',
+    color: 'black',
   },
   wrapper: {
     marginVertical: 1,
