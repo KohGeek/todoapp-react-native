@@ -32,7 +32,7 @@ export default function Header({ navigation, _update }) {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => syncToServer('pull')}>
+        <TouchableOpacity onPress={() => syncToServer('push')}>
           <Icon
             name="cloud-upload"
             size={30}
