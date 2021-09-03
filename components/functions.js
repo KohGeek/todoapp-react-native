@@ -8,7 +8,7 @@ import SQLite from 'react-native-sqlite-storage';
 // Returns 0 if password is valid
 // Returns 1 if either password is empty
 // Returns 2 if password does not match
-export function passwordValidation(password1, password2) {
+export function validatePassword(password1, password2) {
   if (password1 === '' || password2 === '') {
     return 1;
   }
@@ -24,6 +24,11 @@ export const getToken = async () => {
 
 export const setToken = async token => {
   return SInfo.setItem('token', token, {});
+};
+
+export const isLoggedIn = async () => {
+  const token = await getToken();
+  return token !== null;
 };
 
 // syncs database to server
