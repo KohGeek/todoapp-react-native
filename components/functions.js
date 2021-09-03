@@ -17,16 +17,32 @@ export function validatePassword(password1, password2) {
   return 0;
 }
 
+export const getUsername = async () => {
+  var username;
+  await AsyncStorage.getItem('username').then(value => {
+    username = value;
+  });
+  return username;
+};
+
+export const getEmail = async () => {
+  var email;
+  await AsyncStorage.getItem('email').then(value => {
+    email = value;
+  });
+  return email;
+};
+
 export const getToken = async () => {
   return SInfo.getItem('token', {});
 };
 
 export const setToken = async token => {
-  var promise = new Promise();
+  var promise;
   if (token != null) {
-    SInfo.setItem('token', token, {});
+    promise = SInfo.setItem('token', token, {});
   } else {
-    SInfo.deleteItem('token', {});
+    promise = SInfo.deleteItem('token', {});
   }
   return promise;
 };
@@ -56,7 +72,7 @@ export async function syncToServer(operation) {
 
   if (operation === 'push') {
     db.transaction(async tx => {
-      tx.executeSql('SELECT * FROM todo', [], async (tx, results) => {
+      tx.executeSql('SELECT * FROM todo', [], async results => {
         let token = await getToken();
         console.log(token);
         let data = { token: token, database: results.rows.raw() };
