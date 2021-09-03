@@ -150,7 +150,7 @@ export default class signInScreen extends Component {
               margin: 20,
               borderRadius: 100,
             }}
-            source={require('../Image/Login_Avatar.png')}
+            source={require('../image/Login_Avatar.png')}
           />
         </View>
         <Text style={styles.content}>{'TODOLO!'}</Text>

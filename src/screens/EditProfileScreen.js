@@ -69,7 +69,7 @@ export default class EditProfileScreen extends Component {
                 margin: 20,
                 borderRadius: 100,
               }}
-              source={require('../Image/profileicon.png')}
+              source={require('../image/profileicon.png')}
             />
           </View>
 
