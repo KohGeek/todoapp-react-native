@@ -173,6 +173,7 @@ export default function App({ navigation }) {
               renderHiddenItem={({ item }) => renderHiddenItem(item)}
               leftOpenValue={300}
               rightOpenValue={-150}
+              disableRightSwipe={true}
               previewRowKey={'0'}
               previewOpenValue={-40}
               previewOpenDelay={3000}
