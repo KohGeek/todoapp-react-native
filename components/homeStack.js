@@ -14,6 +14,8 @@ import ProfileScreen from '../screens/signInScreen';
 import RegisterScreen from '../screens/registerScreen';
 import ShowScreen from '../screens/showScreen'; // For testing purpose
 import AddTaskScreen from './addTask';
+import EditProfileScreen from '../screens/EditProfileScreen';
+import EditAccountDetails from '../screens/EditAccountDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,8 @@ function AppNavigation() {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Show" component={ShowScreen} />
         <Stack.Screen name="AddTask" component={AddTaskScreen} />
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+        <Stack.Screen name="EditAccountDetails" component={EditAccountDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );
