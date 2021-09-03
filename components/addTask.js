@@ -154,7 +154,7 @@ export default class addTask extends Component {
           this.state.selectedColor,
           this.state.priority,
           reminder,
-          'F',
+          false,
         ],
       );
     });
@@ -213,7 +213,7 @@ export default class addTask extends Component {
           {/* Not yet implement onPress */}
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
-            style={{ left: -100 }}>
+            style={{ left: -80 }}>
             <Icon
               style={styles.userIcon}
               name="arrow-back"
@@ -226,7 +226,7 @@ export default class addTask extends Component {
           <Text style={styles.title}>Add Task</Text>
 
           <TouchableOpacity
-            style={{ right: -100 }}
+            style={{ right: -80 }}
             onPress={() => {
               alert(
                 'Task added !\n\n' +
@@ -304,7 +304,7 @@ export default class addTask extends Component {
                 style={[
                   styles.touchableBtn,
                   {
-                    left: -50,
+                    left: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn1Color,
                   },
@@ -357,7 +357,7 @@ export default class addTask extends Component {
                 style={[
                   styles.touchableBtn,
                   {
-                    right: -50,
+                    right: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn3Color,
                   },
