@@ -21,6 +21,15 @@ export default class registerScreen extends Component {
     };
   }
 
+
+  async _saveSetting(key, value) {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (error) {
+      console.log('## ERROR SAVING ITEM ##: ', error);
+    }
+  }
+
   // Fetch from server: Register a new account
   _store() {
     var success = false;

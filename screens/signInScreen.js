@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setToken } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
+import Config from 'react-native-config';
 
 export default class signInScreen extends Component {
   static navigationOptions = {
