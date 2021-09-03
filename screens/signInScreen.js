@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { InputWithLabel, AppButton } from '../src/UI';
 
+let config = require('./Config');
+
 export default class signInScreen extends Component {
   static navigationOptions = {
     title: 'Login Screen',
@@ -23,7 +25,11 @@ export default class signInScreen extends Component {
 
     this.state = {
       username: '',
+      email: '',
       password: '',
+      token: '',
+      message: '',
+      // profile: [],
     };
   }
 
@@ -39,21 +45,23 @@ export default class signInScreen extends Component {
     }
   }
 
-  async _saveSetting() {
+  async _saveSettings(username, email, token, message) {
     try {
-      let var1 = [
-        'username',
-        this.state.username ? this.state.username.toString() : '',
-      ];
-      // console.log(var1);
-      // let var2 = [
-      //   'password',
-      //   this.state.password ? this.state.password.toString() : '',
-      // ];
-      // console.log(var2);
+      let var1 = ['username', username ? username.toString() : ''];
+      console.log('var1: ' + var1);
+      let var2 = ['message', message ? message.toString() : ''];
+      console.log('var2: ' + var2);
+
+      console.log(var3);
+      let var3 = ['email', email ? email.toString() : ''];
+      console.log('var3: ' + var3);
+
+      console.log(var4);
+      let var4 = ['token', token ? token.toString() : ''];
+      console.log('var4: ' + var4);
 
       //await AsyncStorage.multiSet([var1, var2]);
-      await AsyncStorage.multiSet([var1]);
+      await AsyncStorage.multiSet([var1, var2, var3, var4]);
     } catch (error) {
       console.log('## ERROR SAVING ITEM ##: ', error);
     }
@@ -64,8 +72,7 @@ export default class signInScreen extends Component {
 
     try {
       let keys = await AsyncStorage.multiGet(
-        //['name', 'email', 'gender', 'educationLevel', 'ReceiveP'],
-        ['username'],
+        ['message', 'username', 'email', 'token'],
         (err, stores) => {
           stores.map((result, i, store) => {
             // get at each store's key/value so you can work with it
@@ -75,9 +82,12 @@ export default class signInScreen extends Component {
               newStates[key] = value;
             }
 
-            console.log(key);
-            console.log(value);
-            console.log(['username'].indexOf(key));
+            // console.log('key: ');
+            // console.log(key);
+            // console.log('value: ');
+            // console.log(value);
+            // console.log('message and username: ');
+            // console.log(['message', 'username'].indexOf(key));
           });
           this.setState(newStates);
           console.log(newStates);
@@ -88,15 +98,67 @@ export default class signInScreen extends Component {
     }
   }
 
-  async _removeAllSettings() {
-    //let keys = ['name', 'email', 'gender', 'educationLevel', 'ReceiveP'];
-    let keys = ['username', 'password'];
-    AsyncStorage.multiRemove(keys, err => {
-      // keys k1 & k2 removed, if they existed
-      // callback to do some action after removal of item
-      console.log('Delete', keys);
-    });
+  _read() {
+    var success = false;
+    let url = config.settings.serverPath + '/api/login';
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password,
+      }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          success = false;
+          // Alert.alert('Error', response.status.toString());
+          throw Error('Error ' + response.status);
+        } else {
+          success = true;
+        }
+
+        return response.json();
+      })
+
+      .then(data => {
+        if (success) {
+          this._saveSettings(
+            data.username,
+            data.email,
+            data.token,
+            data.message,
+          );
+
+          console.log('THIS IS MESSAGE: ');
+          console.log(data.message);
+
+          Alert.alert(data.message, 'Welcome, ' + data.username + '!');
+          this.props.navigation.navigate('Index');
+        } else {
+          Alert.alert(data.message);
+        }
+      })
+
+      .catch(data => {
+        Alert.alert(data.message, 'Username or password incorrect');
+        // console.error(error);
+      });
   }
+
+  // async _removeAllSettings() {
+  //   //let keys = ['name', 'email', 'gender', 'educationLevel', 'ReceiveP'];
+  //   let keys = ['username', 'password'];
+  //   AsyncStorage.multiRemove(keys, err => {
+  //     // keys k1 & k2 removed, if they existed
+  //     // callback to do some action after removal of item
+  //     console.log('Delete', keys);
+  //   });
+  // }
 
   render() {
     const pressHandler = () => {
@@ -105,8 +167,7 @@ export default class signInScreen extends Component {
       } else if (this.state.password == '') {
         Alert.alert('Please enter your password.');
       } else {
-        Alert.alert('Welcome back, ' + this.state.username + '!');
-        this.props.navigation.navigate('Index');
+        this._read();
       }
     };
 
@@ -139,11 +200,11 @@ export default class signInScreen extends Component {
             label="Username"
             style={styles.input}
             placeholder={'Username / Email'}
-            value={this.state.username}
+            // value={this.state.username}
             onChangeText={username => {
               //this.setState({ name: name });
               this.setState({ username });
-              this._saveSetting('username', username);
+              // this._saveSetting('username', username);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -164,9 +225,9 @@ export default class signInScreen extends Component {
             // value={this.state.password}
             secureTextEntry={true}
             onChangeText={password => {
-              //this.setState({ password: password });
+              // this.setState({ password: password });
               this.setState({ password });
-              this._saveSetting('password', password);
+              // this._saveSetting('password', password);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -177,11 +238,7 @@ export default class signInScreen extends Component {
           <AppButton
             title="log in"
             theme="success"
-            onPress={pressHandler}
-            onLongPress={() => {
-              Alert.alert('Password: ' + this.state.password);
-            }} // TODO: for reference only
-          ></AppButton>
+            onPress={pressHandler}></AppButton>
           <Text
             style={styles.text}
             onPress={() => this.props.navigation.navigate('Register')}>
