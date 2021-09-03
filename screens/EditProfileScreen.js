@@ -1,18 +1,7 @@
 import React, { Component } from 'react';
-import {
-  AsyncStorage,
-  StyleSheet,
-  ScrollView,
-  View,
-  Switch,
-  Picker,
-  Text,
-  Button,
-  Alert,
-  Image,
-} from 'react-native';
+import { StyleSheet, View, Text, Button, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getToken, setToken } from '../components/functions';
-import { InputWithLabel, AppButton } from '../src/UI';
 import Config from 'react-native-config';
 
 export default class EditProfileScreen extends Component {
@@ -32,12 +21,10 @@ export default class EditProfileScreen extends Component {
 
   componentDidMount() {
     this._readSettings();
-    //this.state.username;
-    //this.state.email;
   }
 
   async _readSettings() {
-    newStates = {};
+    let newStates = {};
 
     try {
       let keys = await AsyncStorage.multiGet(
@@ -80,7 +67,7 @@ export default class EditProfileScreen extends Component {
         console.log(err);
       });
 
-    setToken('');
+    setToken(null);
     this.props.navigation.navigate('Index');
   }
 
@@ -96,8 +83,8 @@ export default class EditProfileScreen extends Component {
         <View style={{ alignItems: 'center' }}>
           <Image
             style={{
-              width: 200,
-              height: 200,
+              width: 150,
+              height: 150,
               margin: 20,
               borderRadius: 100,
             }}
@@ -160,7 +147,7 @@ export default class EditProfileScreen extends Component {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 50,
+    fontSize: 30,
     marginTop: 5,
     color: 'white',
     textAlign: 'right',
@@ -194,14 +181,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    //backgroundColor: '#6360F3',
-    //borderRadius: 10,
-    //margin: 10,
     marginTop: '5%',
-    //paddingRight: '10%',
-    //textAlign: 'left',
-    //marginTop: 10,
-    //flex: 0
   },
 
   header: {
@@ -228,8 +208,5 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: '#6360F3',
-    // textStyle: {
-    //   textDecorationLine: 'underline',
-    // },
   },
 });

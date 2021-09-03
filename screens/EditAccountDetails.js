@@ -1,21 +1,10 @@
 import React, { Component } from 'react';
-import {
-  AsyncStorage,
-  StyleSheet,
-  ScrollView,
-  View,
-  Switch,
-  Picker,
-  Text,
-  Button,
-  Alert,
-  Image,
-} from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
+import { useFocusEffect } from '@react-navigation/native';
 import { validatePassword } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
-
-let config = require('./Config');
 
 export default class EditAccountDetails extends Component {
   static navigationOptions = {
@@ -35,10 +24,6 @@ export default class EditAccountDetails extends Component {
     };
   }
 
-  componentDidMount() {
-    this._readSettings();
-  }
-
   async _saveSetting(key, value) {
     try {
       await AsyncStorage.setItem(key, value);
@@ -47,19 +32,18 @@ export default class EditAccountDetails extends Component {
     }
   }
 
-  async _saveSettings(new_username, new_email, new_password) {
+  async _saveSettings(new_username, new_email) {
     try {
-      let var1 = ['username', new_username ? username.toString() : ''];
+      let var1 = ['username', new_username];
       console.log('var1: ' + var1);
 
-      let var2 = ['new_email', new_email ? message.toString() : ''];
-      console.log('var2: ' + var2);
-
-      let var3 = ['email', new_password ? message.toString() : ''];
-      console.log('var2: ' + var2);
-
-      //await AsyncStorage.multiSet([var1, var2]);
-      await AsyncStorage.multiSet([var1, var2, var3, var4]);
+      if (new_email) {
+        let var2 = ['email', new_email];
+        console.log('var2: ' + var2);
+        await AsyncStorage.multiSet([var1, var2]);
+      } else {
+        await AsyncStorage.multiSet([var1]);
+      }
     } catch (error) {
       console.log('## ERROR SAVING ITEM ##: ', error);
     }
@@ -112,7 +96,6 @@ export default class EditAccountDetails extends Component {
       .then(response => {
         if (!response.ok) {
           success = false;
-          // Alert.alert('Error', response.status.toString());
           throw Error('Error ' + response.status);
         } else {
           success = true;
@@ -123,12 +106,8 @@ export default class EditAccountDetails extends Component {
 
       .then(data => {
         if (success) {
-          this._saveSettings(
-            data.new_username,
-            data.new_email,
-            data.new_password1,
-            Alert.alert('Details Successfully saved!'),
-          );
+          this._saveSettings(data.new_username, data.new_email);
+          Alert.alert('Details Successfully saved!');
         } else {
           Alert.alert('Details Failed to save! Please input again.');
         }
@@ -175,19 +154,14 @@ export default class EditAccountDetails extends Component {
           style={{
             flexwrap: 'wrap',
             flexDirection: 'row',
-            // marginTop: '3%',
-            // marginBottom: '5%',
             backgroundColor: '#1A1B1E',
           }}>
           <InputWithLabel
             label="Current Password"
             style={styles.passinput}
             placeholder={'Please fill this first'}
-            // value={this.state.username}
             onChangeText={current_password => {
-              //this.setState({ name: name });
               this.setState({ current_password });
-              // this._saveSetting('username', username);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -326,13 +300,11 @@ export default class EditAccountDetails extends Component {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 50,
+    fontSize: 40,
     textAlign: 'left',
     marginTop: 5,
     color: 'white',
-    //marginBottom: 5,
   },
-
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -372,8 +344,5 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     color: '#6360F3',
-    // textStyle: {
-    //   textDecorationLine: 'underline',
-    // },
   },
 });
