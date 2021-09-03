@@ -155,4 +155,73 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
+
+  view: {
+    paddingTop: 20,
+  },
+
+  buttonText:{
+    color: 'white', 
+    fontSize: 20,
+    textAlign:'center',
+  },
+
+  addTaskHeader: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  inputStyle: {
+    color: 'white',
+    backgroundColor: '#313437',
+    borderRadius: 50,
+  },
+
+  priority: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+  },
+
+  touchableBtn: {
+    backgroundColor: '#313437',
+    padding: 10,
+    borderRadius: 20,
+    paddingHorizontal: 15,
+  },
+
+  label: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 3,
+    textAlignVertical: 'center',
+    color: 'white',
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: 20,
+    color: 'black',
+  },
+
+  addTaskwrapper: {
+    marginVertical: 1,
+  },
+
+  icon: {
+    width: 20,
+    height: 20,
+  },
+  
 });

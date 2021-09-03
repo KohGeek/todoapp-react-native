@@ -13,6 +13,7 @@ import {
 import { Input } from '../src/UI.js';
 import { ColorPicker } from 'react-native-btr';
 import TimePicker from 'react-native-super-timepicker';
+import { styles } from '../style';
 
 let SQLite = require('react-native-sqlite-storage');
 
@@ -188,7 +189,7 @@ export default class addTask extends Component {
         {/* Header */}
         <View
           style={[
-            styles.header,
+            styles.addTaskHeader,
             {
               backgroundColor: this.state.selectedColor,
               flex: 0.1125,
@@ -265,7 +266,7 @@ export default class addTask extends Component {
           <View style={styles.view}>
             <Text style={styles.label}>Color</Text>
 
-            <View style={styles.wrapper}>
+            <View style={styles.addTaskwrapper}>
               <ColorPicker
                 selectedColor={this.state.selectedColor}
                 onSelect={selectedColor => {
@@ -274,10 +275,10 @@ export default class addTask extends Component {
                   });
                 }}
               />
-              
-                <Text style={{textAlign:'center', color: 'white' }}>
-                  Scroll for more colors.
-                </Text>
+
+              <Text style={{ textAlign: 'center', color: 'white' }}>
+                Scroll for more colors.
+              </Text>
             </View>
           </View>
 
@@ -285,94 +286,90 @@ export default class addTask extends Component {
           <View style={styles.view}>
             <Text style={styles.label}>Priority</Text>
 
-            <View style={[styles.priority,{flex:1,flexDirection:'row'}]}>
-              
-              <View style={{flex:1, paddingRight:5}}>
-              <TouchableOpacity
-                style={[
-                  styles.touchableBtn,
-                  {
-                    paddingHorizontal: 30,
-                    backgroundColor: this.state.prioBtn1Color,
-                    
-                  },
-                ]}
-                onPress={() => {
-                  if (this.state.prioBtn1Color === 'red') {
-                    this.setState({
-                      priority: '',
-                      prioBtn1Color: '#313437',
-                    });
-                  } else {
-                    this.setState({
-                      priority: 'L',
-                      prioBtn1Color: 'red',
-                      prioBtn2Color: '#313437',
-                      prioBtn3Color: '#313437',
-                    });
-                  }
-                }}>
-                <Text style={styles.buttonText}>Low</Text>
-              </TouchableOpacity>
+            <View style={[styles.priority, { flex: 1, flexDirection: 'row' }]}>
+              <View style={{ flex: 1, paddingRight: 5 }}>
+                <TouchableOpacity
+                  style={[
+                    styles.touchableBtn,
+                    {
+                      paddingHorizontal: 30,
+                      backgroundColor: this.state.prioBtn1Color,
+                    },
+                  ]}
+                  onPress={() => {
+                    if (this.state.prioBtn1Color === 'red') {
+                      this.setState({
+                        priority: '',
+                        prioBtn1Color: '#313437',
+                      });
+                    } else {
+                      this.setState({
+                        priority: 'L',
+                        prioBtn1Color: 'red',
+                        prioBtn2Color: '#313437',
+                        prioBtn3Color: '#313437',
+                      });
+                    }
+                  }}>
+                  <Text style={styles.buttonText}>Low</Text>
+                </TouchableOpacity>
               </View>
-              
-              <View style = {{flex:1}}>
-              <TouchableOpacity
-                style={[
-                  styles.touchableBtn,
-                  {
-                    paddingVertical: 10,
-                    backgroundColor: this.state.prioBtn2Color,
 
-                  },
-                ]}
-                onPress={() => {
-                  if (this.state.prioBtn2Color === 'red') {
-                    this.setState({
-                      priority: '',
-                      prioBtn2Color: '#313437',
-                    });
-                  } else {
-                    this.setState({
-                      priority: 'M',
-                      prioBtn1Color: '#313437',
-                      prioBtn2Color: 'red',
-                      prioBtn3Color: '#313437',
-                    });
-                  }
-                }}>
-                <Text style={styles.buttonText}>Medium</Text>
-              </TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <TouchableOpacity
+                  style={[
+                    styles.touchableBtn,
+                    {
+                      paddingVertical: 10,
+                      backgroundColor: this.state.prioBtn2Color,
+                    },
+                  ]}
+                  onPress={() => {
+                    if (this.state.prioBtn2Color === 'red') {
+                      this.setState({
+                        priority: '',
+                        prioBtn2Color: '#313437',
+                      });
+                    } else {
+                      this.setState({
+                        priority: 'M',
+                        prioBtn1Color: '#313437',
+                        prioBtn2Color: 'red',
+                        prioBtn3Color: '#313437',
+                      });
+                    }
+                  }}>
+                  <Text style={styles.buttonText}>Medium</Text>
+                </TouchableOpacity>
               </View>
-             
-              <View style={{flex:1, paddingLeft:5}}>
-              <TouchableOpacity
-                style={[
-                  styles.touchableBtn,
-                  {
-                    paddingHorizontal: 30,
-                    backgroundColor: this.state.prioBtn3Color,
-                  },
-                ]}
-                onPress={() => {
-                  if (this.state.prioBtn3Color === 'red') {
-                    this.setState({
-                      priority: '',
-                      prioBtn3Color: '#313437',
-                    });
-                  } else {
-                    this.setState({
-                      priority: 'H',
-                      prioBtn1Color: '#313437',
-                      prioBtn2Color: '#313437',
-                      prioBtn3Color: 'red',
-                    });
-                  }
-                }}>
-                <Text style={styles.buttonText}>High</Text>
-              </TouchableOpacity>
+
+              <View style={{ flex: 1, paddingLeft: 5 }}>
+                <TouchableOpacity
+                  style={[
+                    styles.touchableBtn,
+                    {
+                      paddingHorizontal: 30,
+                      backgroundColor: this.state.prioBtn3Color,
+                    },
+                  ]}
+                  onPress={() => {
+                    if (this.state.prioBtn3Color === 'red') {
+                      this.setState({
+                        priority: '',
+                        prioBtn3Color: '#313437',
+                      });
+                    } else {
+                      this.setState({
+                        priority: 'H',
+                        prioBtn1Color: '#313437',
+                        prioBtn2Color: '#313437',
+                        prioBtn3Color: 'red',
+                      });
+                    }
+                  }}>
+                  <Text style={styles.buttonText}>High</Text>
+                </TouchableOpacity>
               </View>
-            
             </View>
           </View>
 
@@ -426,64 +423,3 @@ export default class addTask extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  view: {
-    paddingTop: 20,
-  },
-  buttonText:{
-    color: 'white', 
-    fontSize: 20,
-    textAlign:'center',
-  },
-  header: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputStyle: {
-    color: 'white',
-    backgroundColor: '#313437',
-    borderRadius: 50,
-  },
-  priority: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-  },
-  touchableBtn: {
-    backgroundColor: '#313437',
-    padding: 10,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-  },
-  label: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 3,
-    textAlignVertical: 'center',
-    color: 'white',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    margin: 20,
-    color: 'black',
-  },
-  wrapper: {
-    marginVertical: 1,
-  },
-  icon: {
-    width: 20,
-    height: 20,
-  },
-});
