@@ -29,8 +29,9 @@ import Header from './header';
 import Footer from './footer';
 import TodoItem from './todoItem';
 
-export default function App({ navigation }) {
+export default function App({ navigation, route }) {
   const [todos, setTodos] = useState([]);
+  const [addtask, setaddTask] = useState(route.AddTask || false);
 
   // const pressHandler = key => {
   //   setTodos(prevTodos => {
@@ -128,6 +129,11 @@ export default function App({ navigation }) {
     console.log('Database opened');
     _update();
   }, []);
+
+  useEffect(() => {
+    console.log(route);
+    _update();
+  }, [addtask]);
 
   const _update = () => {
     db.transaction(function (tx) {

@@ -51,12 +51,12 @@ export default class addTask extends Component {
     super(props);
 
     this.db = SQLite.openDatabase(
-      { name: 'tododb', createFromLocation: '~todo.sqlite' },
+      { name: 'tododb4', createFromLocation: '~todo.sqlite' },
       this.openDb,
       this.errorDb,
     );
 
-    console.log(this.props.route.params.data)
+    console.log(this.props.route.params.data);
     let data = JSON.parse(this.props.route.params.data);
     let reminder = JSON.parse(data.reminder);
 
@@ -147,18 +147,32 @@ export default class addTask extends Component {
   _insertNewTask() {
     var obj = { dateText: this.state.dateText, time: this.state.time };
     var reminder = JSON.stringify(obj);
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO todo(name,colour,priority,reminder,completed) VALUES(?,?,?,?,?)',
-        [
-          this.state.title,
-          this.state.selectedColor,
-          this.state.priority,
-          reminder,
-          false,
-        ],
-      );
-    });
+    this.db.transaction(
+      tx => {
+        tx.executeSql(
+          'INSERT INTO todo(name,colour,priority,reminder,completed) VALUES(?,?,?,?,?)',
+          [
+            this.state.title,
+            this.state.selectedColor,
+            this.state.priority,
+            reminder,
+            false,
+          ],
+          (tx, results) => {
+            console.log(this.state.title + 'is added successful!');
+          },
+          (tx, error) => {
+            console.log('sql error' + error);
+          },
+        );
+      },
+      error => {
+        console.log('sql error' + error.message);
+      },
+      () => {
+        console.log('transa ok!');
+      },
+    );
   }
 
   openDatePicker = async () => {
@@ -248,14 +262,16 @@ export default class addTask extends Component {
               );
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
-                this.props.navigation.navigate("Index",{
-                  AddTask:true,
-                })
+                console.log('Ready to add task!!');
+                this.props.navigation.navigate('Index', {
+                  AddTask: true,
+                });
               } else {
-                this._insertNewTask;
-                this.props.navigation.navigate("Index",{
-                  AddTask:true,
-                })
+                this._insertNewTask();
+                console.log('Ready to add task!!');
+                this.props.navigation.navigate('Index', {
+                  AddTask: true,
+                });
               }
             }}>
             <Image style={styles.icon} source={require('../Image/tick2.png')} />
