@@ -2,7 +2,7 @@ import React from 'react';
 import SInfo from 'react-native-sensitive-info';
 import Config from 'react-native-config';
 import io from 'socket.io-client';
-import { SQLiteDatabase } from 'react-native-sqlite-storage';
+import SQLite from 'react-native-sqlite-storage';
 
 // Password validation
 // Returns 0 if password is valid
@@ -35,10 +35,15 @@ export function syncToServer(operation) {
     transports: ['websocket', 'polling'],
   });
 
-  let db = SQLiteDatabase.openDatabase({
+  let db = SQLite.openDatabase({
     name: 'tododb',
     createFromLocation: '~todo.sqlite',
   });
+
+  let returndata = [];
+
+  console.log('syncToServer: ' + operation);
+  console.log(`http://${Config.API_URL}:${Config.API_PORT}/api/`);
 
   if (operation === 'push') {
     db.transaction(tx => {
@@ -46,14 +51,16 @@ export function syncToServer(operation) {
         let data = results.rows.raw;
         data['token'] = getToken();
         socket.emit('push', data);
+        returndata = data;
       });
     });
   } else if (operation === 'pull') {
     socket.emit('pull', { token: getToken() });
     socket.on('pull', data => {
       db.transaction(tx => {
+        returndata = data;
         let parsedData = JSON.parse(data);
-        tx.executeSql('DELETE * FROM todo');
+        tx.executeSql('DELETE FROM todo');
         parsedData.forEach(item => {
           tx.executeSql(
             'INSERT INTO todo (id, name, priority, color, reminder, completed) VALUES (?, ?, ?, ?, ?, ?)',
@@ -70,4 +77,15 @@ export function syncToServer(operation) {
       });
     });
   }
+
+  return returndata;
 }
+
+export const emptyTodo = {
+  id: null,
+  name: '',
+  priority: '',
+  color: '',
+  reminder: '',
+  completed: false,
+};
