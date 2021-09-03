@@ -327,7 +327,7 @@ export default class addTask extends Component {
                 }}
               />
 
-              <Text style={{ left: 140, color: 'white' }}>
+              <Text style={{ left: 110, color: 'white' }}>
                 Scroll for more colors.
               </Text>
             </View>
