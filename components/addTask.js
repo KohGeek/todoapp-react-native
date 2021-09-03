@@ -248,8 +248,14 @@ export default class addTask extends Component {
               );
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
+                navigation.navigate("Index",{
+                  AddTask:true,
+                })
               } else {
                 this._insertNewTask;
+                navigation.navigate("Index",{
+                  AddTask:true,
+                })
               }
             }}>
             <Image style={styles.icon} source={require('../Image/tick2.png')} />
