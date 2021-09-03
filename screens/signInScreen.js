@@ -1,19 +1,8 @@
 import React, { Component } from 'react';
-import {
-  AsyncStorage,
-  StyleSheet,
-  ScrollView,
-  View,
-  Switch,
-  Picker,
-  Text,
-  Button,
-  Alert,
-  Image,
-} from 'react-native';
+import { StyleSheet, View, Text, Alert, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setToken } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
-
-let config = require('./Config');
 
 export default class signInScreen extends Component {
   static navigationOptions = {
@@ -81,13 +70,6 @@ export default class signInScreen extends Component {
             {
               newStates[key] = value;
             }
-
-            // console.log('key: ');
-            // console.log(key);
-            // console.log('value: ');
-            // console.log(value);
-            // console.log('message and username: ');
-            // console.log(['message', 'username'].indexOf(key));
           });
           this.setState(newStates);
           console.log(newStates);
@@ -100,7 +82,7 @@ export default class signInScreen extends Component {
 
   _read() {
     var success = false;
-    let url = config.settings.serverPath + '/api/login';
+    let url = `${Config.API_URL}:${Config.API_PORT}/api/login`;
 
     fetch(url, {
       method: 'POST',
@@ -134,6 +116,8 @@ export default class signInScreen extends Component {
             data.message,
           );
 
+          setToken(data.token);
+
           console.log('THIS IS MESSAGE: ');
           console.log(data.message);
 
@@ -146,19 +130,8 @@ export default class signInScreen extends Component {
 
       .catch(data => {
         Alert.alert(data.message, 'Username or password incorrect');
-        // console.error(error);
       });
   }
-
-  // async _removeAllSettings() {
-  //   //let keys = ['name', 'email', 'gender', 'educationLevel', 'ReceiveP'];
-  //   let keys = ['username', 'password'];
-  //   AsyncStorage.multiRemove(keys, err => {
-  //     // keys k1 & k2 removed, if they existed
-  //     // callback to do some action after removal of item
-  //     console.log('Delete', keys);
-  //   });
-  // }
 
   render() {
     const pressHandler = () => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import SInfo from 'react-native-sensitive-info';
 import Config from 'react-native-config';
 import io from 'socket.io-client';

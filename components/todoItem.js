@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, TouchableHighlight, View } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import { useFocusEffect } from '@react-navigation/native';
 
 import { styles } from '../style';
 

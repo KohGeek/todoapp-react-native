@@ -1,19 +1,10 @@
 import React, { Component } from 'react';
-import {
-  AsyncStorage,
-  StyleSheet,
-  ScrollView,
-  View,
-  Switch,
-  Picker,
-  Text,
-  Button,
-  Alert,
-  Image,
-} from 'react-native';
+import { StyleSheet, View, Text, Alert, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { InputWithLabel, AppButton } from '../src/UI';
+import { setToken } from '../components/functions';
+import Config from 'react-native-config';
 
-let config = require('./Config');
 export default class registerScreen extends Component {
   static navigationOptions = {
     title: 'Register Screen',
@@ -28,85 +19,14 @@ export default class registerScreen extends Component {
       password: '',
       retype_password: '',
     };
-
-    // this._store = this._store.bind(this);
   }
-
-  componentDidMount() {
-    this._readSettings();
-  }
-
-  async _saveSetting(key, value) {
-    try {
-      await AsyncStorage.setItem(key, value);
-    } catch (error) {
-      console.log('## ERROR SAVING ITEM ##: ', error);
-    }
-  }
-
-  // async _saveSetting() {
-  //   try {
-  //     let var1 = [
-  //       'username',
-  //       this.state.username ? this.state.username.toString() : '',
-  //     ];
-  //     console.log(var1);
-  //     // let var2 = [
-  //     //   'password',
-  //     //   this.state.password ? this.state.password.toString() : '',
-  //     // ];
-  //     // console.log(var2);
-
-  //     // await AsyncStorage.multiSet([var1, var2]);
-  //     await AsyncStorage.multiSet([var1]);
-  //   } catch (error) {
-  //     console.log('## ERROR SAVING ITEM ##: ', error);
-  //   }
-  // }
-
-  async _readSettings() {
-    newStates = {};
-
-    try {
-      let keys = await AsyncStorage.multiGet(['username'], (err, stores) => {
-        stores.map((result, i, store) => {
-          let key = store[i][0];
-          let value = store[i][1];
-          {
-            newStates[key] = value;
-          }
-
-          console.log(key);
-          console.log(value);
-          console.log(
-            //['name', 'email', 'gender', 'educationLevel'].indexOf(key),
-            ['username'].indexOf(key),
-          );
-        });
-        this.setState(newStates);
-        console.log(newStates);
-      });
-    } catch (error) {
-      console.log('## ERROR READING ITEMS ##: ', error);
-    }
-  }
-
-  // async _removeAllSettings() {
-  //   //let keys = ['name', 'email', 'gender', 'educationLevel', 'ReceiveP'];
-  //   let keys = ['username', 'password'];
-  //   AsyncStorage.multiRemove(keys, err => {
-  //     // keys k1 & k2 removed, if they existed
-  //     // callback to do some action after removal of item
-  //     console.log('Delete', keys);
-  //   });
-  // }
 
   // Fetch from server: Register a new account
   _store() {
     var success = false;
 
     console.log('CAME INTO STORE');
-    let url = config.settings.serverPath + '/api/register';
+    let url = `${Config.API_URL}:${Config.API_PORT}/api/register`;
 
     fetch(url, {
       method: 'POST',
@@ -124,9 +44,6 @@ export default class registerScreen extends Component {
         if (!response.ok) {
           success = false;
           return response.json(); // return the message
-
-          // Alert.alert('Error', response.status.toString());
-          // throw Error('Error ' + response.status);
         } else {
           success = true;
           this.props.navigation.navigate('Index'); // navigate to home page
@@ -189,7 +106,6 @@ export default class registerScreen extends Component {
 
         <View
           style={{
-            //backgroundColor: '#23272a',
             flexwrap: 'wrap',
             flexDirection: 'row',
           }}>
@@ -199,7 +115,6 @@ export default class registerScreen extends Component {
             placeholder={'Your name'}
             value={this.state.username}
             onChangeText={username => {
-              //this.setState({ name: name });
               this.setState({ username });
               this._saveSetting('username', username);
             }}
@@ -211,7 +126,6 @@ export default class registerScreen extends Component {
 
         <View
           style={{
-            //backgroundColor: '#23272a',
             flexwrap: 'wrap',
             flexDirection: 'row',
           }}>
@@ -221,7 +135,6 @@ export default class registerScreen extends Component {
             placeholder={'e.g., abc@mail.com'}
             value={this.state.email}
             onChangeText={email => {
-              //this.setState({ name: name });
               this.setState({ email });
               this._saveSetting('email', email);
             }}
@@ -233,7 +146,6 @@ export default class registerScreen extends Component {
 
         <View
           style={{
-            //backgroundColor: 'lightslategrey',
             flexwrap: 'wrap',
             flexDirection: 'row',
           }}>
@@ -244,7 +156,6 @@ export default class registerScreen extends Component {
             value={this.state.password}
             secureTextEntry={true}
             onChangeText={password => {
-              //this.setState({ password: password });
               this.setState({ password });
               this._saveSetting('password', password);
             }}
@@ -256,7 +167,6 @@ export default class registerScreen extends Component {
 
         <View
           style={{
-            //backgroundColor: 'lightslategrey',
             flexwrap: 'wrap',
             flexDirection: 'row',
           }}>
@@ -325,8 +235,5 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: '#6360F3',
-    // textStyle: {
-    //   textDecorationLine: 'underline',
-    // },
   },
 });
