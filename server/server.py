@@ -200,7 +200,7 @@ def update():
             response_json = {'message': 'Invalid current password'}
         else:
             # if json contains username, update username if not already in database
-            if 'username' in request.json:
+            if 'username' in request.json and (request.json['username'] != current_username or request.json['username'] != "" or request.json['username'] != None):
                 username = request.json['username']
                 c.execute("SELECT * FROM users WHERE username=?", (username,))
                 data = c.fetchone()
@@ -213,7 +213,7 @@ def update():
                     response_json['username_status'] = 'Username already exists'
             
             # if json contains email, update email if not already in database
-            if 'email' in request.json:
+            if 'email' in request.json and (request.json['email'] != None or request.json['email'] != ''):
                 email = request.json['email']
                 c.execute("SELECT * FROM users WHERE email=?", (email,))
                 data = c.fetchone()
@@ -226,7 +226,7 @@ def update():
                     response_json['email_status'] = 'Email already exists'
 
             # if json contains password, update password if not already in database
-            if 'password' in request.json:
+            if 'password' in request.json and (request.json['password'] != None or request.json['password'] != ''):
                 password = request.json['password']
                 hashed_password = PasswordHasher().hash(password)
                 c.execute("UPDATE users SET hashedpassword=? WHERE current_username=?", (hashed_password, current_username))
