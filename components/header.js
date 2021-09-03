@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import color from '../app/config/colors';
 
-export default function Header({ navigation, _update }) {
+export default function Header({ navigation }) {
   const pressHandler = () => {
     navigation.navigate('Profile');
   };
@@ -26,14 +26,14 @@ export default function Header({ navigation, _update }) {
         <TouchableOpacity>
           <Icon
             style={styles.userIcon}
-            name="cloud-upload"
+            name="refresh"
             size={30}
             color="white"
             borderColor="blue"
           />
         </TouchableOpacity>
 
-        {/* <TouchableOpacity>
+        <TouchableOpacity>
           <Icon
             style={styles.userIcon}
             name="sort-amount-desc"
@@ -41,7 +41,7 @@ export default function Header({ navigation, _update }) {
             color="white"
             borderColor="blue"
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={pressHandler}>
           <Icon
@@ -96,9 +96,5 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: 'red',
     width: 150,
-  },
-
-  userIcon: {
-    // padding: 1,
   },
 });

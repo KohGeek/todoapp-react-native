@@ -1,16 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, TouchableHighlight, View } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
-export default function TodoItem({ item, _complete }) {
+export default function TodoItem({ item }) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [slashedText, setSlashedText] = useState(false);
 
-  useEffect(() => {
-    // console.log(item.completed);
-    if (item.completed == 'true') {
-      setToggleCheckBox(true);
-    }
-  }, []);
+  // const slashing = () => {
+  //   toggleCheckBox != false
+  //     ? (setToggleCheckBox(false), setSlashedText(false))
+  //     : (setToggleCheckBox(true), setSlashedText(true));
+  // };
+
+  // const slashing = () => {
+  //   toggleCheckBox != false
+  //     ? console.log('text is normal')
+  //     : console.log('text is slashed');
+  // };
+
+  // const slashing = () => {
+  //   toggleCheckBox != false ? false : true;
+  // };
 
   return (
     <TouchableHighlight onPress={() => console.log('You touched me')}>
@@ -21,12 +31,6 @@ export default function TodoItem({ item, _complete }) {
           value={toggleCheckBox}
           onValueChange={newValue => {
             setToggleCheckBox(newValue);
-            console.log(item.id + 'is set to ' + newValue);
-            if (newValue == 0) {
-              _complete(item.id, 'false');
-            } else if (newValue == 1) {
-              _complete(item.id, 'true');
-            }
           }}
         />
         <Text
@@ -41,7 +45,6 @@ export default function TodoItem({ item, _complete }) {
               : { position: 'relative', top: 5 })
           }>
           {item.name}
-          {item.colour}
         </Text>
       </View>
     </TouchableHighlight>

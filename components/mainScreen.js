@@ -40,32 +40,15 @@ export default function App({ navigation }) {
 
   const submitHandler = text => {
     if (text.length > 3) {
-      // console.log('Ready to add ' + text);
-      db.transaction(function (tx) {
-        tx.executeSql(
-          'INSERT INTO todo(name, completed) VALUES(?,?)',
-          [text, 'false'],
-          (tx, results) => {
-            // console.log(text + ' is added successful!');
-          },
-        );
+      setTodos(prevTodos => {
+        return [{ text: text, key: Math.random().toString() }, ...prevTodos];
       });
-      _update();
     } else {
       Alert.alert('OOPS!', 'Todos myst be over 3 chars long!', [
         { text: 'Understood', onPress: () => console.log('alert closed') },
       ]);
     }
   };
-
-  // const _insert = () => {
-  //   db.transaction(function (tx) {
-  //     tx.executeSql('INSERT INTO todo(name) VALUES(?)', [id], (tx, results) => {
-  //       console.log(id + ' is deleted successful!');
-  //     });
-  //   });
-  //   _update();
-  // };
 
   //hidden function
   const renderHiddenItem = (data, rowMap) => (
@@ -83,74 +66,48 @@ export default function App({ navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
-        onPress={() => {
-          console.log(data.id);
-          deleteRow(data.id);
-        }}>
+        onPress={() => deleteRow(rowMap, data.item.key)}>
         <Text style={styles.backTextWhite}>Delete</Text>
       </TouchableOpacity>
     </View>
   );
 
   //close function
-  const closeRow = id => {
-    console.log('This row closed', id);
+  const closeRow = (rowMap, rowKey) => {
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow();
+      console.log('This row closed', rowKey);
+    }
   };
 
   //delete function
-  const deleteRow = id => {
-    // closeRow(id);
-    // const newData = [...todos];
-    // const prevIndex = todos.findIndex(item => item.key === rowKey);
-    // newData.splice(prevIndex, 1);
-    // setTodos(newData);
-    // console.log(id + ' is ready to be deleted!');
-    db.transaction(function (tx) {
-      tx.executeSql('DELETE FROM todo WHERE id= ?', [id], (tx, results) => {
-        // console.log(id + ' is deleted successful!');
-      });
-    });
-    _update();
+  const deleteRow = (rowMap, rowKey) => {
+    closeRow(rowMap, rowKey);
+    const newData = [...todos];
+    const prevIndex = todos.findIndex(item => item.key === rowKey);
+    newData.splice(prevIndex, 1);
+    setTodos(newData);
   };
 
   //detection for row slide action
-  // const onRowDidOpen = rowKey => {
-  //   console.log('This row opened', rowKey);
-  // };
+  const onRowDidOpen = rowKey => {
+    console.log('This row opened', rowKey);
+  };
 
   var db = openDatabase({
-    name: 'tododb3',
+    name: 'tododb',
     createFromLocation: '~todo.sqlite',
   });
 
   useEffect(() => {
     console.log('Database opened');
-    _update();
-  }, []);
-
-  const _update = () => {
     db.transaction(function (tx) {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         setTodos(results.rows.raw());
         console.log(results.rows.raw());
       });
     });
-  };
-
-  const _complete = (id, completed) => {
-    console.log('ready to set complete state');
-    db.transaction(function (tx) {
-      tx.executeSql(
-        'UPDATE todo SET completed=? WHERE id=?',
-        [completed, id],
-        (tx, results) => {
-          console.log('success to set complete state');
-          // console.log(results.rows.raw());
-        },
-      );
-    });
-    _update();
-  };
+  }, []);
 
   return (
     <TouchableWithoutFeedback
@@ -159,23 +116,21 @@ export default function App({ navigation }) {
         console.log('Dismissed keyboard');
       }}>
       <View style={styles.container}>
-        <Header navigation={navigation} _update={_update} />
+        <Header navigation={navigation} />
 
         <View style={styles.content}>
           <AddTodo submitHandler={submitHandler} />
           <View style={styles.list}>
             <SwipeListView
               data={todos}
-              renderItem={({ item }) => (
-                <TodoItem item={item} _complete={_complete} />
-              )}
-              renderHiddenItem={({ item }) => renderHiddenItem(item)}
+              renderItem={({ item }) => <TodoItem item={item} />}
+              renderHiddenItem={renderHiddenItem}
               leftOpenValue={300}
               rightOpenValue={-150}
               previewRowKey={'0'}
               previewOpenValue={-40}
               previewOpenDelay={3000}
-              // onRowDidOpen={onRowDidOpen}
+              onRowDidOpen={onRowDidOpen}
             />
           </View>
         </View>
