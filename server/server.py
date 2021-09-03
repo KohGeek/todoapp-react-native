@@ -206,7 +206,7 @@ def update():
                 data = c.fetchone()
 
                 if data is None:
-                    c.execute("UPDATE users SET username=? WHERE current_username=?", (username, current_username))
+                    c.execute("UPDATE users SET username=? WHERE username=?", (username, current_username))
                     response_json['username_status'] = 'Username updated'
                     response_code = 200
                 else: 
@@ -219,7 +219,7 @@ def update():
                 data = c.fetchone()
 
                 if data is None:
-                    c.execute("UPDATE users SET email=? WHERE current_username=?", (email, current_username))
+                    c.execute("UPDATE users SET email=? WHERE username=?", (email, current_username))
                     response_json['email_status'] = 'Email updated'
                     response_code = 200
                 else:
@@ -229,7 +229,7 @@ def update():
             if 'password' in request.json and (request.json['password'] != None or request.json['password'] != ''):
                 password = request.json['password']
                 hashed_password = PasswordHasher().hash(password)
-                c.execute("UPDATE users SET hashedpassword=? WHERE current_username=?", (hashed_password, current_username))
+                c.execute("UPDATE users SET hashedpassword=? WHERE username=?", (hashed_password, current_username))
 
                 response_json['password_message'] = 'Password updated'
                 response_code = 200

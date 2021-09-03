@@ -103,9 +103,9 @@ export default class EditAccountDetails extends Component {
       },
       body: JSON.stringify({
         current_username: this.state.username,
+        current_password: this.state.current_password,
         username: this.state.new_username,
         email: this.state.new_email,
-        current_password: this.state.current_password,
         password: this.state.new_password1,
       }),
     })
@@ -133,27 +133,26 @@ export default class EditAccountDetails extends Component {
           Alert.alert('Details Failed to save! Please input again.');
         }
       })
-      .catch(data => {
+      .catch(error => {
         console.error(error);
       });
   }
 
-  render() {
-    const pressHandler = () => {
-      if (this.state.current_password == '') {
-        Alert.alert('Please enter your Current Password!');
-      } else if (this.state.new_email == '') {
-        this.state.new_email = null;
-      } else if (this.state.new_username == '') {
-        this.state.username = null;
-      } else if (
-        validatePassword(this.state.new_password1, this.state.new_password2) ==
+  pressHandler = () => {
+    if (this.state.current_password == '') {
+      Alert.alert('Please enter your Current Password!');
+    } else {
+      if (
+        validatePassword(this.state.new_password1, this.state.new_password2) !=
         0
       ) {
-        this._update();
+        this.state.new_password1 = '';
       }
-    };
+      this._update();
+    }
+  };
 
+  render() {
     return (
       <ScrollView
         style={{
@@ -318,7 +317,7 @@ export default class EditAccountDetails extends Component {
           <AppButton
             title="SAVE"
             theme="success"
-            onPress={pressHandler}></AppButton>
+            onPress={() => this.pressHandler()}></AppButton>
         </View>
       </ScrollView>
     );
