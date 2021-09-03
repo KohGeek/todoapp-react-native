@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { openDatabase } from 'react-native-sqlite-storage';
 
@@ -29,8 +30,9 @@ import Header from './header';
 import Footer from './footer';
 import TodoItem from './todoItem';
 
-export default function App({ navigation }) {
+export default function App({ navigation, route }) {
   const [todos, setTodos] = useState([]);
+  const [addtask, setaddTask] = useState(route.AddTask || false);
 
   // const pressHandler = key => {
   //   setTodos(prevTodos => {
@@ -74,9 +76,10 @@ export default function App({ navigation }) {
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
         onPress={() => {
           console.log('Ready to edit task');
-          console.log(data);
+          // console.log(data);
           navigation.navigate('AddTask', {
             data: JSON.stringify(data),
+            action: 'Edit Task',
           });
         }}>
         <Text style={styles.backTextWhite}>Edit</Text>
@@ -85,7 +88,7 @@ export default function App({ navigation }) {
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
         onPress={() => {
-          console.log(data.id);
+          // console.log(data.id);
           deleteRow(data.id);
         }}>
         <Text style={styles.backTextWhite}>Delete</Text>
@@ -95,7 +98,7 @@ export default function App({ navigation }) {
 
   //close function
   const closeRow = id => {
-    console.log('This row closed', id);
+    // console.log('This row closed', id);
   };
 
   //delete function
@@ -129,11 +132,20 @@ export default function App({ navigation }) {
     _update();
   }, []);
 
+  useEffect(() => {
+    // console.log('Route is ' + route);
+    _update();
+  }, [addtask]);
+
+  useFocusEffect(() => {
+    _update();
+  });
+
   const _update = () => {
     db.transaction(function (tx) {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         setTodos(results.rows.raw());
-        console.log(results.rows.raw());
+        // console.log(results.rows.raw());
       });
     });
   };
@@ -168,7 +180,7 @@ export default function App({ navigation }) {
             <SwipeListView
               data={todos}
               renderItem={({ item }) => (
-                <TodoItem item={item} _complete={_complete} />
+                <TodoItem item={item} _complete={_complete} _update={_update} />
               )}
               renderHiddenItem={({ item }) => renderHiddenItem(item)}
               leftOpenValue={300}

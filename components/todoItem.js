@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, TouchableHighlight, View } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function TodoItem({ item, _complete }) {
+export default function TodoItem({ item, _complete, _update }) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [color, setColor] = useState('white');
 
@@ -15,7 +16,11 @@ export default function TodoItem({ item, _complete }) {
     if (item.colour != null) {
       setColor(item.colour);
     }
-  }, []);
+  }, [color, toggleCheckBox]);
+
+  // useFocusEffect(() => {
+  //   _update();
+  // });
 
   var style = StyleSheet.create({
     wrap_box: { backgroundColor: color },

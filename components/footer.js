@@ -6,8 +6,9 @@ import color from '../app/config/colors';
 import { emptyTodo } from './functions';
 export default function Footer({ navigation }) {
   const buttonClickHandler = () => {
-    navigation.navigate('AddTask',{
-      data:JSON.stringify(emptyTodo),
+    navigation.navigate('AddTask', {
+      data: JSON.stringify(emptyTodo),
+      action: 'Add Task'
     });
   };
 
