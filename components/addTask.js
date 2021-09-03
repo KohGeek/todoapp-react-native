@@ -60,6 +60,7 @@ export default class addTask extends Component {
     let data = JSON.parse(this.props.route.params.data);
     let reminder = JSON.parse(data.reminder);
 
+
     console.log('Task ID: ' + data.id);
     this.state = {
       selectedColor: data.colour || '#161718',
@@ -238,7 +239,7 @@ export default class addTask extends Component {
             />
           </TouchableOpacity>
 
-          <Text style={styles.title}>Add Task</Text>
+          <Text style={styles.title}>{this.props.route.params.action}</Text>
 
           <TouchableOpacity
             style={{ right: -80 }}

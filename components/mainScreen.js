@@ -78,6 +78,7 @@ export default function App({ navigation, route }) {
           console.log(data);
           navigation.navigate('AddTask', {
             data: JSON.stringify(data),
+            action: 'Edit Task',
           });
         }}>
         <Text style={styles.backTextWhite}>Edit</Text>
@@ -130,10 +131,7 @@ export default function App({ navigation, route }) {
     _update();
   }, []);
 
-  useEffect(() => {
-    console.log(route);
-    _update();
-  }, [addtask]);
+
 
   const _update = () => {
     db.transaction(function (tx) {

@@ -8,6 +8,7 @@ export default function Footer({ navigation }) {
   const buttonClickHandler = () => {
     navigation.navigate('AddTask', {
       data: JSON.stringify(emptyTodo),
+      action: 'Add Task'
     });
   };
 
