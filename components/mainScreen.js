@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useFocusEffect } from '@react-navigation/native';
-
+import { styles } from '../style';
 import { openDatabase } from 'react-native-sqlite-storage';
 
 // import {
@@ -199,74 +199,62 @@ export default function App({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  addSubTaskbtn: {
-    backgroundColor: 'coral',
-    right: 140,
-    padding: 16,
-    marginTop: 16,
-  },
-  backTextWhite: {
-    color: '#FFF',
-  },
+// const styles = StyleSheet.create({
+//   addSubTaskbtn: {
+//     backgroundColor: 'coral',
+//     right: 140,
+//     padding: 16,
+//     marginTop: 16,
+//   },
+//   backTextWhite: {
+//     color: '#FFF',
+//   },
 
-  // closeTaskbtn: {
-  //   backgroundColor: 'blue',
-  //   left: 0,
-  //   padding: 16,
-  //   marginTop: 16,
-  // },
+//   container: {
+//     flex: 1,
+//     backgroundColor: color.primary,
+//   },
+//   content: {
+//     padding: 40,
+//     flex: 1,
+//   },
 
-  container: {
-    flex: 1,
-    backgroundColor: color.primary,
-  },
-  content: {
-    padding: 40,
-    // backgroundColor: 'blue',
-    flex: 1,
-  },
-
-  list: {
-    marginTop: 20,
-    // backgroundColor: 'gold',
-    flex: 1,
-    // backgroundColor: 'green',
-  },
-  rowFront: {
-    alignItems: 'center',
-    // backgroundColor: 'green',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    height: 50,
-  },
-  rowBack: {
-    alignItems: 'center',
-    // backgroundColor: 'coral',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75,
-  },
-  backRightBtnLeft: {
-    backgroundColor: 'green',
-    right: 75,
-    padding: 16,
-    marginTop: 16,
-  },
-  backRightBtnRight: {
-    backgroundColor: 'red',
-    right: 10,
-    padding: 16,
-    marginTop: 16,
-  },
-});
+//   list: {
+//     marginTop: 20,
+//     flex: 1,
+//   },
+//   rowFront: {
+//     alignItems: 'center',
+//     borderBottomColor: 'black',
+//     borderBottomWidth: 1,
+//     justifyContent: 'center',
+//     height: 50,
+//   },
+//   rowBack: {
+//     alignItems: 'center',
+//     flex: 1,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     paddingLeft: 15,
+//   },
+//   backRightBtn: {
+//     alignItems: 'center',
+//     bottom: 0,
+//     justifyContent: 'center',
+//     position: 'absolute',
+//     top: 0,
+//     width: 75,
+//   },
+//   backRightBtnLeft: {
+//     backgroundColor: 'green',
+//     right: 75,
+//     padding: 16,
+//     marginTop: 16,
+//   },
+//   backRightBtnRight: {
+//     backgroundColor: 'red',
+//     right: 10,
+//     padding: 16,
+//     marginTop: 16,
+//   },
+// });

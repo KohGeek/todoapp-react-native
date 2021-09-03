@@ -1,0 +1,28 @@
+{
+    "database": [
+        {
+            "colour": "#4287f5",
+            "name": "task1",
+            "completed": "true",
+            "reminder": "{\"dateText\": \"Tue, Sep 14, 2021\", \"time\": \"12:00\"}",
+            "priority": "L",
+            "id": 1
+        },
+        {
+            "colour": "#f57842",
+            "name": "task2",
+            "completed": "false",
+            "reminder": "{\"dateText\": \"Fri, Sep 24, 2021\", \"time\": \"14:00\"}",
+            "priority": "L",
+            "id": 2
+        },
+        {
+            "colour": "#9942f5",
+            "name": "task3",
+            "completed": "false",
+            "reminder": "{\"dateText\": \"\", \"time\": \"\"}",
+            "priority": "L",
+            "id": 3
+        }
+    ]
+}
