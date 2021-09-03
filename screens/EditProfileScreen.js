@@ -32,8 +32,6 @@ export default class EditProfileScreen extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.setItem('username', 'Sam');
-    AsyncStorage.setItem('email', '1234');
     this._readSettings();
     //this.state.username;
     //this.state.email;
@@ -92,30 +90,28 @@ export default class EditProfileScreen extends Component {
         {/* USERNAME */}
         <View>
 
-          <Text style={styles.label}>Username:</Text>
-            <Button
-              color="#6360F3"
-              style={styles.button}
-              //title={'Username:  ' + this.state.username}
-              title={this.state.username}
-              onPress={() => {
-                this.props.navigation.navigate('EditUsernameScreen');
-              }}></Button>
+          <Text style={styles.label}>Username: </Text>
+             <View style={{
+              backgroundColor: '#1A1B1E',
+              flexwrap: 'wrap',
+              borderColor: '#BFBFBF',
+    
+            }}>
+              <Text style={styles.name}> {this.state.username} </Text>
+          </View>
 
         </View>
-
 
          {/* EMAIL */}
          <View>
           <Text style={styles.label}>Email:</Text>
-            <Button
-              color="#6360F3"
-              style={styles.button}
-              //title={'Username:  ' + this.state.username}
-              title={this.state.email}
-              onPress={() => {
-                this.props.navigation.navigate('EditEmailScreen');
-              }}></Button>
+            <View style={{
+              backgroundColor: '#1A1B1E',
+              flexwrap: 'wrap',
+              borderColor: '#BFBFBF',
+            }}>
+              <Text style={styles.name}> {this.state.email} </Text>
+          </View>
 
           </View>
 
@@ -143,6 +139,15 @@ export default class EditProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  name: {
+    fontSize: 50,
+    marginTop: 5,
+    color: 'white',
+    textAlign: 'right',
+    alignItems: 'center',
+    marginRight: 20,
+},
+
   container: {
     flex: 1,
     justifyContent: 'center',
