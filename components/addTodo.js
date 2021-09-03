@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Button, View } from 'react-native';
 
-import color from '../app/config/colors';
 import { styles } from '../style';
 
 export default function AddTodo({ submitHandler }) {
@@ -26,15 +25,3 @@ export default function AddTodo({ submitHandler }) {
     </View>
   );
 }
-
-// const styles = StyleSheet.create({
-//   input: {
-//     marginBottom: 10,
-//     paddingHorizontal: 8,
-//     paddingVertical: 6,
-//     borderColor: 'blue',
-//     borderWidth: 3,
-//     borderRadius: 10,
-//     color: color.white,
-//   },
-// });

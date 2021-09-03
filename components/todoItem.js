@@ -10,7 +10,6 @@ export default function TodoItem({ item, _complete, _update }) {
   const [color, setColor] = useState('white');
 
   useEffect(() => {
-    // console.log(item.completed);
     if (item.completed == 'true') {
       setToggleCheckBox(true);
     }
@@ -19,10 +18,6 @@ export default function TodoItem({ item, _complete, _update }) {
       setColor(item.colour);
     }
   }, [item]);
-
-  // useFocusEffect(() => {
-  //   _update();
-  // });
 
   var style = StyleSheet.create({
     wrap_box: { backgroundColor: color },
@@ -62,28 +57,3 @@ export default function TodoItem({ item, _complete, _update }) {
     </TouchableHighlight>
   );
 }
-
-// const styles = StyleSheet.create({
-//   checkboxes: {
-//     // backgroundColor: 'gold',
-//   },
-//   item: {
-//     position: 'relative',
-//     top: 5,
-//   },
-
-//   slash: {
-//     textDecorationLine: 'line-through',
-//   },
-//   subitem: {},
-
-//   wrapper: {
-//     padding: 16,
-//     marginTop: 16,
-//     borderColor: 'blue',
-//     borderWidth: 1,
-//     borderRadius: 10,
-//     flex: 1,
-//     flexDirection: 'row',
-//   },
-// });

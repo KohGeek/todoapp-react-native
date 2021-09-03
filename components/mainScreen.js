@@ -16,16 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { styles } from '../style';
 import { openDatabase } from 'react-native-sqlite-storage';
 
-// import {
-//   Colors,
-//   DebugInstructions,
-//   Header,
-//   LearnMoreLinks,
-//   ReloadInstructions,
-// } from 'react-native/Libraries/NewAppScreen';
-
 import AddTodo from './addTodo';
-import color from '../app/config/colors';
 import Header from './header';
 import Footer from './footer';
 import TodoItem from './todoItem';
@@ -34,22 +25,13 @@ export default function App({ navigation, route }) {
   const [todos, setTodos] = useState([]);
   const [addtask, setaddTask] = useState(route.AddTask || false);
 
-  // const pressHandler = key => {
-  //   setTodos(prevTodos => {
-  //     return prevTodos.filter(todo => todo.key != key);
-  //   });
-  // };
-
   const submitHandler = text => {
     if (text.length >= 1) {
-      // console.log('Ready to add ' + text);
       db.transaction(function (tx) {
         tx.executeSql(
           'INSERT INTO todo(name,completed, reminder) VALUES(?,?,?)',
           [text, 'false', '{"dateText": "", "time": ""}'],
-          (tx, results) => {
-            // console.log(text + ' is added successful!');
-          },
+          (tx, results) => {},
         );
       });
       _update();
@@ -60,15 +42,6 @@ export default function App({ navigation, route }) {
     }
   };
 
-  // const _insert = () => {
-  //   db.transaction(function (tx) {
-  //     tx.executeSql('INSERT INTO todo(name) VALUES(?)', [id], (tx, results) => {
-  //       console.log(id + ' is deleted successful!');
-  //     });
-  //   });
-  //   _update();
-  // };
-
   //hidden function
   const renderHiddenItem = data => (
     <View style={styles.rowBack}>
@@ -76,7 +49,6 @@ export default function App({ navigation, route }) {
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
         onPress={() => {
           console.log('Ready to edit task');
-          // console.log(data);
           navigation.navigate('AddTask', {
             data: JSON.stringify(data),
             action: 'Edit Task',
@@ -88,7 +60,6 @@ export default function App({ navigation, route }) {
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
         onPress={() => {
-          // console.log(data.id);
           deleteRow(data.id);
         }}>
         <Text style={styles.backTextWhite}>Delete</Text>
@@ -97,30 +68,15 @@ export default function App({ navigation, route }) {
   );
 
   //close function
-  const closeRow = id => {
-    // console.log('This row closed', id);
-  };
+  const closeRow = id => {};
 
   //delete function
   const deleteRow = id => {
-    // closeRow(id);
-    // const newData = [...todos];
-    // const prevIndex = todos.findIndex(item => item.key === rowKey);
-    // newData.splice(prevIndex, 1);
-    // setTodos(newData);
-    // console.log(id + ' is ready to be deleted!');
     db.transaction(function (tx) {
-      tx.executeSql('DELETE FROM todo WHERE id= ?', [id], (tx, results) => {
-        // console.log(id + ' is deleted successful!');
-      });
+      tx.executeSql('DELETE FROM todo WHERE id= ?', [id], (tx, results) => {});
     });
     _update();
   };
-
-  //detection for row slide action
-  // const onRowDidOpen = rowKey => {
-  //   console.log('This row opened', rowKey);
-  // };
 
   var db = openDatabase({
     name: 'tododb4',
@@ -133,7 +89,6 @@ export default function App({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    // console.log('Route is ' + route);
     _update();
   }, [addtask]);
 
@@ -145,7 +100,6 @@ export default function App({ navigation, route }) {
     db.transaction(function (tx) {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         setTodos(results.rows.raw());
-        // console.log(results.rows.raw());
       });
     });
   };
@@ -158,7 +112,6 @@ export default function App({ navigation, route }) {
         [completed, id],
         (tx, results) => {
           console.log('success to set complete state');
-          // console.log(results.rows.raw());
         },
       );
     });
@@ -189,7 +142,6 @@ export default function App({ navigation, route }) {
               previewRowKey={'0'}
               previewOpenValue={-40}
               previewOpenDelay={3000}
-              // onRowDidOpen={onRowDidOpen}
             />
           </View>
         </View>
@@ -198,63 +150,3 @@ export default function App({ navigation, route }) {
     </TouchableWithoutFeedback>
   );
 }
-
-// const styles = StyleSheet.create({
-//   addSubTaskbtn: {
-//     backgroundColor: 'coral',
-//     right: 140,
-//     padding: 16,
-//     marginTop: 16,
-//   },
-//   backTextWhite: {
-//     color: '#FFF',
-//   },
-
-//   container: {
-//     flex: 1,
-//     backgroundColor: color.primary,
-//   },
-//   content: {
-//     padding: 40,
-//     flex: 1,
-//   },
-
-//   list: {
-//     marginTop: 20,
-//     flex: 1,
-//   },
-//   rowFront: {
-//     alignItems: 'center',
-//     borderBottomColor: 'black',
-//     borderBottomWidth: 1,
-//     justifyContent: 'center',
-//     height: 50,
-//   },
-//   rowBack: {
-//     alignItems: 'center',
-//     flex: 1,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     paddingLeft: 15,
-//   },
-//   backRightBtn: {
-//     alignItems: 'center',
-//     bottom: 0,
-//     justifyContent: 'center',
-//     position: 'absolute',
-//     top: 0,
-//     width: 75,
-//   },
-//   backRightBtnLeft: {
-//     backgroundColor: 'green',
-//     right: 75,
-//     padding: 16,
-//     marginTop: 16,
-//   },
-//   backRightBtnRight: {
-//     backgroundColor: 'red',
-//     right: 10,
-//     padding: 16,
-//     marginTop: 16,
-//   },
-// });

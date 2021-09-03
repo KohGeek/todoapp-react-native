@@ -8,6 +8,24 @@ export const styles = StyleSheet.create({
     marginTop: 16,
   },
 
+  addButton: {
+    backgroundColor: '#6360F3',
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignContent: 'center',
+    padding: 10,
+    position: 'relative',
+    bottom: 50,
+  },
+
+  addIcon: {
+    color: 'white',
+    position: 'relative',
+    left: 3,
+  },
+
   backRightBtn: {
     alignItems: 'center',
     bottom: 0,
@@ -40,6 +58,36 @@ export const styles = StyleSheet.create({
   content: {
     padding: 40,
     flex: 1,
+  },
+
+  date: {
+    color: 'white',
+    fontSize: 20,
+    paddingLeft: 10,
+  },
+
+  days: {
+    fontSize: 50,
+    color: 'white',
+    paddingLeft: 10,
+  },
+
+  header: {
+    height: '20%',
+    width: '100%',
+    borderRadius: 8,
+    paddingTop: 38,
+    backgroundColor: '#2c2f33',
+  },
+
+  header_footer: {
+    height: 80,
+    paddingTop: 38,
+    backgroundColor: '#2c2f33',
+    bottom: 0,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   input_box: {
@@ -80,6 +128,22 @@ export const styles = StyleSheet.create({
 
   slash: {
     textDecorationLine: 'line-through',
+  },
+
+  time_info: {
+    alignSelf: 'flex-start',
+    position: 'absolute',
+    bottom: 20,
+  },
+
+  userContainer: {
+    position: 'absolute',
+    right: 10,
+    bottom: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    flex: 1,
+    width: 150,
   },
 
   wrapper: {
