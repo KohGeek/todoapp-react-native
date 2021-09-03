@@ -44,7 +44,7 @@ export default class signInScreen extends Component {
       let var2 = ['email', email ? email.toString() : ''];
       console.log('var3: ' + var2);
 
-      //await AsyncStorage.multiSet([var1, var2]);
+      await AsyncStorage.multiSet([var1, var2]);
     } catch (error) {
       console.log('## ERROR SAVING ITEM ##: ', error);
     }

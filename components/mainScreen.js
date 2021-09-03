@@ -86,8 +86,6 @@ export default function App({ navigation, route }) {
 
   useFocusEffect(() => {
     _update();
-    getUsername();
-    getEmail();
   });
 
   const _update = () => {
