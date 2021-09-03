@@ -130,18 +130,32 @@ export default class addTask extends Component {
   _insertTask(taskId) {
     var obj = { dateText: this.state.dateText, time: this.state.time };
     var reminder = JSON.stringify(obj);
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'UPDATE todo SET name=?,colour=?,priority=?,reminder=? WHERE id=?',
-        [
-          this.state.title,
-          this.state.selectedColor,
-          this.state.priority,
-          reminder,
-          taskId,
-        ],
-      );
-    });
+    this.db.transaction(
+      tx => {
+        tx.executeSql(
+          'UPDATE todo SET name=?,colour=?,priority=?,reminder=? WHERE id=?',
+          [
+            this.state.title,
+            this.state.selectedColor,
+            this.state.priority,
+            reminder,
+            taskId,
+          ],
+          (tx, results) => {
+            console.log(this.state.title + ' is updated successful!');
+          },
+          (tx, error) => {
+            console.log('sql error' + error);
+          },
+        );
+      },
+      error => {
+        console.log('sql error' + error.message);
+      },
+      () => {
+        console.log('update ok!');
+      },
+    );
   }
 
   _insertNewTask() {
@@ -262,7 +276,7 @@ export default class addTask extends Component {
               );
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
-                console.log('Ready to add task!!');
+                console.log('Ready to update task!!');
                 this.props.navigation.navigate('Index', {
                   AddTask: true,
                 });
