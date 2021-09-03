@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setToken } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
 import Config from 'react-native-config';
+import { SQLiteDatabase } from 'react-native-sqlite-storage';
 
 export default class signInScreen extends Component {
   static navigationOptions = {
@@ -124,6 +125,15 @@ export default class signInScreen extends Component {
       .catch(data => {
         Alert.alert(data.message, 'Username or password incorrect');
       });
+
+    let db = SQLite.openDatabase({
+      name: 'todo.sqlite',
+      createFromLocation: '~todo.sqlite',
+    });
+
+    db.transaction(tx => {
+      tx.executeSql('DELETE FROM todo', []);
+    });
   }
 
   render() {
@@ -158,19 +168,15 @@ export default class signInScreen extends Component {
 
         <View
           style={{
-            //backgroundColor: '#23272a',
             flexwrap: 'wrap',
             flexDirection: 'row',
           }}>
           <InputWithLabel
             label="Username"
             style={styles.input}
-            placeholder={'Username / Email'}
-            // value={this.state.username}
+            placeholder={'Username'}
             onChangeText={username => {
-              //this.setState({ name: name });
               this.setState({ username });
-              // this._saveSetting('username', username);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -180,7 +186,6 @@ export default class signInScreen extends Component {
 
         <View
           style={{
-            //backgroundColor: 'lightslategrey',
             flexwrap: 'wrap',
             flexDirection: 'row',
           }}>
@@ -188,12 +193,9 @@ export default class signInScreen extends Component {
             style={styles.input}
             label={'Password'}
             placeholder={'Type here'}
-            // value={this.state.password}
             secureTextEntry={true}
             onChangeText={password => {
-              // this.setState({ password: password });
               this.setState({ password });
-              // this._saveSetting('password', password);
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
