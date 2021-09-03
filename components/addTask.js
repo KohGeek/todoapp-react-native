@@ -198,9 +198,9 @@ export default class addTask extends Component {
           {/* Not yet implement onPress */}
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
-            style={{ left: -80 }}>
+            style={{ flex: 1, marginLeft: 20 }}>
             <Icon
-              style={styles.userIcon}
+              // style={styles.userIcon}
               name="arrow-back"
               size={30}
               color="black"
@@ -208,10 +208,12 @@ export default class addTask extends Component {
             />
           </TouchableOpacity>
 
-          <Text style={styles.title}>{this.props.route.params.action}</Text>
+          <Text style={[styles.title, { flex: 9 }]}>
+            {this.props.route.params.action}
+          </Text>
 
           <TouchableOpacity
-            style={{ right: -80 }}
+            style={{ flex: 2 }}
             onPress={() => {
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
@@ -230,7 +232,7 @@ export default class addTask extends Component {
               }
             }}>
             <Icon
-              style={styles.userIcon}
+              // style={styles.userIcon}
               name="checkmark-sharp"
               size={30}
               color="black"
