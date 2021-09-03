@@ -25,6 +25,15 @@ export default function Header({ navigation, _update }) {
       <View style={styles.userContainer}>
         <TouchableOpacity onPress={() => syncToServer('pull')}>
           <Icon
+            name="cloud-download"
+            size={30}
+            color="white"
+            borderColor="blue"
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => syncToServer('pull')}>
+          <Icon
             name="cloud-upload"
             size={30}
             color="white"
