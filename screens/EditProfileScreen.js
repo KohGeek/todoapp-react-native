@@ -11,9 +11,9 @@ import {
   Alert,
   Image,
 } from 'react-native';
+import { getToken, setToken } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
-
-let config = require('./Config');
+import Config from 'react-native-config';
 
 export default class EditProfileScreen extends Component {
   static navigationOptions = {
@@ -28,7 +28,6 @@ export default class EditProfileScreen extends Component {
       email: '',
       password: '',
     };
- 
   }
 
   componentDidMount() {
@@ -60,20 +59,41 @@ export default class EditProfileScreen extends Component {
     }
   }
 
+  async _logout() {
+    var url = `${Config.API_URL}:${Config.API_PORT}/api/logout`;
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: await getToken(),
+      }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    setToken('');
+    this.props.navigation.navigate('Index');
+  }
+
   render() {
     return (
-
-     
       <View
         style={{
           backgroundColor: '#1F2124', //grey
           flex: 1,
         }}>
-        
-         <View>
-      </View>
+        <View></View>
 
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <Image
             style={{
               width: 200,
@@ -84,55 +104,55 @@ export default class EditProfileScreen extends Component {
             source={require('../Image/profileicon.png')}
           />
         </View>
-        
-
 
         {/* USERNAME */}
         <View>
-
           <Text style={styles.label}>Username: </Text>
-             <View style={{
+          <View
+            style={{
               backgroundColor: '#1A1B1E',
               flexwrap: 'wrap',
               borderColor: '#BFBFBF',
-    
             }}>
-              <Text style={styles.name}> {this.state.username} </Text>
+            <Text style={styles.name}> {this.state.username} </Text>
           </View>
-
         </View>
 
-         {/* EMAIL */}
-         <View>
+        {/* EMAIL */}
+        <View>
           <Text style={styles.label}>Email:</Text>
-            <View style={{
+          <View
+            style={{
               backgroundColor: '#1A1B1E',
               flexwrap: 'wrap',
               borderColor: '#BFBFBF',
             }}>
-              <Text style={styles.name}> {this.state.email} </Text>
+            <Text style={styles.name}> {this.state.email} </Text>
           </View>
-
-          </View>
-
-
+        </View>
 
         {/* PASSWORD */}
         <View style={styles.passwordButton}>
-          {/* <Text style={styles.label}>Password:</Text> */}
-            <Button
-              marginTop= '15%'
-              color="#6360F3"
-              style={styles.button}
-              //title={'Password:  ' + this.state.username}
-              title={'Edit Account Details >'}
-              onPress={() => {
-                this.props.navigation.navigate('EditAccountDetails');
-              }}></Button>
-
+          <Button
+            marginTop="15%"
+            color="#6360F3"
+            style={styles.button}
+            title={'Edit Account Details >'}
+            onPress={() => {
+              this.props.navigation.navigate('EditAccountDetails');
+            }}></Button>
         </View>
 
-
+        <View style={styles.passwordButton}>
+          <Button
+            marginTop="15%"
+            color="#6360F3"
+            style={styles.button}
+            title={'Logout'}
+            onPress={async () => {
+              await this._logout();
+            }}></Button>
+        </View>
       </View>
     );
   }
@@ -146,7 +166,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     alignItems: 'center',
     marginRight: 20,
-},
+  },
 
   container: {
     flex: 1,
@@ -180,7 +200,7 @@ const styles = StyleSheet.create({
     marginTop: '5%',
     //paddingRight: '10%',
     //textAlign: 'left',
-    //marginTop: 10, 
+    //marginTop: 10,
     //flex: 0
   },
 
