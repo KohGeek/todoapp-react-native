@@ -52,7 +52,7 @@ export default class addTask extends Component {
     super(props);
 
     this.db = SQLite.openDatabase(
-      { name: 'tododb4', createFromLocation: '~todo.sqlite' },
+      { name: 'todo.sqlite', createFromLocation: '~todo.sqlite' },
       this.openDb,
       this.errorDb,
     );

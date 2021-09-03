@@ -10,10 +10,6 @@ export default function TodoItem({ item, _complete, _update }) {
   const [color, setColor] = useState('white');
 
   useEffect(() => {
-    if (item.completed == 'true') {
-      setToggleCheckBox(true);
-    }
-
     if (item.colour != null) {
       setColor(item.colour);
     }
@@ -32,7 +28,7 @@ export default function TodoItem({ item, _complete, _update }) {
           value={toggleCheckBox}
           onValueChange={newValue => {
             setToggleCheckBox(newValue);
-            console.log(item.id + 'is set to ' + newValue);
+            console.log(item.id + ' is set to ' + newValue);
             if (newValue == 0) {
               _complete(item.id, 'false');
             } else if (newValue == 1) {
