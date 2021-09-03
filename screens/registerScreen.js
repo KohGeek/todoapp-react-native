@@ -29,7 +29,7 @@ export default class registerScreen extends Component {
       retype_password: '',
     };
 
-    this._store = this._store.bind(this);
+    // this._store = this._store.bind(this);
   }
 
   componentDidMount() {
@@ -44,25 +44,25 @@ export default class registerScreen extends Component {
     }
   }
 
-  async _saveSetting() {
-    try {
-      let var1 = [
-        'username',
-        this.state.username ? this.state.username.toString() : '',
-      ];
-      console.log(var1);
-      // let var2 = [
-      //   'password',
-      //   this.state.password ? this.state.password.toString() : '',
-      // ];
-      // console.log(var2);
+  // async _saveSetting() {
+  //   try {
+  //     let var1 = [
+  //       'username',
+  //       this.state.username ? this.state.username.toString() : '',
+  //     ];
+  //     console.log(var1);
+  //     // let var2 = [
+  //     //   'password',
+  //     //   this.state.password ? this.state.password.toString() : '',
+  //     // ];
+  //     // console.log(var2);
 
-      // await AsyncStorage.multiSet([var1, var2]);
-      await AsyncStorage.multiSet([var1]);
-    } catch (error) {
-      console.log('## ERROR SAVING ITEM ##: ', error);
-    }
-  }
+  //     // await AsyncStorage.multiSet([var1, var2]);
+  //     await AsyncStorage.multiSet([var1]);
+  //   } catch (error) {
+  //     console.log('## ERROR SAVING ITEM ##: ', error);
+  //   }
+  // }
 
   async _readSettings() {
     newStates = {};
@@ -70,9 +70,8 @@ export default class registerScreen extends Component {
     try {
       let keys = await AsyncStorage.multiGet(['username'], (err, stores) => {
         stores.map((result, i, store) => {
-          // get at each store's key/value so you can work with it
-          let key = store[i][0]; // the key
-          let value = store[i][1]; // the value
+          let key = store[i][0];
+          let value = store[i][1];
           {
             newStates[key] = value;
           }
@@ -92,19 +91,22 @@ export default class registerScreen extends Component {
     }
   }
 
-  async _removeAllSettings() {
-    //let keys = ['name', 'email', 'gender', 'educationLevel', 'ReceiveP'];
-    let keys = ['username', 'password'];
-    AsyncStorage.multiRemove(keys, err => {
-      // keys k1 & k2 removed, if they existed
-      // callback to do some action after removal of item
-      console.log('Delete', keys);
-    });
-  }
+  // async _removeAllSettings() {
+  //   //let keys = ['name', 'email', 'gender', 'educationLevel', 'ReceiveP'];
+  //   let keys = ['username', 'password'];
+  //   AsyncStorage.multiRemove(keys, err => {
+  //     // keys k1 & k2 removed, if they existed
+  //     // callback to do some action after removal of item
+  //     console.log('Delete', keys);
+  //   });
+  // }
 
-  // Database connectivity
+  // Fetch from server: Register a new account
   _store() {
-    let url = config.settings.serverPath + '/api/accounts';
+    var success = false;
+
+    console.log('CAME INTO STORE');
+    let url = config.settings.serverPath + '/api/register';
 
     fetch(url, {
       method: 'POST',
@@ -113,32 +115,37 @@ export default class registerScreen extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: this.state.name,
+        username: this.state.username,
         email: this.state.email,
         password: this.state.password,
       }),
     })
       .then(response => {
         if (!response.ok) {
-          Alert.alert('Error', response.status.toString());
-          throw Error('Error ' + response.status);
-        }
+          success = false;
+          return response.json(); // return the message
 
+          // Alert.alert('Error', response.status.toString());
+          // throw Error('Error ' + response.status);
+        } else {
+          success = true;
+          this.props.navigation.navigate('Index'); // navigate to home page
+        }
+        console.log('CAME INTO RESPONSEJSON');
         return response.json();
       })
-      .then(responseJson => {
-        if (responseJson.affected > 0) {
-          Alert.alert(
-            'Record Saved',
-            'Record for `' + this.state.name + '` has been saved',
-          );
+
+      .then(data => {
+        if (success) {
+          Alert.alert(data.message, 'Please log in again.');
         } else {
-          Alert.alert('Error saving record');
+          Alert.alert(data.message);
         }
 
-        this.props.navigation.getParam('refresh')();
-        this.props.navigation.goBack();
+        console.log('THIS IS MESSAGE: ');
+        console.log(data.message);
       })
+
       .catch(error => {
         console.error(error);
       });
@@ -157,11 +164,7 @@ export default class registerScreen extends Component {
       } else if (this.state.password != this.state.retype_password) {
         Alert.alert('Retype password mismatch.');
       } else {
-        // this._saveSettings();
-        this._store;
-        Alert.alert('Welcome, ' + this.state.username + '!');
-        // this.props.navigation.navigate('Show');
-        this.props.navigation.navigate('Index');
+        this._store();
       }
     };
 
@@ -278,11 +281,7 @@ export default class registerScreen extends Component {
           <AppButton
             title="register"
             theme="success"
-            onPress={pressHandler}
-            // onLongPress={() => {
-            //   Alert.alert('Password: ' + this.state.password);
-            // }}
-          ></AppButton>
+            onPress={pressHandler}></AppButton>
           <Text
             style={styles.text}
             onPress={() => this.props.navigation.navigate('Profile')}>
