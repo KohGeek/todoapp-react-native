@@ -56,6 +56,7 @@ export default class addTask extends Component {
       this.errorDb,
     );
 
+    console.log(this.props.route.params.data)
     let data = JSON.parse(this.props.route.params.data);
     let reminder = JSON.parse(data.reminder);
 
