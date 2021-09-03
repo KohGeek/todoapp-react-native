@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setToken } from '../components/functions';
+import { setToken, syncToServer } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
 import Config from 'react-native-config';
 import SQLite from 'react-native-sqlite-storage';
@@ -111,6 +111,7 @@ export default class signInScreen extends Component {
           );
 
           setToken(data.token);
+          syncToServer('pull');
 
           console.log('THIS IS MESSAGE: ');
           console.log(data.message);
@@ -121,19 +122,9 @@ export default class signInScreen extends Component {
           Alert.alert(data.message);
         }
       })
-
       .catch(data => {
         Alert.alert(data.message, 'Username or password incorrect');
       });
-
-    let db = SQLite.openDatabase({
-      name: 'todo.sqlite',
-      createFromLocation: '~todo.sqlite',
-    });
-
-    db.transaction(tx => {
-      tx.executeSql('DELETE FROM todo', []);
-    });
   }
 
   render() {

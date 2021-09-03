@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Button, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getToken, setToken } from '../components/functions';
 import { useFocusEffect } from '@react-navigation/native';
+import SQLite from 'react-native-sqlite-storage';
 import Config from 'react-native-config';
 
 function FetchData({ username }) {
@@ -47,8 +48,6 @@ export default class EditProfileScreen extends Component {
       });
 
     await setToken(null);
-    await AsyncStorage.removeItem('username');
-    await AsyncStorage.removeItem('email');
     this.props.navigation.navigate('Index');
   }
 
