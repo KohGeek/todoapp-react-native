@@ -274,10 +274,10 @@ export default class addTask extends Component {
                   });
                 }}
               />
-
-              <Text style={{ left: 110, color: 'white' }}>
-                Scroll for more colors.
-              </Text>
+              
+                <Text style={{textAlign:'center', color: 'white' }}>
+                  Scroll for more colors.
+                </Text>
             </View>
           </View>
 
@@ -285,14 +285,16 @@ export default class addTask extends Component {
           <View style={styles.view}>
             <Text style={styles.label}>Priority</Text>
 
-            <View style={[styles.priority]}>
+            <View style={[styles.priority,{flex:1,flexDirection:'row'}]}>
+              
+              <View style={{flex:1, paddingRight:5}}>
               <TouchableOpacity
                 style={[
                   styles.touchableBtn,
                   {
-                    left: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn1Color,
+                    
                   },
                 ]}
                 onPress={() => {
@@ -310,15 +312,18 @@ export default class addTask extends Component {
                     });
                   }
                 }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Low</Text>
+                <Text style={styles.buttonText}>Low</Text>
               </TouchableOpacity>
-
+              </View>
+              
+              <View style = {{flex:1}}>
               <TouchableOpacity
                 style={[
                   styles.touchableBtn,
                   {
                     paddingVertical: 10,
                     backgroundColor: this.state.prioBtn2Color,
+
                   },
                 ]}
                 onPress={() => {
@@ -336,14 +341,15 @@ export default class addTask extends Component {
                     });
                   }
                 }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Medium</Text>
+                <Text style={styles.buttonText}>Medium</Text>
               </TouchableOpacity>
-
+              </View>
+             
+              <View style={{flex:1, paddingLeft:5}}>
               <TouchableOpacity
                 style={[
                   styles.touchableBtn,
                   {
-                    right: -25,
                     paddingHorizontal: 30,
                     backgroundColor: this.state.prioBtn3Color,
                   },
@@ -363,8 +369,10 @@ export default class addTask extends Component {
                     });
                   }
                 }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>High</Text>
+                <Text style={styles.buttonText}>High</Text>
               </TouchableOpacity>
+              </View>
+            
             </View>
           </View>
 
@@ -422,6 +430,11 @@ export default class addTask extends Component {
 const styles = StyleSheet.create({
   view: {
     paddingTop: 20,
+  },
+  buttonText:{
+    color: 'white', 
+    fontSize: 20,
+    textAlign:'center',
   },
   header: {
     flex: 1,
