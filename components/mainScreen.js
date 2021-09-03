@@ -57,9 +57,9 @@ export default function App({ navigation }) {
         style={[styles.backRightBtn, styles.backRightBtnLeft]}
         onPress={() => {
           console.log('Ready to edit task');
-
+          console.log(data.item);
           navigation.navigate('AddTask', {
-            taskId: '1',
+            data: JSON.stringify(data.item),
           });
         }}>
         <Text style={styles.backTextWhite}>Edit</Text>

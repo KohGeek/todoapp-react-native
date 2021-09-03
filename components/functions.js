@@ -85,7 +85,7 @@ export const emptyTodo = {
   id: null,
   name: '',
   priority: '',
-  color: '',
-  reminder: '',
-  completed: false,
+  color: '#161718',
+  reminder: '{"dateText": "", "time": ""}',
+  completed: 'false',
 };
