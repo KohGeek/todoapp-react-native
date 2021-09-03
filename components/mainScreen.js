@@ -75,7 +75,7 @@ export default function App({ navigation, route }) {
   };
 
   var db = openDatabase({
-    name: 'tododb4',
+    name: 'todo.sqlite',
     createFromLocation: '~todo.sqlite',
   });
 
@@ -84,9 +84,9 @@ export default function App({ navigation, route }) {
     _update();
   }, []);
 
-  useEffect(() => {
-    _update();
-  }, [addtask]);
+  // useEffect(() => {
+  //   _update();
+  // }, [addtask]);
 
   useFocusEffect(() => {
     _update();
@@ -96,6 +96,7 @@ export default function App({ navigation, route }) {
     db.transaction(function (tx) {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         setTodos(results.rows.raw());
+        console.log(results.rows.raw());
       });
     });
   };
@@ -103,14 +104,9 @@ export default function App({ navigation, route }) {
   const _complete = (id, completed) => {
     console.log('ready to set complete state');
     db.transaction(function (tx) {
-      tx.executeSql(
-        'UPDATE todo SET completed=? WHERE id=?',
-        [completed, id],
-        (tx, results) => {
-          console.log('success to set complete state');
-        },
-      );
+      tx.executeSql('UPDATE todo SET completed=? WHERE id=?', [completed, id]);
     });
+
     _update();
   };
 
