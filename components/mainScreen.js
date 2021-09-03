@@ -11,6 +11,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { useFocusEffect } from '@react-navigation/native';
 import { styles } from '../style';
 import { openDatabase } from 'react-native-sqlite-storage';
+import { getUsername, getEmail } from './functions';
 
 import AddTodo from './addTodo';
 import Header from './header';
@@ -85,6 +86,8 @@ export default function App({ navigation, route }) {
 
   useFocusEffect(() => {
     _update();
+    getUsername();
+    getEmail();
   });
 
   const _update = () => {

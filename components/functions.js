@@ -2,6 +2,7 @@ import SInfo from 'react-native-sensitive-info';
 import Config from 'react-native-config';
 import io from 'socket.io-client';
 import SQLite from 'react-native-sqlite-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Password validation
 // Returns 0 if password is valid
@@ -18,19 +19,11 @@ export function validatePassword(password1, password2) {
 }
 
 export const getUsername = async () => {
-  var username;
-  await AsyncStorage.getItem('username').then(value => {
-    username = value;
-  });
-  return username;
+  return AsyncStorage.getItem('username');
 };
 
 export const getEmail = async () => {
-  var email;
-  await AsyncStorage.getItem('email').then(value => {
-    email = value;
-  });
-  return email;
+  return AsyncStorage.getItem('email');
 };
 
 export const getToken = async () => {

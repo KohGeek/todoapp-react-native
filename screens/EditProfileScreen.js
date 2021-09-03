@@ -6,10 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Config from 'react-native-config';
 
 function FetchData({ username }) {
-  useFocusEffect(() => {
-    console.log('test');
-  });
-
+  useFocusEffect(() => {});
   return null;
 }
 export default class EditProfileScreen extends Component {

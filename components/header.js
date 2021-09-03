@@ -5,16 +5,16 @@ import moment from 'moment';
 import { styles } from '../style';
 import { getEmail, getUsername, syncToServer } from './functions';
 
-const pressHandler = async () => {
-  const username = await getUsername();
-  const email = await getEmail();
-  navigation.navigate('EditProfileScreen', {
-    username: username,
-    email: email,
-  });
-};
-
 export default function Header({ navigation }) {
+  const pressHandler = async () => {
+    const username = await getUsername();
+    const email = await getEmail();
+    navigation.navigate('EditProfileScreen', {
+      username: username,
+      email: email,
+    });
+  };
+
   const [currentDate, setCurrentDate] = useState('');
   useEffect(() => {
     var date = moment().utcOffset('+05:30').format('DD MMM YYYY');
