@@ -11,6 +11,7 @@ import {
   Alert,
   Image,
 } from 'react-native';
+import { validatePassword } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
 
 let config = require('./Config');
@@ -57,7 +58,7 @@ export default class EditAccountDetails extends Component {
       let var3 = ['email', new_password ? message.toString() : ''];
       console.log('var2: ' + var2);
 
-         //await AsyncStorage.multiSet([var1, var2]);
+      //await AsyncStorage.multiSet([var1, var2]);
       await AsyncStorage.multiSet([var1, var2, var3, var4]);
     } catch (error) {
       console.log('## ERROR SAVING ITEM ##: ', error);
@@ -105,7 +106,6 @@ export default class EditAccountDetails extends Component {
         email: this.state.new_email,
         current_password: this.state.current_password,
         password: this.state.new_password1,
-
       }),
     })
       .then(response => {
@@ -115,7 +115,7 @@ export default class EditAccountDetails extends Component {
           throw Error('Error ' + response.status);
         } else {
           success = true;
-          this.props.navigation.navigate('EditProfileScreen')
+          this.props.navigation.navigate('EditProfileScreen');
         }
         return response.json();
       })
@@ -126,10 +126,10 @@ export default class EditAccountDetails extends Component {
             data.new_username,
             data.new_email,
             data.new_password1,
-            Alert.alert('Details Successfully saved!')
+            Alert.alert('Details Successfully saved!'),
           );
-        }else {
-            Alert.alert ('Details Failed to save! Please input again.')
+        } else {
+          Alert.alert('Details Failed to save! Please input again.');
         }
       })
       .catch(data => {
@@ -139,21 +139,18 @@ export default class EditAccountDetails extends Component {
 
   render() {
     const pressHandler = () => {
-
       if (this.state.current_password == '') {
         Alert.alert('Please enter your Current Password!');
-        } else if (this.state.new_email == '') {
-            this.state.new_email = null;
-        } else if (this.state.new_username == '') {
-            this.state.username = null;
-        } else if (this.state.new_password1 == '') {
-            this.state.new_password1 = null;
-        } else if (this.state.new_password2 == '') {
-            this.state.new_password2 = null;
-        } else if (this.state.new_password1 == this.state.new_password2) {  
-            this._update();
-        }
-
+      } else if (this.state.new_email == '') {
+        this.state.new_email = null;
+      } else if (this.state.new_username == '') {
+        this.state.username = null;
+      } else if (
+        validatePassword(this.state.new_password1, this.state.new_password2) ==
+        0
+      ) {
+        this._update();
+      }
     };
 
     return (
@@ -162,9 +159,8 @@ export default class EditAccountDetails extends Component {
           backgroundColor: '#2c2f33',
           flex: 1,
         }}>
-
-
-        <View style={{
+        <View
+          style={{
             backgroundColor: '#000000',
             flexwrap: 'wrap',
             flexDirection: 'row',
@@ -172,16 +168,15 @@ export default class EditAccountDetails extends Component {
             //marginTop: '1%',
             //marginBottom: 40,
           }}>
-            <Text style={styles.name}> {this.state.username} </Text>
+          <Text style={styles.name}> {this.state.username} </Text>
         </View>
-
 
         <View
           style={{
             flexwrap: 'wrap',
             flexDirection: 'row',
-           // marginTop: '3%',
-           // marginBottom: '5%',
+            // marginTop: '3%',
+            // marginBottom: '5%',
             backgroundColor: '#1A1B1E',
           }}>
           <InputWithLabel
@@ -201,13 +196,13 @@ export default class EditAccountDetails extends Component {
         </View>
 
         <View
-            style={{
-                //marginTop: 10,
-                borderColor: 'white',
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginBottom: 10,
-            }}
+          style={{
+            //marginTop: 10,
+            borderColor: 'white',
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            marginBottom: 10,
+          }}
         />
 
         <View
@@ -231,15 +226,14 @@ export default class EditAccountDetails extends Component {
           />
         </View>
 
-
         <View
-            style={{
-                marginTop: 10,
-                borderColor: 'white',
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginBottom: 10,
-            }}
+          style={{
+            marginTop: 10,
+            borderColor: 'white',
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            marginBottom: 10,
+          }}
         />
 
         <View
@@ -253,12 +247,9 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Email'}
             placeholder={'Type here (Optional)'}
-        
             secureTextEntry={true}
             onChangeText={new_email => {
-            
               this.setState({ new_email });
-           
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -267,13 +258,13 @@ export default class EditAccountDetails extends Component {
         </View>
 
         <View
-            style={{
-                marginTop: 10,
-                borderColor: 'white',
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginBottom: 10,
-            }}
+          style={{
+            marginTop: 10,
+            borderColor: 'white',
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            marginBottom: 10,
+          }}
         />
 
         <View
@@ -287,12 +278,9 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Password'}
             placeholder={'Type here (Optional)'}
-           
             secureTextEntry={true}
             onChangeText={new_password1 => {
-              
               this.setState({ new_password1 });
-              
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -309,12 +297,9 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'Re-Type Password'}
             placeholder={'Re-Type new password'}
-           
             secureTextEntry={true}
             onChangeText={new_password2 => {
-              
               this.setState({ new_password2 });
-              
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -323,15 +308,14 @@ export default class EditAccountDetails extends Component {
         </View>
 
         <View
-            style={{
-                marginTop: 10,
-                borderColor: 'white',
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                marginBottom: 10,
-            }}
+          style={{
+            marginTop: 10,
+            borderColor: 'white',
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            marginBottom: 10,
+          }}
         />
-
 
         <View style={{ alignItems: 'center', marginTop: 10, flex: 0 }}>
           <AppButton
@@ -345,14 +329,13 @@ export default class EditAccountDetails extends Component {
 }
 
 const styles = StyleSheet.create({
-    name: {
-        fontSize: 50,
-        textAlign: 'left',
-        marginTop: 5,
-        color: 'white',
-        //marginBottom: 5,
-    },
-
+  name: {
+    fontSize: 50,
+    textAlign: 'left',
+    marginTop: 5,
+    color: 'white',
+    //marginBottom: 5,
+  },
 
   container: {
     flex: 1,
