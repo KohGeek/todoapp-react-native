@@ -220,14 +220,14 @@ export default class addTask extends Component {
                 this._insertTask(this.state.taskId);
                 console.log('Ready to update task!!');
                 alert('Task edited successfully !');
-                this.props.navigation.navigate('Index', {
+                this.props.navigation.navigate('Main', {
                   AddTask: true,
                 });
               } else {
                 this._insertNewTask();
                 console.log('Ready to add task!!');
                 alert('Task added successfully !');
-                this.props.navigation.navigate('Index', {
+                this.props.navigation.navigate('Main', {
                   AddTask: true,
                 });
               }

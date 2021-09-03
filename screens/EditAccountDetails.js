@@ -11,6 +11,7 @@ import {
   Alert,
   Image,
 } from 'react-native';
+import Config from 'react-native-config';
 import { validatePassword } from '../components/functions';
 import { InputWithLabel, AppButton } from '../src/UI';
 
@@ -35,7 +36,6 @@ export default class EditAccountDetails extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.setItem('username', 'Sam');
     this._readSettings();
   }
 
@@ -92,7 +92,8 @@ export default class EditAccountDetails extends Component {
   _update() {
     var success = false;
 
-    let url = config.settings.serverPath + '/api/update';
+    var url = `${Config.API_URL}:${Config.API_PORT}/api/update`;
+    console.log(url);
 
     fetch(url, {
       method: 'POST',
@@ -216,7 +217,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Username'}
             placeholder={'Type here (Optional)'}
-            secureTextEntry={true}
             onChangeText={new_username => {
               this.setState({ new_username });
             }}
@@ -247,7 +247,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Email'}
             placeholder={'Type here (Optional)'}
-            secureTextEntry={true}
             onChangeText={new_email => {
               this.setState({ new_email });
             }}
@@ -278,7 +277,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'New Password'}
             placeholder={'Type here (Optional)'}
-            secureTextEntry={true}
             onChangeText={new_password1 => {
               this.setState({ new_password1 });
             }}
@@ -297,7 +295,6 @@ export default class EditAccountDetails extends Component {
             style={styles.newinput}
             label={'Re-Type Password'}
             placeholder={'Re-Type new password'}
-            secureTextEntry={true}
             onChangeText={new_password2 => {
               this.setState({ new_password2 });
             }}

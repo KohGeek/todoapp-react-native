@@ -284,7 +284,7 @@ export default class registerScreen extends Component {
             onPress={pressHandler}></AppButton>
           <Text
             style={styles.text}
-            onPress={() => this.props.navigation.navigate('Profile')}>
+            onPress={() => this.props.navigation.navigate('Index')}>
             Sign In
           </Text>
         </View>
