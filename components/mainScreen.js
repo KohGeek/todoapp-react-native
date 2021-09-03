@@ -27,7 +27,6 @@ export default function App({ navigation, route }) {
         tx.executeSql(
           'INSERT INTO todo(name,completed, reminder) VALUES(?,?,?)',
           [text, 'false', '{"dateText": "", "time": ""}'],
-          (tx, results) => {},
         );
       });
       _update();
@@ -84,10 +83,6 @@ export default function App({ navigation, route }) {
     _update();
   }, []);
 
-  // useEffect(() => {
-  //   _update();
-  // }, [addtask]);
-
   useFocusEffect(() => {
     _update();
   });
@@ -96,7 +91,6 @@ export default function App({ navigation, route }) {
     db.transaction(function (tx) {
       tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
         setTodos(results.rows.raw());
-        console.log(results.rows.raw());
       });
     });
   };
@@ -114,7 +108,6 @@ export default function App({ navigation, route }) {
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
-        console.log('Dismissed keyboard');
       }}>
       <View style={styles.container}>
         <Header navigation={navigation} _update={_update} />

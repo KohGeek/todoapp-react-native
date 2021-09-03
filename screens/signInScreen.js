@@ -39,29 +39,21 @@ export default class signInScreen extends Component {
     try {
       let var1 = ['username', username ? username.toString() : ''];
       console.log('var1: ' + var1);
-      let var2 = ['message', message ? message.toString() : ''];
-      console.log('var2: ' + var2);
 
-      console.log(var3);
-      let var3 = ['email', email ? email.toString() : ''];
-      console.log('var3: ' + var3);
-
-      console.log(var4);
-      let var4 = ['token', token ? token.toString() : ''];
-      console.log('var4: ' + var4);
+      let var2 = ['email', email ? email.toString() : ''];
+      console.log('var3: ' + var2);
 
       //await AsyncStorage.multiSet([var1, var2]);
-      await AsyncStorage.multiSet([var1, var2, var3, var4]);
     } catch (error) {
       console.log('## ERROR SAVING ITEM ##: ', error);
     }
   }
 
   async _readSettings() {
-    newStates = {};
+    let newStates = {};
 
     try {
-      let keys = await AsyncStorage.multiGet(
+      await AsyncStorage.multiGet(
         ['message', 'username', 'email', 'token'],
         (err, stores) => {
           stores.map((result, i, store) => {
