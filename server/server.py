@@ -60,7 +60,6 @@ def decode_auth_token(auth_token):
     c = db.cursor()
     c.execute("SELECT * FROM tokens WHERE token = ?", (auth_token,))
     data = c.fetchone()
-    print(data)
 
     data = jwt.decode(data[0], server.config.get('SECRET_KEY'), algorithms="HS256")
     return data
@@ -196,14 +195,17 @@ def update():
         c.execute("SELECT hashedpassword, uuid FROM users WHERE username=?", (current_username,))
         data = c.fetchone()
 
+
         response_json['username'] = current_username
         response_json['email'] = ''
 
-        if not PasswordHasher().verify(data[0], current_password):
+        if data is None:
+            response_json = {'message': 'Username not found'}
+        elif not PasswordHasher().verify(data[0], current_password):
             response_json = {'message': 'Invalid current password'}
         else:
             # if json contains username, update username if not already in database
-            if 'username' in request.json and (request.json['username'] != current_username or request.json['username'] != "" or request.json['username'] != None):
+            if request.json['username_change'] == True:
                 username = request.json['username']
                 c.execute("SELECT * FROM users WHERE username=?", (username,))
                 data = c.fetchone()
@@ -217,7 +219,7 @@ def update():
                     response_json['username_status'] = 'Username already exists'
             
             # if json contains email, update email if not already in database
-            if 'email' in request.json and (request.json['email'] != None or request.json['email'] != ''):
+            if request.json['email_change'] == True:
                 email = request.json['email']
                 c.execute("SELECT * FROM users WHERE email=?", (email,))
                 data = c.fetchone()
@@ -231,7 +233,7 @@ def update():
                     response_json['email_status'] = 'Email already exists'
 
             # if json contains password, update password if not already in database
-            if 'password' in request.json and (request.json['password'] != None or request.json['password'] != ''):
+            if request.json['password_change'] == True:
                 password = request.json['password']
                 hashed_password = PasswordHasher().hash(password)
                 c.execute("UPDATE users SET hashedpassword=? WHERE username=?", (hashed_password, current_username))
