@@ -120,9 +120,6 @@ class Input extends Component {
   }
 }
 
-
-
-
 const inputStyles2 = StyleSheet.create({
   container: {
     flex: 1,
@@ -209,7 +206,7 @@ const buttonStyles = StyleSheet.create({
 
 /* Export Modules */
 module.exports = {
-  Input:Input,
+  Input: Input,
   InputWithLabel: InputWithLabel,
   AppButton: AppButton,
 };

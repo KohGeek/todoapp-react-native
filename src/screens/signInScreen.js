@@ -191,10 +191,7 @@ export default class signInScreen extends Component {
           />
         </View>
         <View style={{ alignItems: 'center', marginTop: 10, flex: 0 }}>
-          <AppButton
-            title="log in"
-            theme="success"
-            onPress={pressHandler}></AppButton>
+          <AppButton title="log in" theme="success" onPress={pressHandler} />
           <Text
             style={styles.text}
             onPress={() => this.props.navigation.navigate('Register')}>

@@ -59,7 +59,7 @@ export default class EditProfileScreen extends Component {
             backgroundColor: '#1F2124', //grey
             flex: 1,
           }}>
-          <View></View>
+          <View />
 
           <View style={{ alignItems: 'center' }}>
             <Image
@@ -111,7 +111,8 @@ export default class EditProfileScreen extends Component {
                   username: this.state.username,
                   email: this.state.email,
                 });
-              }}></Button>
+              }}
+            />
           </View>
 
           <View style={{ marginTop: '10%' }}>
@@ -122,7 +123,8 @@ export default class EditProfileScreen extends Component {
               title={'Logout'}
               onPress={async () => {
                 await this._logout();
-              }}></Button>
+              }}
+            />
           </View>
         </View>
       </>

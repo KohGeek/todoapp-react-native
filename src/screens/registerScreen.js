@@ -195,10 +195,7 @@ export default class registerScreen extends Component {
         </View>
 
         <View style={{ alignItems: 'center', marginTop: 10, flex: 0 }}>
-          <AppButton
-            title="register"
-            theme="success"
-            onPress={pressHandler}></AppButton>
+          <AppButton title="register" theme="success" onPress={pressHandler} />
           <Text
             style={styles.text}
             onPress={() => this.props.navigation.navigate('Index')}>

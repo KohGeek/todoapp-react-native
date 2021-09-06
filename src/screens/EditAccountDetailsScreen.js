@@ -296,7 +296,8 @@ export default class EditAccountDetails extends Component {
             <AppButton
               title="SAVE"
               theme="success"
-              onPress={() => this.pressHandler()}></AppButton>
+              onPress={() => this.pressHandler()}
+            />
           </View>
         </ScrollView>
       </>

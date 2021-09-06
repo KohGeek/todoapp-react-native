@@ -257,7 +257,8 @@ export default class AddTask extends Component {
                 });
               }}
               keyboardType={'default'}
-              selectTextOnFocus={true}></Input>
+              selectTextOnFocus={true}
+            />
           </View>
 
           {/* Color Picker */}
