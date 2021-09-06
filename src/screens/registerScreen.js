@@ -77,15 +77,15 @@ export default class registerScreen extends Component {
 
   render() {
     const pressHandler = () => {
-      if (this.state.username == '') {
+      if (this.state.username === '') {
         Alert.alert('Please enter your username.');
-      } else if (this.state.email == '') {
+      } else if (this.state.email === '') {
         Alert.alert('Please enter your email.');
-      } else if (this.state.password == '') {
+      } else if (this.state.password === '') {
         Alert.alert('Please enter your password.');
-      } else if (this.state.retype_password == '') {
+      } else if (this.state.retype_password === '') {
         Alert.alert('Please retype password.');
-      } else if (this.state.password != this.state.retype_password) {
+      } else if (this.state.password !== this.state.retype_password) {
         Alert.alert('Retype password mismatch.');
       } else {
         this._store();

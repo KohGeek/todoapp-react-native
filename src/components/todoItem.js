@@ -28,9 +28,9 @@ export default function TodoItem({ item, _complete, _update }) {
           onValueChange={newValue => {
             setToggleCheckBox(newValue);
             console.log(item.id + ' is set to ' + newValue);
-            if (newValue == 0) {
+            if (newValue === 0) {
               _complete(item.id, 'false');
-            } else if (newValue == 1) {
+            } else if (newValue === 1) {
               _complete(item.id, 'true');
             }
           }}

@@ -59,9 +59,7 @@ export default class signInScreen extends Component {
             // get at each store's key/value so you can work with it
             let key = store[i][0]; // the key
             let value = store[i][1]; // the value
-            {
-              newStates[key] = value;
-            }
+            newStates[key] = value;
           });
           console.log(newStates);
         },
@@ -126,9 +124,9 @@ export default class signInScreen extends Component {
 
   render() {
     const pressHandler = () => {
-      if (this.state.username == '') {
+      if (this.state.username === '') {
         Alert.alert('Please enter your username.');
-      } else if (this.state.password == '') {
+      } else if (this.state.password === '') {
         Alert.alert('Please enter your password.');
       } else {
         this._read();

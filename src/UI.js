@@ -14,7 +14,7 @@ class InputWithLabel extends Component {
     super(props);
 
     this.orientation = this.props.orientation
-      ? this.props.orientation == 'horizontal'
+      ? this.props.orientation === 'horizontal'
         ? 'row'
         : 'column'
       : 'column';
@@ -67,15 +67,6 @@ const inputStyles = StyleSheet.create({
     flex: 2.5,
     fontSize: 20,
     color: 'white',
-    //borderColor: 'white',
-    // borderLeftWidth: 1,
-    // borderTopWidth: 1,
-    // borderRightWidth: 1,
-    // borderBottomWidth: 1,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // borderBottomRightRadius: 20,
-    // borderBottomLeftRadius: 20,
   },
 });
 
@@ -84,7 +75,7 @@ class Input extends Component {
     super(props);
 
     this.orientation = this.props.orientation
-      ? this.props.orientation == 'horizontal'
+      ? this.props.orientation === 'horizontal'
         ? 'row'
         : 'column'
       : 'column';
@@ -94,9 +85,6 @@ class Input extends Component {
     return (
       <View
         style={[inputStyles2.container, { flexDirection: this.orientation }]}>
-        {/* <Text style={inputStyles.label}>
-                    {this.props.label ? this.props.label : ''}
-                </Text> */}
         <TextInput
           style={[inputStyles2.input, this.props.style]}
           placeholderTextColor="white"

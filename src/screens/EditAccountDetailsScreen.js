@@ -105,25 +105,25 @@ export default class EditAccountDetails extends Component {
   }
 
   pressHandler = () => {
-    if (this.object.current_password == '') {
+    if (this.object.current_password === '') {
       Alert.alert('Please enter your Current Password!');
     } else {
       let passwordCheck = validatePassword(
         this.object.new_password1,
         this.object.new_password2,
       );
-      if (passwordCheck == 0) {
+      if (passwordCheck === 0) {
         console.log('password match');
         this.object.password_change = true;
-      } else if (passwordCheck == 2) {
+      } else if (passwordCheck === 2) {
         Alert.alert('Passwords do not match!');
         return;
       }
-      if (this.object.new_email != '') {
+      if (this.object.new_email !== '') {
         console.log('email change');
         this.object.email_change = true;
       }
-      if (this.object.new_username != '') {
+      if (this.object.new_username !== '') {
         console.log('username change');
         this.object.username_change = true;
       }
@@ -136,19 +136,13 @@ export default class EditAccountDetails extends Component {
     return (
       <>
         <FetchData username={this.state.username} />
-        <ScrollView
-          style={{
-            backgroundColor: '#2c2f33',
-            flex: 1,
-          }}>
+        <ScrollView style={{ backgroundColor: '#2c2f33', flex: 1 }}>
           <View
             style={{
               backgroundColor: '#000000',
               flexwrap: 'wrap',
               flexDirection: 'row',
               borderColor: '#BFBFBF',
-              //marginTop: '1%',
-              //marginBottom: 40,
             }}>
             <Text style={styles.userinfo}> {this.state.username} </Text>
           </View>

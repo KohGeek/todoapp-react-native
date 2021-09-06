@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   DatePickerAndroid,
+  Alert,
 } from 'react-native';
 
 import { Input } from '../src/UI.js';
@@ -217,14 +218,14 @@ export default class AddTask extends Component {
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
                 console.log('Ready to update task!!');
-                alert('Task edited successfully !');
+                Alert.alert('Task edited successfully !');
                 this.props.navigation.navigate('Main', {
                   AddTask: true,
                 });
               } else {
                 this._insertNewTask();
                 console.log('Ready to add task!!');
-                alert('Task added successfully !');
+                Alert.alert('Task added successfully !');
                 this.props.navigation.navigate('Main', {
                   AddTask: true,
                 });

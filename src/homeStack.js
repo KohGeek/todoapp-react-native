@@ -15,10 +15,14 @@ const Stack = createNativeStackNavigator();
 function useLoggedInStatus() {
   const [loggedIn, setLoggedIn] = useState(null);
 
-  useEffect(async () => {
-    await isLoggedIn().then(res => {
-      setLoggedIn(res);
-    });
+  useEffect(() => {
+    const fetchData = async () => {
+      await isLoggedIn().then(res => {
+        setLoggedIn(res);
+      });
+    };
+
+    fetchData();
   }, []);
 
   return loggedIn;

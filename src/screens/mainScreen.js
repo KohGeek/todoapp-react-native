@@ -19,7 +19,6 @@ import TodoItem from '../components/todoItem';
 
 export default function App({ navigation, route }) {
   const [todos, setTodos] = useState([]);
-  const [addtask, setaddTask] = useState(route.AddTask || false);
 
   const submitHandler = text => {
     if (text.length >= 1) {
@@ -62,13 +61,10 @@ export default function App({ navigation, route }) {
     </View>
   );
 
-  //close function
-  const closeRow = id => {};
-
   //delete function
   const deleteRow = id => {
     db.transaction(function (tx) {
-      tx.executeSql('DELETE FROM todo WHERE id= ?', [id], (tx, results) => {});
+      tx.executeSql('DELETE FROM todo WHERE id= ?', [id]);
     });
     _update();
   };
@@ -111,7 +107,6 @@ export default function App({ navigation, route }) {
       }}>
       <View style={styles.container}>
         <Header navigation={navigation} _update={_update} />
-
         <View style={styles.content}>
           <AddTodo submitHandler={submitHandler} />
           <View style={styles.list}>

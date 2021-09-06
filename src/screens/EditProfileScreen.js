@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button, Image } from 'react-native';
+import { View, Text, Button, Image } from 'react-native';
 import { getToken, setToken } from '../components/functions';
 import { useFocusEffect } from '@react-navigation/native';
 import Config from 'react-native-config';
