@@ -116,6 +116,9 @@ export default class EditAccountDetails extends Component {
       ) {
         console.log('password match');
         this.object.password_change = true;
+      } else {
+        Alert.alert('Passwords do not match!');
+        return;
       }
       if (this.object.new_email != '') {
         console.log('email change');
@@ -251,6 +254,7 @@ export default class EditAccountDetails extends Component {
               style={styles.newinput}
               label={'New Password'}
               placeholder={'Type here (Optional)'}
+              secureTextEntry={true}
               onChangeText={new_password1 => {
                 this.object.new_password1 = new_password1;
               }}
@@ -269,6 +273,7 @@ export default class EditAccountDetails extends Component {
               style={styles.newinput}
               label={'Re-Type Password'}
               placeholder={'Re-Type new password'}
+              secureTextEntry={true}
               onChangeText={new_password2 => {
                 this.object.new_password2 = new_password2;
               }}
