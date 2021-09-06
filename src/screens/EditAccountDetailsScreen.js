@@ -128,7 +128,7 @@ export default class EditAccountDetails extends Component {
         this.object.username_change = true;
       }
       this._update();
-      this.props.navigation.navigate('Main');
+      this.props.navigation.pop(2);
     }
   };
 

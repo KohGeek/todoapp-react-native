@@ -63,7 +63,6 @@ export default class signInScreen extends Component {
               newStates[key] = value;
             }
           });
-          this.setState(newStates);
           console.log(newStates);
         },
       );
