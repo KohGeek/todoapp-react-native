@@ -6,13 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Password validation
 // Returns 0 if password is valid
-// Returns 1 if either password is empty
+// Returns 1 if both password is empty
 // Returns 2 if password does not match
 export function validatePassword(password1, password2) {
-  if (password1 === '' || password2 === '') {
+  if (password1 === '' && password2 === '') {
     return 1;
-  }
-  if (password1 !== password2) {
+  } else if (password1 !== password2) {
     return 2;
   }
   return 0;

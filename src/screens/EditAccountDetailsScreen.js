@@ -108,15 +108,14 @@ export default class EditAccountDetails extends Component {
     if (this.object.current_password == '') {
       Alert.alert('Please enter your Current Password!');
     } else {
-      if (
-        validatePassword(
-          this.object.new_password1,
-          this.object.new_password2,
-        ) == 0
-      ) {
+      let passwordCheck = validatePassword(
+        this.object.new_password1,
+        this.object.new_password2,
+      );
+      if (passwordCheck == 0) {
         console.log('password match');
         this.object.password_change = true;
-      } else {
+      } else if (passwordCheck == 2) {
         Alert.alert('Passwords do not match!');
         return;
       }
