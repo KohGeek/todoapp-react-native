@@ -195,9 +195,9 @@ def update():
         c.execute("SELECT hashedpassword, uuid FROM users WHERE username=?", (current_username,))
         data = c.fetchone()
 
-
         response_json['username'] = current_username
         response_json['email'] = ''
+        uuid = data[1]
 
         if data is None:
             response_json = {'message': 'Username not found'}
@@ -211,7 +211,7 @@ def update():
                 data = c.fetchone()
 
                 if data is None:
-                    c.execute("UPDATE users SET username=? WHERE username=?", (username, current_username))
+                    c.execute("UPDATE users SET username=? WHERE uuid=?", (username, uuid))
                     response_json['username_status'] = 'Username updated'
                     response_json['username'] = username
                     response_code = 200
@@ -225,7 +225,7 @@ def update():
                 data = c.fetchone()
 
                 if data is None:
-                    c.execute("UPDATE users SET email=? WHERE username=?", (email, current_username))
+                    c.execute("UPDATE users SET email=? WHERE uuid=?", (email, uuid))
                     response_json['email_status'] = 'Email updated'
                     response_json['email'] = email
                     response_code = 200
@@ -236,7 +236,7 @@ def update():
             if request.json['password_change'] == True:
                 password = request.json['password']
                 hashed_password = PasswordHasher().hash(password)
-                c.execute("UPDATE users SET hashedpassword=? WHERE username=?", (hashed_password, current_username))
+                c.execute("UPDATE users SET hashedpassword=? WHERE uuid=?", (hashed_password, uuid))
 
                 response_json['password_message'] = 'Password updated'
                 response_code = 200
