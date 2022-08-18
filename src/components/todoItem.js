@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, TouchableHighlight, View } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, StyleSheet, TouchableHighlight, View} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
-import { styles } from '../style';
+import {styles} from '../style';
 
-export default function TodoItem({ item, _complete, _update }) {
+export default function TodoItem({item, _complete, _update}) {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [color, setColor] = useState('white');
 
@@ -15,7 +15,7 @@ export default function TodoItem({ item, _complete, _update }) {
   }, [item]);
 
   var style = StyleSheet.create({
-    wrap_box: { backgroundColor: color },
+    wrap_box: {backgroundColor: color},
   });
 
   return (
@@ -28,9 +28,9 @@ export default function TodoItem({ item, _complete, _update }) {
           onValueChange={newValue => {
             setToggleCheckBox(newValue);
             console.log(item.id + ' is set to ' + newValue);
-            if (newValue == 0) {
+            if (newValue === 0) {
               _complete(item.id, 'false');
-            } else if (newValue == 1) {
+            } else if (newValue === 1) {
               _complete(item.id, 'true');
             }
           }}
@@ -44,7 +44,7 @@ export default function TodoItem({ item, _complete, _update }) {
                   position: 'relative',
                   top: 5,
                 }
-              : { position: 'relative', top: 5 })
+              : {position: 'relative', top: 5})
           }>
           {item.name}
         </Text>

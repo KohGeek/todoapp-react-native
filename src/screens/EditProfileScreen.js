@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button, Image } from 'react-native';
-import { getToken, setToken } from '../components/functions';
-import { useFocusEffect } from '@react-navigation/native';
+import React, {Component} from 'react';
+import {View, Text, Button, Image} from 'react-native';
+import {getToken, setToken} from '../components/functions';
+import {useFocusEffect} from '@react-navigation/native';
 import Config from 'react-native-config';
-import { styles } from '../style';
+import {styles} from '../style';
 
-function FetchData({ username }) {
+function FetchData({username}) {
   useFocusEffect(() => {});
   return null;
 }
@@ -59,9 +59,9 @@ export default class EditProfileScreen extends Component {
             backgroundColor: '#1F2124', //grey
             flex: 1,
           }}>
-          <View></View>
+          <View />
 
-          <View style={{ alignItems: 'center' }}>
+          <View style={styles.alignCenter}>
             <Image
               style={{
                 width: 150,
@@ -76,12 +76,7 @@ export default class EditProfileScreen extends Component {
           {/* USERNAME */}
           <View>
             <Text style={styles.editlabel}>Username: </Text>
-            <View
-              style={{
-                backgroundColor: '#1A1B1E',
-                flexwrap: 'wrap',
-                borderColor: '#BFBFBF',
-              }}>
+            <View style={styles.editProfileScreenLabel}>
               <Text style={styles.userinforight}> {this.state.username} </Text>
             </View>
           </View>
@@ -89,40 +84,37 @@ export default class EditProfileScreen extends Component {
           {/* EMAIL */}
           <View>
             <Text style={styles.editlabel}>Email:</Text>
-            <View
-              style={{
-                backgroundColor: '#1A1B1E',
-                flexwrap: 'wrap',
-                borderColor: '#BFBFBF',
-              }}>
+            <View style={styles.editProfileScreenLabel}>
               <Text style={styles.userinforight}> {this.state.email} </Text>
             </View>
           </View>
 
           {/* PASSWORD */}
-          <View style={{ marginTop: '10%' }}>
+          <View style={styles.marginTop10Percent}>
             <Button
               marginTop="15%"
               color="#6360F3"
-              style={{ marginTop: '5%' }}
+              style={styles.marginTop5Percent}
               title={'Edit Account Details >'}
               onPress={() => {
                 this.props.navigation.navigate('EditAccountDetails', {
                   username: this.state.username,
                   email: this.state.email,
                 });
-              }}></Button>
+              }}
+            />
           </View>
 
-          <View style={{ marginTop: '10%' }}>
+          <View style={styles.marginTop10Percent}>
             <Button
               marginTop="15%"
               color="#6360F3"
-              style={{ marginTop: '5%' }}
+              style={styles.marginTop5Percent}
               title={'Logout'}
               onPress={async () => {
                 await this._logout();
-              }}></Button>
+              }}
+            />
           </View>
         </View>
       </>

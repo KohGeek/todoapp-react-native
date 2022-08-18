@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, Alert, Image } from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, Alert, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setToken, syncToServer } from '../components/functions';
-import { InputWithLabel, AppButton } from '../src/UI';
+import {setToken, syncToServer} from '../components/functions';
+import {InputWithLabel, AppButton} from '~/src/UI';
+import {styles} from '../style';
 import Config from 'react-native-config';
 
-export default class signInScreen extends Component {
+export default class SignInScreen extends Component {
   static navigationOptions = {
     title: 'Login Screen',
   };
@@ -54,14 +55,12 @@ export default class signInScreen extends Component {
     try {
       await AsyncStorage.multiGet(
         ['message', 'username', 'email', 'token'],
-        (err, stores) => {
-          stores.map((result, i, store) => {
+        (_, stores) => {
+          stores.map((_, i, store) => {
             // get at each store's key/value so you can work with it
             let key = store[i][0]; // the key
             let value = store[i][1]; // the value
-            {
-              newStates[key] = value;
-            }
+            newStates[key] = value;
           });
           this.setState(newStates);
           console.log(newStates);
@@ -73,7 +72,7 @@ export default class signInScreen extends Component {
   }
 
   _read() {
-    var success = false;
+    let success = false;
     let url = `${Config.API_URL}:${Config.API_PORT}/api/login`;
 
     fetch(url, {
@@ -90,7 +89,6 @@ export default class signInScreen extends Component {
       .then(response => {
         if (!response.ok) {
           success = false;
-          // Alert.alert('Error', response.status.toString());
           throw Error('Error ' + response.status);
         } else {
           success = true;
@@ -127,9 +125,9 @@ export default class signInScreen extends Component {
 
   render() {
     const pressHandler = () => {
-      if (this.state.username == '') {
+      if (this.state.username === '') {
         Alert.alert('Please enter your username.');
-      } else if (this.state.password == '') {
+      } else if (this.state.password === '') {
         Alert.alert('Please enter your password.');
       } else {
         this._read();
@@ -137,12 +135,8 @@ export default class signInScreen extends Component {
     };
 
     return (
-      <View
-        style={{
-          backgroundColor: '#2c2f33',
-          flex: 1,
-        }}>
-        <View style={{ alignItems: 'center' }}>
+      <View style={styles.mainContainer}>
+        <View style={styles.alignCenter}>
           <Image
             style={{
               width: 200,
@@ -153,19 +147,15 @@ export default class signInScreen extends Component {
             source={require('../image/Login_Avatar.png')}
           />
         </View>
-        <Text style={styles.content}>{'TODOLO!'}</Text>
+        <Text style={styles.contentRegister}>{'TODOLO!'}</Text>
 
-        <View
-          style={{
-            flexwrap: 'wrap',
-            flexDirection: 'row',
-          }}>
+        <View style={styles.flexWarpRow}>
           <InputWithLabel
             label="Username"
-            style={styles.input}
+            style={styles.inputRegister}
             placeholder={'Username'}
             onChangeText={username => {
-              this.setState({ username });
+              this.setState({username});
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
@@ -173,31 +163,24 @@ export default class signInScreen extends Component {
           />
         </View>
 
-        <View
-          style={{
-            flexwrap: 'wrap',
-            flexDirection: 'row',
-          }}>
+        <View style={styles.flexWarpRow}>
           <InputWithLabel
-            style={styles.input}
+            style={styles.inputRegister}
             label={'Password'}
             placeholder={'Type here'}
             secureTextEntry={true}
             onChangeText={password => {
-              this.setState({ password });
+              this.setState({password});
             }}
             keyboardType={'default'}
             selectTextOnFocus={true}
             orientation={'horizontal'}
           />
         </View>
-        <View style={{ alignItems: 'center', marginTop: 10, flex: 0 }}>
-          <AppButton
-            title="log in"
-            theme="success"
-            onPress={pressHandler}></AppButton>
+        <View style={[styles.alignCenter, styles.marginTop10, styles.noFlex]}>
+          <AppButton title="log in" theme="success" onPress={pressHandler} />
           <Text
-            style={styles.text}
+            style={styles.textSignIn}
             onPress={() => this.props.navigation.navigate('Register')}>
             Register
           </Text>
@@ -206,41 +189,3 @@ export default class signInScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  title: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 20,
-  },
-  button: {
-    backgroundColor: '#6360F3',
-    margin: 10,
-  },
-  content: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 20,
-    margin: 20,
-    fontWeight: 'bold',
-  },
-  input: {
-    fontSize: 20,
-    color: 'white',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  text: {
-    fontSize: 14,
-    color: '#6360F3',
-    // textStyle: {
-    //   textDecorationLine: 'underline',
-    // },
-  },
-});

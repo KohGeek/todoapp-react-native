@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   addSubTaskbtn: {
@@ -253,5 +253,57 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     margin: 10,
     color: 'white',
+  },
+  editAccountsDetailsGap: {
+    marginTop: 10,
+    borderColor: 'white',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginBottom: 10,
+  },
+  marginTop0: {
+    marginTop: 0,
+  },
+  marginTop10Percent: {marginTop: '10%'},
+  marginTop10: {marginTop: 10},
+  marginTop5Percent: {marginTop: '5%'},
+  marginBottom5Percent: {marginBottom: '5%'},
+  flexWarpRow: {flexwrap: 'wrap', flexDirection: 'row'},
+  contentRegister: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 20,
+    margin: 20,
+    fontWeight: 'bold',
+  },
+  inputRegister: {
+    fontSize: 20,
+    color: 'white',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  textRegister: {
+    fontSize: 16,
+    color: '#6360F3',
+  },
+  textSignIn: {
+    fontSize: 14,
+    color: '#6360F3',
+  },
+  alignCenter: {
+    alignItems: 'center',
+  },
+  noFlex: {flex: 0},
+  editProfileScreenLabel: {
+    backgroundColor: '#1A1B1E',
+    flexwrap: 'wrap',
+    borderColor: '#BFBFBF',
+  },
+  mainContainer: {
+    backgroundColor: '#2c2f33',
+    flex: 1,
+  },
+  flex1: {
+    flex: 1,
   },
 });

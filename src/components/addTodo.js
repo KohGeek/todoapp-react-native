@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { TextInput, Button, View } from 'react-native';
+import React, {useState} from 'react';
+import {TextInput, Button, View} from 'react-native';
 
-import { styles } from '../style';
+import {styles} from '../style';
 
-export default function AddTodo({ submitHandler }) {
+export default function AddTodo({submitHandler}) {
   const [text, setText] = useState('');
   const changeHandler = val => {
     setText(val);

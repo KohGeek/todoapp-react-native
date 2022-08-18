@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,19 +7,18 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { useFocusEffect } from '@react-navigation/native';
-import { styles } from '../style';
-import { openDatabase } from 'react-native-sqlite-storage';
+import {SwipeListView} from 'react-native-swipe-list-view';
+import {useFocusEffect} from '@react-navigation/native';
+import {styles} from '../style';
+import {openDatabase} from 'react-native-sqlite-storage';
 
 import AddTodo from '../components/addTodo';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import TodoItem from '../components/todoItem';
 
-export default function App({ navigation, route }) {
+export default function MainScreen({navigation, route}) {
   const [todos, setTodos] = useState([]);
-  const [addtask, setaddTask] = useState(route.AddTask || false);
 
   const submitHandler = text => {
     if (text.length >= 1) {
@@ -32,7 +31,7 @@ export default function App({ navigation, route }) {
       _update();
     } else {
       Alert.alert('OOPS!', 'Task added cannot be empty!!', [
-        { text: 'Understood', onPress: () => console.log('alert closed') },
+        {text: 'Understood', onPress: () => console.log('alert closed')},
       ]);
     }
   };
@@ -62,13 +61,10 @@ export default function App({ navigation, route }) {
     </View>
   );
 
-  //close function
-  const closeRow = id => {};
-
   //delete function
   const deleteRow = id => {
     db.transaction(function (tx) {
-      tx.executeSql('DELETE FROM todo WHERE id= ?', [id], (tx, results) => {});
+      tx.executeSql('DELETE FROM todo WHERE id= ?', [id], (trx, results) => {});
     });
     _update();
   };
@@ -81,7 +77,7 @@ export default function App({ navigation, route }) {
   useEffect(() => {
     console.log('Database opened');
     _update();
-  }, []);
+  }, [_update]);
 
   useFocusEffect(() => {
     _update();
@@ -89,7 +85,7 @@ export default function App({ navigation, route }) {
 
   const _update = () => {
     db.transaction(function (tx) {
-      tx.executeSql('SELECT * FROM todo', [], (tx, results) => {
+      tx.executeSql('SELECT * FROM todo', [], (trx, results) => {
         setTodos(results.rows.raw());
       });
     });
@@ -117,10 +113,10 @@ export default function App({ navigation, route }) {
           <View style={styles.list}>
             <SwipeListView
               data={todos}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <TodoItem item={item} _complete={_complete} _update={_update} />
               )}
-              renderHiddenItem={({ item }) => renderHiddenItem(item)}
+              renderHiddenItem={({item}) => renderHiddenItem(item)}
               leftOpenValue={300}
               rightOpenValue={-150}
               disableRightSwipe={true}

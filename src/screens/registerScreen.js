@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Alert, Image } from 'react-native';
+import { View, Text, Alert, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { InputWithLabel, AppButton } from '../src/UI';
+import { InputWithLabel, AppButton } from '~/src/UI';
+import { styles } from '../style';
 import Config from 'react-native-config';
 
-export default class registerScreen extends Component {
+export default class RegisterScreen extends Component {
   static navigationOptions = {
     title: 'Register Screen',
   };
@@ -30,9 +31,10 @@ export default class registerScreen extends Component {
 
   // Fetch from server: Register a new account
   _store() {
-    var success = false;
+    let success = false;
 
     console.log('CAME INTO STORE');
+    console.log('Config.API_URL: ', Config.API_URL);
     let url = `${Config.API_URL}:${Config.API_PORT}/api/register`;
 
     fetch(url, {
@@ -77,15 +79,15 @@ export default class registerScreen extends Component {
 
   render() {
     const pressHandler = () => {
-      if (this.state.username == '') {
+      if (this.state.username === '') {
         Alert.alert('Please enter your username.');
-      } else if (this.state.email == '') {
+      } else if (this.state.email === '') {
         Alert.alert('Please enter your email.');
-      } else if (this.state.password == '') {
+      } else if (this.state.password === '') {
         Alert.alert('Please enter your password.');
-      } else if (this.state.retype_password == '') {
+      } else if (this.state.retype_password === '') {
         Alert.alert('Please retype password.');
-      } else if (this.state.password != this.state.retype_password) {
+      } else if (this.state.password !== this.state.retype_password) {
         Alert.alert('Retype password mismatch.');
       } else {
         this._store();
@@ -93,12 +95,8 @@ export default class registerScreen extends Component {
     };
 
     return (
-      <View
-        style={{
-          backgroundColor: '#2c2f33',
-          flex: 1,
-        }}>
-        <View style={{ alignItems: 'center' }}>
+      <View style={styles.mainContainer}>
+        <View style={styles.alignCenter}>
           <Image
             style={{
               width: 100,
@@ -106,19 +104,15 @@ export default class registerScreen extends Component {
               margin: 20,
               borderRadius: 100,
             }}
-            source={require('../resources/AppLogo.png')}
+            source={require('~/resources/AppLogo.png')}
           />
         </View>
-        <Text style={styles.content}>{'JOIN TODOLO!'}</Text>
+        <Text style={styles.contentRegister}>{'JOIN TODOLO!'}</Text>
 
-        <View
-          style={{
-            flexwrap: 'wrap',
-            flexDirection: 'row',
-          }}>
+        <View style={styles.flexWarpRow}>
           <InputWithLabel
             label="Username"
-            style={styles.input}
+            style={styles.inputRegister}
             placeholder={'Your name'}
             value={this.state.username}
             onChangeText={username => {
@@ -131,14 +125,10 @@ export default class registerScreen extends Component {
           />
         </View>
 
-        <View
-          style={{
-            flexwrap: 'wrap',
-            flexDirection: 'row',
-          }}>
+        <View style={styles.flexWarpRow}>
           <InputWithLabel
             label="Email"
-            style={styles.input}
+            style={styles.inputRegister}
             placeholder={'e.g., abc@mail.com'}
             value={this.state.email}
             onChangeText={email => {
@@ -151,13 +141,9 @@ export default class registerScreen extends Component {
           />
         </View>
 
-        <View
-          style={{
-            flexwrap: 'wrap',
-            flexDirection: 'row',
-          }}>
+        <View style={styles.flexWarpRow}>
           <InputWithLabel
-            style={styles.input}
+            style={styles.inputRegister}
             label={'Password'}
             placeholder={'Type here'}
             value={this.state.password}
@@ -172,19 +158,14 @@ export default class registerScreen extends Component {
           />
         </View>
 
-        <View
-          style={{
-            flexwrap: 'wrap',
-            flexDirection: 'row',
-          }}>
+        <View style={styles.flexWarpRow}>
           <InputWithLabel
-            style={styles.input}
+            style={styles.inputRegister}
             label={'Retype Password'}
             placeholder={'Type here'}
             value={this.state.retype_password}
             secureTextEntry={true}
             onChangeText={retype_password => {
-              //this.setState({ password: password });
               this.setState({ retype_password });
               this._saveSetting('retype_password', retype_password);
             }}
@@ -194,13 +175,10 @@ export default class registerScreen extends Component {
           />
         </View>
 
-        <View style={{ alignItems: 'center', marginTop: 10, flex: 0 }}>
-          <AppButton
-            title="register"
-            theme="success"
-            onPress={pressHandler}></AppButton>
+        <View style={[styles.alignCenter, styles.marginTop10, styles.noFlex]}>
+          <AppButton title="register" theme="success" onPress={pressHandler} />
           <Text
-            style={styles.text}
+            style={styles.textRegister}
             onPress={() => this.props.navigation.navigate('Index')}>
             Sign In
           </Text>
@@ -209,38 +187,3 @@ export default class registerScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  title: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 20,
-  },
-  button: {
-    backgroundColor: '#6360F3',
-    margin: 10,
-  },
-  content: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 20,
-    margin: 20,
-    fontWeight: 'bold',
-  },
-  input: {
-    fontSize: 20,
-    color: 'white',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  text: {
-    fontSize: 16,
-    color: '#6360F3',
-  },
-});

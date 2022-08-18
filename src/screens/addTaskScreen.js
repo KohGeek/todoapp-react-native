@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
+  Alert,
   Text,
   View,
   ScrollView,
@@ -8,14 +9,14 @@ import {
   DatePickerAndroid,
 } from 'react-native';
 
-import { Input } from '../src/UI.js';
-import { ColorPicker } from 'react-native-btr';
+import {Input} from '~/src/UI.js';
+import {ColorPicker} from 'react-native-btr';
 import TimePicker from 'react-native-super-timepicker';
-import { styles } from '../style';
+import {styles} from '../style';
 
 let SQLite = require('react-native-sqlite-storage');
 
-Date.prototype.formatted = function () {
+const dateFormat = function () {
   let day = this.getDay();
   let date = this.getDate();
   let month = this.getMonth();
@@ -39,8 +40,8 @@ Date.prototype.formatted = function () {
   return `${daysText[day]}, ${monthsText[month]} ${date}, ${year}`;
 };
 
-export default class AddTask extends Component {
-  static navigationOptions = ({ navigation }) => {
+export default class AddTaskScreen extends Component {
+  static navigationOptions = ({navigation}) => {
     return {
       title: 'Add Task',
     };
@@ -50,7 +51,7 @@ export default class AddTask extends Component {
     super(props);
 
     this.db = SQLite.openDatabase(
-      { name: 'todo.sqlite', createFromLocation: '~todo.sqlite' },
+      {name: 'todo.sqlite', createFromLocation: '~todo.sqlite'},
       this.openDb,
       this.errorDb,
     );
@@ -79,8 +80,8 @@ export default class AddTask extends Component {
 
   //REMEMBER TO CREATE REFRESH ON MAIN SCREEN AFTER INSERT DATA
   _insertTask(taskId) {
-    var obj = { dateText: this.state.dateText, time: this.state.time };
-    var reminder = JSON.stringify(obj);
+    let obj = {dateText: this.state.dateText, time: this.state.time};
+    let reminder = JSON.stringify(obj);
     this.db.transaction(
       tx => {
         tx.executeSql(
@@ -92,10 +93,10 @@ export default class AddTask extends Component {
             reminder,
             taskId,
           ],
-          (tx, results) => {
+          (trx, results) => {
             console.log(this.state.title + ' is updated successful!');
           },
-          (tx, error) => {
+          (trx, error) => {
             console.log('sql error' + error);
           },
         );
@@ -110,8 +111,8 @@ export default class AddTask extends Component {
   }
 
   _insertNewTask() {
-    var obj = { dateText: this.state.dateText, time: this.state.time };
-    var reminder = JSON.stringify(obj);
+    let obj = {dateText: this.state.dateText, time: this.state.time};
+    let reminder = JSON.stringify(obj);
     this.db.transaction(
       tx => {
         tx.executeSql(
@@ -123,10 +124,10 @@ export default class AddTask extends Component {
             reminder,
             false,
           ],
-          (tx, results) => {
+          (trx, results) => {
             console.log(this.state.title + 'is added successful!');
           },
-          (tx, error) => {
+          (trx, error) => {
             console.log('sql error' + error);
           },
         );
@@ -142,7 +143,7 @@ export default class AddTask extends Component {
 
   openDatePicker = async () => {
     try {
-      const { action, year, month, day } = await DatePickerAndroid.open({
+      const {action, year, month, day} = await DatePickerAndroid.open({
         date: this.state.date,
         minDate: new Date(),
         maxDate: new Date(2099, 11, 31),
@@ -154,10 +155,10 @@ export default class AddTask extends Component {
 
         this.setState({
           date: selectedDate,
-          dateText: selectedDate.formatted(),
+          dateText: dateFormat(selectedDate),
         });
       }
-    } catch ({ code, message }) {
+    } catch ({code, message}) {
       console.warn('Cannot open date picker', message);
     }
   };
@@ -168,22 +169,22 @@ export default class AddTask extends Component {
 
   componentDidMount() {
     if (this.state.priority === 'L') {
-      this.setState({ prioBtn1Color: 'red' });
+      this.setState({prioBtn1Color: 'red'});
     } else if (this.state.priority === 'M') {
-      this.setState({ prioBtn2Color: 'red' });
+      this.setState({prioBtn2Color: 'red'});
     } else if (this.state.priority === 'H') {
-      this.setState({ prioBtn3Color: 'red' });
+      this.setState({prioBtn3Color: 'red'});
     }
   }
 
   onConfirm(hour, minute) {
-    this.setState({ time: `${hour}:${minute}` });
+    this.setState({time: `${hour}:${minute}`});
     this.TimePicker.close();
   }
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.flex1}>
         {/* Header */}
         <View
           style={[
@@ -197,7 +198,7 @@ export default class AddTask extends Component {
           {/* Not yet implement onPress */}
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
-            style={{ flex: 1, marginLeft: 20 }}>
+            style={{flex: 1, marginLeft: 20}}>
             <Icon
               // style={styles.userIcon}
               name="arrow-back"
@@ -207,24 +208,24 @@ export default class AddTask extends Component {
             />
           </TouchableOpacity>
 
-          <Text style={[styles.title, { flex: 9 }]}>
+          <Text style={[styles.title, {flex: 9}]}>
             {this.props.route.params.action}
           </Text>
 
           <TouchableOpacity
-            style={{ flex: 2 }}
+            style={{flex: 2}}
             onPress={() => {
               if (this.state.taskId != null) {
                 this._insertTask(this.state.taskId);
                 console.log('Ready to update task!!');
-                alert('Task edited successfully !');
+                Alert.alert('Task edited successfully !');
                 this.props.navigation.navigate('Main', {
                   AddTask: true,
                 });
               } else {
                 this._insertNewTask();
                 console.log('Ready to add task!!');
-                alert('Task added successfully !');
+                Alert.alert('Task added successfully !');
                 this.props.navigation.navigate('Main', {
                   AddTask: true,
                 });
@@ -241,10 +242,10 @@ export default class AddTask extends Component {
         </View>
 
         {/* Task adding */}
-        <ScrollView style={{ backgroundColor: '#161718', flex: 1 }}>
+        <ScrollView style={{backgroundColor: '#161718', flex: 1}}>
           {/* Title */}
           <View style={styles.view}>
-            <Text style={[styles.label, { color: this.state.labelColor }]}>
+            <Text style={[styles.label, {color: this.state.labelColor}]}>
               Title
             </Text>
             <Input
@@ -257,7 +258,8 @@ export default class AddTask extends Component {
                 });
               }}
               keyboardType={'default'}
-              selectTextOnFocus={true}></Input>
+              selectTextOnFocus={true}
+            />
           </View>
 
           {/* Color Picker */}
@@ -274,7 +276,7 @@ export default class AddTask extends Component {
                 }}
               />
 
-              <Text style={{ textAlign: 'center', color: 'white' }}>
+              <Text style={{textAlign: 'center', color: 'white'}}>
                 Scroll for more colors.
               </Text>
             </View>
@@ -284,8 +286,8 @@ export default class AddTask extends Component {
           <View style={styles.view}>
             <Text style={styles.label}>Priority</Text>
 
-            <View style={[styles.priority, { flex: 1, flexDirection: 'row' }]}>
-              <View style={{ flex: 1, paddingRight: 5 }}>
+            <View style={[styles.priority, {flex: 1, flexDirection: 'row'}]}>
+              <View style={{flex: 1, paddingRight: 5}}>
                 <TouchableOpacity
                   style={[
                     styles.touchableBtn,
@@ -313,7 +315,7 @@ export default class AddTask extends Component {
                 </TouchableOpacity>
               </View>
 
-              <View style={{ flex: 1 }}>
+              <View style={styles.flex1}>
                 <TouchableOpacity
                   style={[
                     styles.touchableBtn,
@@ -341,7 +343,7 @@ export default class AddTask extends Component {
                 </TouchableOpacity>
               </View>
 
-              <View style={{ flex: 1, paddingLeft: 5 }}>
+              <View style={{flex: 1, paddingLeft: 5}}>
                 <TouchableOpacity
                   style={[
                     styles.touchableBtn,
@@ -375,11 +377,11 @@ export default class AddTask extends Component {
           <View style={styles.view}>
             <Text style={[styles.label]}>Reminder</Text>
 
-            <View style={{ padding: 15 }}>
+            <View style={{padding: 15}}>
               <Text style={[styles.label]}>Date</Text>
 
               <TouchableOpacity
-                style={{ backgroundColor: 'white', borderRadius: 50 }}
+                style={{backgroundColor: 'white', borderRadius: 50}}
                 onPress={this.openDatePicker}>
                 <View>
                   <Input

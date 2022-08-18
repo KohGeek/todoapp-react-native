@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   Platform,
   View,
@@ -14,7 +14,7 @@ class InputWithLabel extends Component {
     super(props);
 
     this.orientation = this.props.orientation
-      ? this.props.orientation == 'horizontal'
+      ? this.props.orientation === 'horizontal'
         ? 'row'
         : 'column'
       : 'column';
@@ -22,8 +22,7 @@ class InputWithLabel extends Component {
 
   render() {
     return (
-      <View
-        style={[inputStyles.container, { flexDirection: this.orientation }]}>
+      <View style={[inputStyles.container, {flexDirection: this.orientation}]}>
         <Text backgroundColor="#2c2f33" style={inputStyles.label}>
           {this.props.label ? this.props.label : ''}
         </Text>
@@ -84,7 +83,7 @@ class Input extends Component {
     super(props);
 
     this.orientation = this.props.orientation
-      ? this.props.orientation == 'horizontal'
+      ? this.props.orientation === 'horizontal'
         ? 'row'
         : 'column'
       : 'column';
@@ -92,8 +91,7 @@ class Input extends Component {
 
   render() {
     return (
-      <View
-        style={[inputStyles2.container, { flexDirection: this.orientation }]}>
+      <View style={[inputStyles2.container, {flexDirection: this.orientation}]}>
         {/* <Text style={inputStyles.label}>
                     {this.props.label ? this.props.label : ''}
                 </Text> */}
@@ -119,9 +117,6 @@ class Input extends Component {
     );
   }
 }
-
-
-
 
 const inputStyles2 = StyleSheet.create({
   container: {
@@ -182,7 +177,7 @@ class AppButton extends Component {
         <View
           style={[
             buttonStyles.button,
-            { backgroundColor: this.backgroundColor },
+            {backgroundColor: this.backgroundColor},
           ]}>
           <Text style={buttonStyles.buttonText}>{this.props.title}</Text>
         </View>
@@ -209,7 +204,7 @@ const buttonStyles = StyleSheet.create({
 
 /* Export Modules */
 module.exports = {
-  Input:Input,
+  Input: Input,
   InputWithLabel: InputWithLabel,
   AppButton: AppButton,
 };

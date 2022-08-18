@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { ScrollView, View, Text, Alert } from 'react-native';
+import React, {Component} from 'react';
+import {ScrollView, View, Text, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
-import { useFocusEffect } from '@react-navigation/native';
-import { validatePassword } from '../components/functions';
-import { InputWithLabel, AppButton } from '../src/UI';
-import { styles } from '../style';
+import {useFocusEffect} from '@react-navigation/native';
+import {validatePassword} from '../components/functions';
+import {InputWithLabel, AppButton} from '~/src/UI';
+import {styles} from '../style';
 
-function FetchData({ username }) {
+function FetchData({username}) {
   useFocusEffect(() => {});
   return null;
 }
-export default class EditAccountDetails extends Component {
+export default class EditAccountDetailsScreen extends Component {
   static navigationOptions = {
     title: 'EditAccountDetails',
   };
@@ -69,7 +69,7 @@ export default class EditAccountDetails extends Component {
   }
 
   _update() {
-    var url = `${Config.API_URL}:${Config.API_PORT}/api/update`;
+    let url = `${Config.API_URL}:${Config.API_PORT}/api/update`;
 
     fetch(url, {
       method: 'POST',
@@ -105,23 +105,23 @@ export default class EditAccountDetails extends Component {
   }
 
   pressHandler = () => {
-    if (this.object.current_password == '') {
+    if (this.object.current_password === '') {
       Alert.alert('Please enter your Current Password!');
     } else {
       if (
         validatePassword(
           this.object.new_password1,
           this.object.new_password2,
-        ) == 0
+        ) === 0
       ) {
         console.log('password match');
         this.object.password_change = true;
       }
-      if (this.object.new_email != '') {
+      if (this.object.new_email !== '') {
         console.log('email change');
         this.object.email_change = true;
       }
-      if (this.object.new_username != '') {
+      if (this.object.new_username !== '') {
         console.log('username change');
         this.object.username_change = true;
       }
@@ -134,19 +134,13 @@ export default class EditAccountDetails extends Component {
     return (
       <>
         <FetchData username={this.state.username} />
-        <ScrollView
-          style={{
-            backgroundColor: '#2c2f33',
-            flex: 1,
-          }}>
+        <ScrollView style={styles.mainContainer}>
           <View
             style={{
               backgroundColor: '#000000',
               flexwrap: 'wrap',
               flexDirection: 'row',
               borderColor: '#BFBFBF',
-              //marginTop: '1%',
-              //marginBottom: 40,
             }}>
             <Text style={styles.userinfo}> {this.state.username} </Text>
           </View>
@@ -170,23 +164,14 @@ export default class EditAccountDetails extends Component {
             />
           </View>
 
-          <View
-            style={{
-              //marginTop: 10,
-              borderColor: 'white',
-              borderBottomColor: 'black',
-              borderBottomWidth: 1,
-              marginBottom: 10,
-            }}
-          />
+          <View style={[styles.editAccountsDetailsGap, styles.marginTop0]} />
 
           <View
-            style={{
-              marginTop: '5%',
-              marginBottom: '5%',
-              flexwrap: 'wrap',
-              flexDirection: 'row',
-            }}>
+            style={[
+              styles.marginTop5Percent,
+              styles.marginBottom5Percent,
+              styles.flexWarpRow,
+            ]}>
             <InputWithLabel
               style={styles.newinput}
               label={'New Username'}
@@ -200,23 +185,14 @@ export default class EditAccountDetails extends Component {
             />
           </View>
 
-          <View
-            style={{
-              marginTop: 10,
-              borderColor: 'white',
-              borderBottomColor: 'black',
-              borderBottomWidth: 1,
-              marginBottom: 10,
-            }}
-          />
+          <View style={styles.editAccountsDetailsGap} />
 
           <View
-            style={{
-              marginTop: '5%',
-              marginBottom: '5%',
-              flexwrap: 'wrap',
-              flexDirection: 'row',
-            }}>
+            style={[
+              styles.marginTop5Percent,
+              styles.marginBottom5Percent,
+              styles.flexWarpRow,
+            ]}>
             <InputWithLabel
               style={styles.newinput}
               label={'New Email'}
@@ -230,23 +206,14 @@ export default class EditAccountDetails extends Component {
             />
           </View>
 
-          <View
-            style={{
-              marginTop: 10,
-              borderColor: 'white',
-              borderBottomColor: 'black',
-              borderBottomWidth: 1,
-              marginBottom: 10,
-            }}
-          />
+          <View style={styles.editAccountsDetailsGap} />
 
           <View
-            style={{
-              marginTop: '5%',
-              marginBottom: '5%',
-              flexwrap: 'wrap',
-              flexDirection: 'row',
-            }}>
+            style={[
+              styles.marginTop5Percent,
+              styles.marginBottom5Percent,
+              styles.flexWarpRow,
+            ]}>
             <InputWithLabel
               style={styles.newinput}
               label={'New Password'}
@@ -260,11 +227,7 @@ export default class EditAccountDetails extends Component {
             />
           </View>
 
-          <View
-            style={{
-              flexwrap: 'wrap',
-              flexDirection: 'row',
-            }}>
+          <View style={styles.flexWarpRow}>
             <InputWithLabel
               style={styles.newinput}
               label={'Re-Type Password'}
@@ -278,21 +241,14 @@ export default class EditAccountDetails extends Component {
             />
           </View>
 
-          <View
-            style={{
-              marginTop: 10,
-              borderColor: 'white',
-              borderBottomColor: 'black',
-              borderBottomWidth: 1,
-              marginBottom: 10,
-            }}
-          />
+          <View style={styles.editAccountsDetailsGap} />
 
-          <View style={{ alignItems: 'center', marginTop: 10, flex: 0 }}>
+          <View style={[styles.alignCenter, styles.marginTop10, styles.noFlex]}>
             <AppButton
               title="SAVE"
               theme="success"
-              onPress={() => this.pressHandler()}></AppButton>
+              onPress={() => this.pressHandler()}
+            />
           </View>
         </ScrollView>
       </>

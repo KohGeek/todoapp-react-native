@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
-import { styles } from '../style';
-import { getEmail, getUsername, syncToServer } from './functions';
+import {styles} from '../style';
+import {getEmail, getUsername, syncToServer} from './functions';
 
-export default function Header({ navigation }) {
+export default function Header({navigation}) {
   const pressHandler = async () => {
     const username = await getUsername();
     const email = await getEmail();

@@ -1,31 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, {useEffect, useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import MainScreen from './screens/mainScreen';
-import ProfileScreen from './screens/signInScreen';
-import RegisterScreen from './screens/registerScreen';
-import AddTaskScreen from './screens/addTaskScreen';
+import MainScreen from './screens/MainScreen';
+import ProfileScreen from './screens/SignInScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import AddTaskScreen from './screens/AddTaskScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
-import EditAccountDetails from './screens/EditAccountDetailsScreen';
-import { isLoggedIn } from './components/functions';
+import EditAccountDetailsScreen from './screens/EditAccountDetailsScreen';
+import {isLoggedIn} from './components/functions';
 
 const Stack = createNativeStackNavigator();
 
 function useLoggedInStatus() {
   const [loggedIn, setLoggedIn] = useState(null);
 
-  useEffect(async () => {
-    await isLoggedIn().then(res => {
-      setLoggedIn(res);
-    });
+  useEffect(() => {
+    async function fetchData() {
+      const loginStatus = await isLoggedIn();
+      setLoggedIn(loginStatus);
+    }
+    fetchData();
   }, []);
 
   return loggedIn;
 }
 
 function AppNavigation() {
-  var isLogged = useLoggedInStatus();
+  let isLogged = useLoggedInStatus();
 
   return (
     <NavigationContainer>
@@ -50,7 +52,7 @@ function AppNavigation() {
         <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
         <Stack.Screen
           name="EditAccountDetails"
-          component={EditAccountDetails}
+          component={EditAccountDetailsScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
