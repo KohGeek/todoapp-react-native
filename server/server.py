@@ -82,6 +82,10 @@ def token_query(token, type):
 
     return return_data
 
+@server.route('/api/test', methods=['GET'])
+def test():
+    return make_response(jsonify({'message': 'It works!'}))
+
 # Real flask application starts here
 # The following three method are user management
 @server.route('/api/login', methods=['POST'])

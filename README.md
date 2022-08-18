@@ -1,6 +1,6 @@
 # Todo App - Todolo
 
-A todo app powered by react-native. The project is not tested on iOS. The iOS build has been removed from the repository altogether.
+A todo app powered by react-native. The project is not tested on iOS.
 
 ## Setup
 
