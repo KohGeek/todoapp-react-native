@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { View, Text, Alert, Image } from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, Alert, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { InputWithLabel, AppButton } from '~/src/UI';
-import { styles } from '../style';
+import {InputWithLabel, AppButton} from '~/src/UI';
+import {styles} from '../style';
 import Config from 'react-native-config';
 
 export default class RegisterScreen extends Component {
@@ -116,7 +116,7 @@ export default class RegisterScreen extends Component {
             placeholder={'Your name'}
             value={this.state.username}
             onChangeText={username => {
-              this.setState({ username });
+              this.setState({username});
               this._saveSetting('username', username);
             }}
             keyboardType={'default'}
@@ -132,7 +132,7 @@ export default class RegisterScreen extends Component {
             placeholder={'e.g., abc@mail.com'}
             value={this.state.email}
             onChangeText={email => {
-              this.setState({ email });
+              this.setState({email});
               this._saveSetting('email', email);
             }}
             keyboardType={'default'}
@@ -149,7 +149,7 @@ export default class RegisterScreen extends Component {
             value={this.state.password}
             secureTextEntry={true}
             onChangeText={password => {
-              this.setState({ password });
+              this.setState({password});
               this._saveSetting('password', password);
             }}
             keyboardType={'default'}
@@ -166,7 +166,7 @@ export default class RegisterScreen extends Component {
             value={this.state.retype_password}
             secureTextEntry={true}
             onChangeText={retype_password => {
-              this.setState({ retype_password });
+              this.setState({retype_password});
               this._saveSetting('retype_password', retype_password);
             }}
             keyboardType={'default'}

@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  Alert,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  DatePickerAndroid,
-} from 'react-native';
+import {Alert, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 
 import {Input} from '~/src/UI.js';
 import {ColorPicker} from 'react-native-btr';
 import TimePicker from 'react-native-super-timepicker';
+import {Picker} from '@react-native-picker/picker';
 import {styles} from '../style';
 
 let SQLite = require('react-native-sqlite-storage');
@@ -143,13 +137,13 @@ export default class AddTaskScreen extends Component {
 
   openDatePicker = async () => {
     try {
-      const {action, year, month, day} = await DatePickerAndroid.open({
+      const {action, year, month, day} = await Picker.open({
         date: this.state.date,
         minDate: new Date(),
         maxDate: new Date(2099, 11, 31),
         mode: 'default', // try also with `spinner`
       });
-      if (action !== DatePickerAndroid.dismissedAction) {
+      if (action !== Picker.dismissedAction) {
         // Selected year, month (0-11), day
         let selectedDate = new Date(year, month, day);
 

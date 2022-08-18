@@ -68,6 +68,7 @@ buck-out/
 
 # Database
 *.sqlite
+server/userdata/
 
 # .env file
 .env
