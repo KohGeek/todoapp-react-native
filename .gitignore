@@ -1,3 +1,10 @@
+# Python venvs
+#
+Scripts/
+Lib/
+Include/
+pyvenv.cfg
+
 # OSX
 #
 .DS_Store

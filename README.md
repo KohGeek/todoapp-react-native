@@ -4,7 +4,7 @@ A todo app powered by react-native. The project is not tested on iOS. The iOS bu
 
 ## Setup
 
-Use the following to launch the project.
+Use the following to launch the project. Make sure you have Android Studio installed.
 
 Delete any preexisting `node_modules` folder, then run the code below:
 
