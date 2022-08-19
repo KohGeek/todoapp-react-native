@@ -98,7 +98,7 @@ export async function syncToServer(operation) {
                 item.id,
                 item.name,
                 item.priority,
-                item.color,
+                item.colour,
                 item.reminder,
                 item.completed,
               ],

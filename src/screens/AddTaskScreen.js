@@ -4,17 +4,16 @@ import {Alert, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 
 import {Input} from '~/src/UI.js';
 import {ColorPicker} from 'react-native-btr';
-import TimePicker from 'react-native-super-timepicker';
-import {Picker} from '@react-native-picker/picker';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {styles} from '../style';
 
 let SQLite = require('react-native-sqlite-storage');
 
-const dateFormat = function () {
-  let day = this.getDay();
-  let date = this.getDate();
-  let month = this.getMonth();
-  let year = this.getFullYear();
+const dateFormat = function (date) {
+  let day = date.getDay();
+  let dateOfMonth = date.getDate();
+  let month = date.getMonth();
+  let year = date.getFullYear();
   let daysText = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   let monthsText = [
     'Jan',
@@ -31,7 +30,17 @@ const dateFormat = function () {
     'Dec',
   ];
 
-  return `${daysText[day]}, ${monthsText[month]} ${date}, ${year}`;
+  return `${daysText[day]}, ${monthsText[month]} ${dateOfMonth}, ${year}`;
+};
+
+const timeFormat = function (date) {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  return `${hours}:${minutes} ${ampm}`;
 };
 
 export default class AddTaskScreen extends Component {
@@ -53,7 +62,11 @@ export default class AddTaskScreen extends Component {
     let data = JSON.parse(this.props.route.params.data);
     let reminder = JSON.parse(data.reminder);
 
+    console.log(data.colour);
+
     this.state = {
+      datePickerShow: false,
+      timePickerShow: false,
       selectedColor: data.colour || 'white',
       priority: data.priority || '',
       title: data.name || '',
@@ -63,7 +76,7 @@ export default class AddTaskScreen extends Component {
 
       //Reminder
       dateText: reminder.dateText || '',
-      time: reminder.time || '0000',
+      timeText: reminder.timeText || '0000',
 
       //For button styling usage
       prioBtn1Color: '#313437',
@@ -74,7 +87,7 @@ export default class AddTaskScreen extends Component {
 
   //REMEMBER TO CREATE REFRESH ON MAIN SCREEN AFTER INSERT DATA
   _insertTask(taskId) {
-    let obj = {dateText: this.state.dateText, time: this.state.time};
+    let obj = {dateText: this.state.dateText, timeText: this.state.timeText};
     let reminder = JSON.stringify(obj);
     this.db.transaction(
       tx => {
@@ -105,7 +118,7 @@ export default class AddTaskScreen extends Component {
   }
 
   _insertNewTask() {
-    let obj = {dateText: this.state.dateText, time: this.state.time};
+    let obj = {dateText: this.state.dateText, timeText: this.state.timeText};
     let reminder = JSON.stringify(obj);
     this.db.transaction(
       tx => {
@@ -136,30 +149,36 @@ export default class AddTaskScreen extends Component {
   }
 
   openDatePicker = async () => {
-    try {
-      const {action, year, month, day} = await Picker.open({
-        date: this.state.date,
-        minDate: new Date(),
-        maxDate: new Date(2099, 11, 31),
-        mode: 'default', // try also with `spinner`
-      });
-      if (action !== Picker.dismissedAction) {
-        // Selected year, month (0-11), day
-        let selectedDate = new Date(year, month, day);
+    this.setState({datePickerShow: true});
+  };
 
-        this.setState({
-          date: selectedDate,
-          dateText: dateFormat(selectedDate),
-        });
-      }
-    } catch ({code, message}) {
-      console.warn('Cannot open date picker', message);
+  setDate = (event, date) => {
+    if (date) {
+      this.setState({
+        date: date,
+        dateText: dateFormat(date),
+        datePickerShow: false,
+      });
+    } else {
+      this.setState({datePickerShow: false});
     }
   };
 
-  onCancel() {
-    this.TimePicker.close();
-  }
+  openTimePicker = async () => {
+    this.setState({timePickerShow: true});
+  };
+
+  setTime = (event, time) => {
+    if (time) {
+      this.setState({
+        time: time,
+        timeText: timeFormat(time),
+        timePickerShow: false,
+      });
+    } else {
+      this.setState({timePickerShow: false});
+    }
+  };
 
   componentDidMount() {
     if (this.state.priority === 'L') {
@@ -169,11 +188,6 @@ export default class AddTaskScreen extends Component {
     } else if (this.state.priority === 'H') {
       this.setState({prioBtn3Color: 'red'});
     }
-  }
-
-  onConfirm(hour, minute) {
-    this.setState({time: `${hour}:${minute}`});
-    this.TimePicker.close();
   }
 
   render() {
@@ -189,12 +203,10 @@ export default class AddTaskScreen extends Component {
               flexDirection: 'row',
             },
           ]}>
-          {/* Not yet implement onPress */}
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
             style={{flex: 1, marginLeft: 20}}>
             <Icon
-              // style={styles.userIcon}
               name="arrow-back"
               size={30}
               color="black"
@@ -213,16 +225,12 @@ export default class AddTaskScreen extends Component {
                 this._insertTask(this.state.taskId);
                 console.log('Ready to update task!!');
                 Alert.alert('Task edited successfully !');
-                this.props.navigation.navigate('Main', {
-                  AddTask: true,
-                });
+                this.props.navigation.goBack();
               } else {
                 this._insertNewTask();
                 console.log('Ready to add task!!');
                 Alert.alert('Task added successfully !');
-                this.props.navigation.navigate('Main', {
-                  AddTask: true,
-                });
+                this.props.navigation.goBack();
               }
             }}>
             <Icon
@@ -379,7 +387,6 @@ export default class AddTaskScreen extends Component {
                 onPress={this.openDatePicker}>
                 <View>
                   <Input
-                    //label="Date"
                     style={styles.inputStyle}
                     value={this.state.dateText}
                     placeholder="Event Date"
@@ -388,28 +395,38 @@ export default class AddTaskScreen extends Component {
                   />
                 </View>
               </TouchableOpacity>
+              {this.state.datePickerShow && (
+                <RNDateTimePicker
+                  mode="date"
+                  mininmumDate={new Date()}
+                  maximumDate={new Date(2099, 11, 31)}
+                  value={new Date()}
+                  onChange={this.setDate}
+                />
+              )}
 
               <Text style={[styles.label]}>Time</Text>
 
-              <TouchableOpacity onPress={() => this.TimePicker.open()}>
+              <TouchableOpacity
+                style={{backgroundColor: 'white', borderRadius: 50}}
+                onPress={this.openTimePicker}>
                 <View>
                   <Input
                     style={styles.inputStyle}
-                    value={this.state.time}
+                    value={this.state.timeText}
                     placeholder="Event Time"
                     editable={false}
                     underlineColorAndroid={'transparent'}
                   />
                 </View>
               </TouchableOpacity>
-
-              <TimePicker
-                ref={ref => {
-                  this.TimePicker = ref;
-                }}
-                onCancel={() => this.onCancel()}
-                onConfirm={(hour, minute) => this.onConfirm(hour, minute)}
-              />
+              {this.state.timePickerShow && (
+                <RNDateTimePicker
+                  mode="time"
+                  value={new Date()}
+                  onChange={this.setTime}
+                />
+              )}
             </View>
           </View>
         </ScrollView>

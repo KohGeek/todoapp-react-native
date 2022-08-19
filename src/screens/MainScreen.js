@@ -24,8 +24,8 @@ export default function MainScreen({navigation, route}) {
     if (text.length >= 1) {
       db.transaction(function (tx) {
         tx.executeSql(
-          'INSERT INTO todo(name,completed, reminder) VALUES(?,?,?)',
-          [text, 'false', '{"dateText": "", "time": ""}'],
+          'INSERT INTO todo(name, completed, reminder) VALUES(?,?,?)',
+          [text, 'false', '{"dateText": "", "timeText": ""}'],
         );
       });
       _update();
