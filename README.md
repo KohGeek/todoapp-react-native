@@ -2,9 +2,13 @@
 
 A todo app powered by react-native. The project is not tested on iOS.
 
+Last tested: 23/08/2023. Working fine except graphical glitches.
+
 ## Setup
 
 Use the following to launch the project. Make sure you have Android Studio installed.
+
+Rename `.env.bak` to `.env` and fill in the required fields accordingly. Your IP will be your local machine IP address.
 
 Delete any preexisting `node_modules` folder, then run the code below:
 
@@ -12,19 +16,12 @@ Delete any preexisting `node_modules` folder, then run the code below:
 npm ci | npm run android
 ```
 
-Additionally, to run the python server, install the following packages:
+Install all python prerequisites listed in `requirements.txt`.
 
-- pyjwt
-- flask
-- flask-socketio
-- eventlet
-- flask-cors
-- argon2-cffi
-
-If you use pip, use this:
+To run the python server, use the following:
 
 ```bash
-pip install pyjwt flask flask-socketio eventlet flask-cors argon2-cffi
+npm run server
 ```
 
 ### _Developers_
