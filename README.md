@@ -6,6 +6,9 @@ Last tested: 23/08/2023. Working fine except graphical glitches.
 
 ## Setup
 
+> [!WARNING]
+> Please note that this project has only been tested with JDK 17. It's been reported that JDK 11 _may_ work, while JDK 19 **does not**.
+
 Use the following to launch the project. Make sure you have Android Studio installed.
 
 Rename `.env.bak` to `.env` and fill in the required fields accordingly. Your IP will be your local machine IP address.
